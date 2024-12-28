@@ -2,12 +2,12 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer"
-import "./layout.css"
+import classes from "./layout.module.css"
 
 const Layout = () => {
   return (
-    <div className="layout">
-      <div className="layout-header">
+    <div className={classes.layout}>
+      <div className={classes.layoutHeader}>
         <Navbar />
       </div>
       <div className="layout-content">
