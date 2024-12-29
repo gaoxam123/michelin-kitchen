@@ -2,46 +2,64 @@ import { Button } from "@mui/material"
 import "./leftbar.css"
 import { Bookmark, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline, Event } from "@mui/icons-material"
 
+const Icons = {
+    Bookmark, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline, Event
+}
+
 export default function Leftbar() {
+    const items = [
+        {
+            icon: 'RssFeed',
+            title: 'Feed',
+        },
+        {
+            icon: 'PlayCircleFilledOutlined',
+            title: 'Video',
+        },
+        {
+            icon: 'Group',
+            title: 'Groups',
+        },
+        {
+            icon: 'Bookmark',
+            title: 'Bookmarks',
+        },
+        {
+            icon: 'HelpOutline',
+            title: 'QA',
+        },
+        {
+            icon: 'WorkOutline',
+            title: 'Work',
+        },
+        {
+            icon: 'Event',
+            title: 'Events',
+        },
+        {
+            icon: 'School',
+            title: 'Courses',
+        },
+    ]
+
     return (
         <div className="leftbar">
             <div className="leftbar-wrapper">
                 <ul className="leftbar-list">
-                    <li className="leftbar-list-item">
-                        <RssFeed className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Feed</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <PlayCircleFilledOutlined className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Videos</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <Group className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Groups</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <Bookmark className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Bookmarks</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <HelpOutline className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">QA</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <WorkOutline className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Work</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <Event className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Events</span>
-                    </li>
-                    <li className="leftbar-list-item">
-                        <School className="leftbar-icon"/>
-                        <span className="leftbar-list-item-text">Courses</span>
-                    </li>
+                    {items.map(
+                        item => {
+                            const Component = Icons[item.icon]
+                            return (
+                                <li key={item.icon} className="leftbar-list-item">
+                                    <Component className="leftbar-icon" />
+                                    <span className="leftbar-list-item-text">{item.title}</span>
+                                </li>
+                            )
+                        }
+                    )}
                 </ul>
                 <Button className="leftbar-button">Show more</Button>
-                <hr className="leftbar-hr"/>
+                <hr className="leftbar-hr" />
                 <ul className="leftbar-friend-list">
                     <li className="leftbar-friend">
                         <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
