@@ -1,17 +1,16 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer"
 import classes from "./layout.module.css"
 
-const Layout = () => {
+function Layout({ children }) {
   return (
     <div className={classes.layout}>
       <div className={classes.layoutHeader}>
         <Navbar />
       </div>
       <div className="layout-content">
-        <Outlet />
+        {children}
       </div>
       <div className="layout-footer">
         <Footer />

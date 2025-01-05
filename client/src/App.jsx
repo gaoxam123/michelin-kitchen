@@ -1,29 +1,30 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import Homepage from './pages/homepage/homepage'
-import Blogs from './pages/blogs/blogs'
 import Layout from './components/layout/layout'
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Homepage />
-      },
-      {
-        path: "/blogs",
-        element: <Blogs />
-      },
-    ]
-  },
-]);
+import { publicRoutes } from './routes'
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          {publicRoutes.map(
+            (route, index) => {
+              const Component = route.component
+              const ComponentLayout = route.layout || Layout
+              return <Route
+                key={index}
+                path={route.path}
+                element={
+                  <ComponentLayout>
+                    <Component />
+                  </ComponentLayout>
+                } />
+            }
+          )}
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }
 
