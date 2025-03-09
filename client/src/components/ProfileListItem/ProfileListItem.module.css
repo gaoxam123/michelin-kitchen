@@ -1,0 +1,19 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-radius: 8pt;
+}
+
+.wrapper:hover {
+    background-color: #F1F1F1;
+    cursor: pointer;
+}
+
+.profile-picture {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px;
+}

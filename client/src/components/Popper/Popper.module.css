@@ -1,0 +1,6 @@
+.popper {
+    width: 100%;
+    min-height: 50pt;
+    border-radius: 10px;
+    box-shadow: rgb(0,0,0/12%) 0px 2px 12px;
+}

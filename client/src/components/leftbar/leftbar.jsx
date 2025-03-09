@@ -1,5 +1,6 @@
 import { Button } from "@mui/material"
 import "./leftbar.css"
+import ProfileListItem from "../ProfileListItem"
 import { Bookmark, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline, Event } from "@mui/icons-material"
 
 const Icons = {
@@ -60,48 +61,10 @@ export default function Leftbar() {
                 </ul>
                 <Button className="leftbar-button">Show more</Button>
                 <hr className="leftbar-hr" />
-                <ul className="leftbar-friend-list">
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                    <li className="leftbar-friend">
-                        <img src="profile_pics.jpg" alt="" className="leftbar-friend-img" />
-                        <span className="leftbar-friend-name">Name</span>
-                    </li>
-                </ul>
+                <div className="leftbar-friend-list">
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                </div>
             </div>
         </div>
     )
