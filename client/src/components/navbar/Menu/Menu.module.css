@@ -5,8 +5,12 @@
     cursor: pointer;
     text-decoration: none !important;
     display: block;
+
+    &:hover {
+        background-color: #f1f1f1;
+    }
 }
 
-.item:hover {
-    background-color: #F1F1F1;
+.menu-btn {
+    cursor: pointer;
 }

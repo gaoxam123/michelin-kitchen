@@ -11,7 +11,7 @@ import { Search, Person, Chat, Notifications, Close } from "@mui/icons-material"
 import Tippy from "@tippyjs/react/headless"
 import Popper from '../Popper'
 
-const currentUser = null;
+const currentUser = null
 
 function Navbar() {
 
@@ -84,8 +84,12 @@ function Navbar() {
           </>
         ) : (
           <>
-            <CustomButton text="Log in"></CustomButton>
-            <CustomButton text="Sign up"></CustomButton>
+            <div className={cls('login-btn')}>
+              <CustomButton text="Log In"></CustomButton>
+            </div>
+            <div className={cls('signup-btn')}>
+              <CustomButton text="Sign Up"></CustomButton>
+            </div>
           </>
         )}
         <Menu items={

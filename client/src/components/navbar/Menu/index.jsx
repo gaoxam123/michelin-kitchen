@@ -4,25 +4,37 @@ import Tippy from "@tippyjs/react/headless";
 import Popper from "../../Popper";
 import MenuIcon from '@mui/icons-material/Menu';
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { SettingsAccessibility } from "@mui/icons-material";
 
 const cls = classNames.bind(styles)
 
 function Menu({ items }) {
     const [history, setHistory] = useState([items])
     const currentList = history[history.length - 1]
+    const [activate, setActivate] = useState(false)
+
+    const menuRef = useRef()
+
+    useEffect(() => {
+        const handleClickOutside = (event) => setActivate(menuRef.current && menuRef.current.contains(event.target))
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     return (
         <Tippy
             interactive
+            visible={activate}
             placement="bottom-end"
             render={attrs => (
-                <div className={cls("menu-list")} tabIndex="-1" {...attrs}>
+                <div className={cls("menu-list")} tabIndex="-1" {...attrs} ref={menuRef}>
                     <Popper>
                         {currentList.map((item, index) => {
                             let Component = 'div'
 
                             if (!!item.href) {
+                                // TODO use router
                                 Component = 'a'
                             }
 
@@ -46,7 +58,7 @@ function Menu({ items }) {
             )}
             onHidden={() => setHistory(prev => prev.slice(0, 1))}
         >
-            <div className={cls("random")}>
+            <div className={cls("menu-btn")} onClick={() => setActivate(true)}>
                 <MenuIcon />
             </div>
         </Tippy>

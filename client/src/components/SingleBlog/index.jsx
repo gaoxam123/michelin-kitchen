@@ -6,7 +6,7 @@ import ExpandableContent from "../ExpandableContent"
 import { formatDate } from '../../utils/formatDate'
 const cls = classNames.bind(styles)
 
-export default function SingleBlog({ username = "unknown", postDate = Date.now(), userFollowed = true, numLikes = 100, numComments = 10, numShares = 23 }) {
+export default function SingleBlog({ username = "unknown", postDate = Date.now(), userFollowed = true, numLikes = 0, numComments = 0, numShares = 0 }) {
     return <div className={cls("wrapper")}>
         <div className={cls("header")}>
             <div className={cls("profile-picture")}>
@@ -18,7 +18,7 @@ export default function SingleBlog({ username = "unknown", postDate = Date.now()
                         {username}
                     </div>
                     <div className={cls("follow")}>
-                        {userFollowed && "Follow"}
+                        {userFollowed || "Follow"}
                     </div>
                 </div>
                 <div className={cls("date")}>
