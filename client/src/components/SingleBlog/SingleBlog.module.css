@@ -1,0 +1,114 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(188, 178, 178);
+    border-radius: 10px;
+    width: 80%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 20px;
+    padding: 5px 10px;
+    height: 60px;
+    .profile-picture {
+        height: 100%;
+        width: 7.5%;
+        img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            object-fit: fill;
+        }
+        img:hover {
+            cursor: pointer;
+        }
+    }
+    .username-date-follow {
+        display: flex;
+        flex-direction: column;
+        .username-follow {
+            font-size: 20px;
+            color: rgb(66, 60, 60);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            .username:hover {
+                text-decoration: underline;
+                text-decoration-thickness: 1.5px;
+                cursor: pointer;
+            }
+            .follow {
+                color: rgb(95, 95, 220);
+                font-size: 18px;
+            }
+            .follow:hover {
+                cursor: pointer;
+                text-decoration: underline;
+                text-decoration-thickness: 1.5px;
+            }
+        }
+        .date {
+            font-size: 15px;
+            color: rgb(152, 141, 141);
+        }
+        .date:hover {
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-thickness: 1.5px ;
+        }
+    }
+}
+
+.caption {
+    padding: 5px 10px;
+}
+
+.image {
+    img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.likes-comments-shares {
+    padding: 0px 10px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: gray;
+    .likes {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .likes:hover {
+        cursor: pointer;
+    }
+    .likes p:hover {
+        text-decoration: underline;
+    }
+    .comments-shares {
+        display: flex;
+        gap: 20px;
+        .comments:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .shares:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
