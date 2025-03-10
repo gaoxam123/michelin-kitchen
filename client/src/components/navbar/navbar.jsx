@@ -1,5 +1,6 @@
 import classNames from "classnames/bind"
 import styles from './navbar.module.css'
+import Menu from './Menu'
 import ProfileListItem from "../ProfileListItem"
 
 const cls = classNames.bind(styles)
@@ -8,6 +9,8 @@ import { useState } from "react"
 import { Search, Person, Chat, Notifications, Close } from "@mui/icons-material"
 import Tippy from "@tippyjs/react/headless"
 import Popper from '../Popper'
+
+const currentUser = null;
 
 function Navbar() {
 
@@ -37,8 +40,8 @@ function Navbar() {
           render={attrs => (
             <div className={cls("search-result")} tabIndex="-1" {...attrs}>
               <Popper>
-                {searchResults.map(profile => (
-                  <ProfileListItem profileImage={profile.imgSrc} displayName={profile.name} />
+                {searchResults.map((profile, index) => (
+                  <ProfileListItem key={index} profileImage={profile.imgSrc} displayName={profile.name} />
                 ))}
               </Popper>
             </div>
@@ -56,25 +59,66 @@ function Navbar() {
         </Tippy>
       </div>
       <div className={cls("navbar-right")}>
-        <div className={cls("navbar-links")}>
-          <span className={cls("navbar-link")}>Homepage</span>
-          <span className={cls("navbar-link")}>Timeline</span>
-        </div>
-        <div className={cls("navbar-icons")}>
-          <div className={cls("navbar-icon-item")}>
-            <Person />
-            <span className={cls("navbar-icon-badge")}>1</span>
-          </div>
-          <div className={cls("navbar-icon-item")}>
-            <Chat />
-            <span className={cls("navbar-icon-badge")}>1</span>
-          </div>
-          <div className={cls("navbar-icon-item")}>
-            <Notifications />
-            <span className={cls("navbar-icon-badge")}>1</span>
-          </div>
-        </div>
-        <img src="profile_pics.jpg" alt="" className={cls("navbar-img")} />
+        {currentUser ? (
+          <>
+            <div className={cls("navbar-links")}>
+              <span className={cls("navbar-link")}>Homepage</span>
+              <span className={cls("navbar-link")}>Timeline</span>
+            </div>
+            <div className={cls("navbar-icons")}>
+              <div className={cls("navbar-icon-item")}>
+                <Person />
+                <span className={cls("navbar-icon-badge")}>1</span>
+              </div>
+              <div className={cls("navbar-icon-item")}>
+                <Chat />
+                <span className={cls("navbar-icon-badge")}>1</span>
+              </div>
+              <div className={cls("navbar-icon-item")}>
+                <Notifications />
+                <span className={cls("navbar-icon-badge")}>1</span>
+              </div>
+            </div>
+            <img src="profile_pics.jpg" alt="" className={cls("navbar-img")} />
+          </>
+        ) : (
+          <>
+            <button>LOGIN</button>
+            <button>SIGNUP</button>
+          </>
+        )}
+        <Menu items={
+          [
+            {
+              icon: null,
+              title: "Language",
+              children:
+                [
+                  {
+                    icon: null,
+                    title: "Back",
+                    back: true
+                  },
+                  {
+                    icon: null,
+                    title: "English"
+                  },
+                  {
+                    icon: null,
+                    title: "Tiếng Việt"
+                  },
+                  {
+                    icon: null,
+                    title: "Deutsch"
+                  }
+                ]
+            },
+            {
+              icon: null,
+              title: "Settings",
+              href: "/settings"
+            }
+          ]} />
       </div>
     </div>
   )

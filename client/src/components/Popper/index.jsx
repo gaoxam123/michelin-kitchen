@@ -3,8 +3,8 @@ import styles from "./Popper.module.css";
 
 const cls = classNames.bind(styles);
 
-function Popper({ children }) {
-    return <div className={cls("popper")}>{children}</div>;
+function Popper({ children, props }) {
+    return <div className={cls("popper")} {...props}>{children}</div>;
 }
 
 export default Popper;

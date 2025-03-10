@@ -1,0 +1,12 @@
+.item {
+    color: black;
+    padding: 10pt;
+    border-radius: 8pt;
+    cursor: pointer;
+    text-decoration: none !important;
+    display: block;
+}
+
+.item:hover {
+    background-color: #F1F1F1;
+}
