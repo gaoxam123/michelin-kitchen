@@ -44,6 +44,7 @@ function Menu({ items }) {
                     </Popper>
                 </div>
             )}
+            onHidden={() => setHistory(prev => prev.slice(0, 1))}
         >
             <div className={cls("random")}>
                 <MenuIcon />

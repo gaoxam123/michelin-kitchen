@@ -2,6 +2,7 @@ import classNames from "classnames/bind"
 import styles from './navbar.module.css'
 import Menu from './Menu'
 import ProfileListItem from "../ProfileListItem"
+import CustomButton from "../CustomButton"
 
 const cls = classNames.bind(styles)
 
@@ -83,8 +84,8 @@ function Navbar() {
           </>
         ) : (
           <>
-            <button>LOGIN</button>
-            <button>SIGNUP</button>
+            <CustomButton text="Log in"></CustomButton>
+            <CustomButton text="Sign up"></CustomButton>
           </>
         )}
         <Menu items={

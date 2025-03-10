@@ -3,11 +3,13 @@ import styles from './CustomButton.module.css'
 
 const cls = classNames.bind(styles)
 
-export default function CustomButton({ icon = null, text = null}) {
+export default function CustomButton({ icon = null, text = null }) {
     const Icon = icon
-    return <div className={cls("wrapper")}>
-        <div className={cls("button")}>
-            {icon !== null && <Icon/>} {text !== null && text}
+    return (
+        <div className={cls("wrapper")}>
+            <div className={cls("button")}>
+                {icon !== null && <Icon />} {text !== null && text}
+            </div>
         </div>
-    </div>
+    )
 }
