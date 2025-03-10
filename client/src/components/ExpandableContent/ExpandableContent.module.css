@@ -1,0 +1,13 @@
+.expandButton {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 110px;
+    border-radius: 10px;
+}
+
+.expandButton:active {
+    background-color: lightgray;
+}
