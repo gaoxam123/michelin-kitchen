@@ -1,33 +1,16 @@
 import classNames from "classnames/bind"
 import styles from './navbar.module.css'
 import Menu from './Menu'
-import ProfileListItem from "../ProfileListItem"
 import CustomButton from "../CustomButton"
+import SearchBar from "../SearchBar"
 
 const cls = classNames.bind(styles)
 
-import { useState } from "react"
-import { Search, Person, Chat, Notifications, Close } from "@mui/icons-material"
-import Tippy from "@tippyjs/react/headless"
-import Popper from '../Popper'
+import { Person, Chat, Notifications } from "@mui/icons-material"
 
 const currentUser = null
 
 function Navbar() {
-
-  const [inputFocus, setInputFocus] = useState(false)
-
-  // TODO: dummy results for front end; setSearchResults should fetch results from database
-  const [searchResults, setSearchResults] = useState([
-    {
-      imgSrc: "profile_pics.jpg",
-      name: "dummy1"
-    },
-    {
-      imgSrc: "profile_pics.jpg",
-      name: "dummy2"
-    }
-  ])
 
   return (
     <div className={cls("navbar-container")}>
@@ -35,29 +18,7 @@ function Navbar() {
         <span className={cls("logo")}>MichelinKitchen</span>
       </div>
       <div className={cls("navbar-center")}>
-        <Tippy
-          interactive
-          visible={inputFocus && searchResults.length > 0}
-          render={attrs => (
-            <div className={cls("search-result")} tabIndex="-1" {...attrs}>
-              <Popper>
-                {searchResults.map((profile, index) => (
-                  <ProfileListItem key={index} profileImage={profile.imgSrc} displayName={profile.name} />
-                ))}
-              </Popper>
-            </div>
-          )}
-        >
-          <div className={cls("searchbar")}>
-            <input placeholder="Search for?" className={cls("search-input")} onFocus={() => setInputFocus(true)} onBlur={() => setInputFocus(false)} />
-            <button className={cls("clear-input")}>
-              <Close />
-            </button>
-            <button className={cls("search-btn")}>
-              <Search />
-            </button>
-          </div>
-        </Tippy>
+        <SearchBar placeholder="Search" />
       </div>
       <div className={cls("navbar-right")}>
         {currentUser ? (
