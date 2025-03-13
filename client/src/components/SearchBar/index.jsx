@@ -1,3 +1,5 @@
+import request from "../../utils/request"
+
 import Tippy from "@tippyjs/react/headless"
 import Popper from '../Popper'
 import ProfileListItem from "../ProfileListItem"
@@ -10,9 +12,6 @@ import useDebounce from "../../hooks/useDebounce"
 
 import classNames from "classnames/bind"
 import styles from './SearchBar.module.css'
-
-// TODO: Change API
-const SEARCH_API = "https://dummyjson.com/users/search"
 
 const cls = classNames.bind(styles)
 
@@ -33,9 +32,16 @@ function SearchBar({ placeholder }) {
         const query = encodeURIComponent(searchValueDebounce.trim())
 
         if (query) {
-            fetch(`${SEARCH_API}?q=${query}`)
-                .then(res => res.json())
-                .then(res => setSearchResults(res.users))
+            const fetchAPI = async () => {
+                const result = await request
+                    .get('search', {
+                        params: {
+                            q: query
+                        }
+                    });
+                setSearchResults(result.data.users)
+            }
+            fetchAPI();
         } else {
             setSearchResults([])
         }
@@ -59,6 +65,7 @@ function SearchBar({ placeholder }) {
                                 profileImage={user.image}
                                 displayName={`${user.firstName} ${user.lastName}`}
                                 to={`/user/${user.id}`}
+                                onClick={() => setShowSearchResults(false)}
                             />
                         ))}
                     </Popper>

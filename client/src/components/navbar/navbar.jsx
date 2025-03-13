@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import classNames from "classnames/bind"
 import styles from './navbar.module.css'
 import Menu from './Menu'
@@ -15,7 +17,7 @@ function Navbar() {
   return (
     <div className={cls("navbar-container")}>
       <div className={cls("navbar-left")}>
-        <span className={cls("logo")}>MichelinKitchen</span>
+        <Link className={cls("logo")} to="/">MichelinKitchen</Link>
       </div>
       <div className={cls("navbar-center")}>
         <SearchBar placeholder="Search" />
