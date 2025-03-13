@@ -1,4 +1,4 @@
-import Feed from '../../components/feed/feed'
+import Feed from '../../components/Feed'
 import Rightbar from '../../components/rightbar/rightbar'
 import Leftbar from '../../components/leftbar/leftbar'
 import "./homepage.css"

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import configRoutes from "../../config/routes"
 
 import classNames from "classnames/bind"
 import styles from './navbar.module.css'
@@ -17,7 +18,7 @@ function Navbar() {
   return (
     <div className={cls("navbar-container")}>
       <div className={cls("navbar-left")}>
-        <Link className={cls("logo")} to="/">MichelinKitchen</Link>
+        <Link className={cls("logo")} to={configRoutes.home}>MichelinKitchen</Link>
       </div>
       <div className={cls("navbar-center")}>
         <SearchBar placeholder="Search" />

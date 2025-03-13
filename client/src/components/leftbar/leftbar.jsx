@@ -64,6 +64,10 @@ export default function Leftbar() {
                 <div className="leftbar-friend-list">
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                 </div>
             </div>
         </div>

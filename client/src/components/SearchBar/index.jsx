@@ -1,4 +1,5 @@
 import request from "../../utils/request"
+import configRoutes from "../../config/routes"
 
 import Tippy from "@tippyjs/react/headless"
 import Popper from '../Popper'
@@ -64,7 +65,7 @@ function SearchBar({ placeholder }) {
                                 key={user.id}
                                 profileImage={user.image}
                                 displayName={`${user.firstName} ${user.lastName}`}
-                                to={`/user/${user.id}`}
+                                to={`${configRoutes.profile}${user.id}`}
                                 onClick={() => setShowSearchResults(false)}
                             />
                         ))}
