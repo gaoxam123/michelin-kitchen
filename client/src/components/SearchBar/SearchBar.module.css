@@ -33,10 +33,15 @@
     border: none;
     outline: none;
     border-radius: 20px;
+    color: #868686;
 
     &:hover {
         background-color: #f1f1f1;
         cursor: pointer;
+    }
+
+    &.active {
+        color: black;
     }
 }
 

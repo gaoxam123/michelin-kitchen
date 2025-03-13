@@ -3,7 +3,7 @@ import { Search, Close } from "@mui/icons-material"
 import Popper from '../Popper'
 import ProfileListItem from "../ProfileListItem"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 import classNames from "classnames/bind"
 import styles from './SearchBar.module.css'
@@ -12,6 +12,9 @@ const cls = classNames.bind(styles)
 
 function SearchBar({ placeholder }) {
     const [inputFocus, setInputFocus] = useState(false)
+    const [searchValue, setSearchValue] = useState('')
+
+    const inputRef = useRef()
 
     // TODO: dummy results for front end; setSearchResults should fetch results from database
     const [searchResults, setSearchResults] = useState([
@@ -28,7 +31,7 @@ function SearchBar({ placeholder }) {
     return (
         <Tippy
             interactive
-            visible={inputFocus && searchResults.length > 0}
+            visible={inputFocus && searchValue && searchResults.length > 0}
             render={attrs => (
                 <div className={cls("search-result")} tabIndex="-1" {...attrs}>
                     <Popper>
@@ -40,11 +43,29 @@ function SearchBar({ placeholder }) {
             )}
         >
             <div className={cls("searchbar")}>
-                <input placeholder={placeholder} className={cls("search-input")} onFocus={() => setInputFocus(true)} onBlur={() => setInputFocus(false)} />
-                <button className={cls("clear-input")}>
-                    <Close />
-                </button>
-                <button className={cls("search-btn")}>
+                <input
+                    ref={inputRef}
+                    placeholder={placeholder}
+                    className={cls("search-input")}
+                    onFocus={() => setInputFocus(true)}
+                    onBlur={() => setInputFocus(false)}
+                    value={searchValue}
+                    onChange={(event) => setSearchValue(event.target.value)}
+                />
+                {searchValue &&
+                    <button
+                        className={cls("clear-input")}
+                        onClick={() => {
+                            setSearchValue('')
+                            inputRef.current.focus()
+                        }}
+                    >
+                        <Close />
+                    </button>
+                }
+                <button className={cls("search-btn", {
+                    active: searchValue
+                })}>
                     <Search />
                 </button>
             </div>
