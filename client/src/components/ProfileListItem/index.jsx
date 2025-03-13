@@ -3,7 +3,7 @@ import styles from './ProfileListItem.module.css'
 
 const cls = classNames.bind(styles)
 
-function ProfileListItem({ profileImage, displayName }) {
+function ProfileListItem({ profileImage = "profile_pics.jpg", displayName = "NONAME" }) {
     return <div className={cls("wrapper")}>
         <img src={profileImage} className={cls("profile-picture")} />
         <span className={cls("display-name")}>{displayName}</span>

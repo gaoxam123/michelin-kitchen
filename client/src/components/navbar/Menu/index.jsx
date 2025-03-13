@@ -1,10 +1,12 @@
-import classNames from "classnames/bind";
-import styles from "./Menu.module.css"
 import Tippy from "@tippyjs/react/headless";
 import Popper from "../../Popper";
-import MenuIcon from '@mui/icons-material/Menu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
+
+import classNames from "classnames/bind";
+import styles from "./Menu.module.css"
 
 const cls = classNames.bind(styles)
 
@@ -51,7 +53,7 @@ function Menu({ items }) {
             onClickOutside={() => setActivate(false)}
         >
             <div className={cls("menu-btn")} onClick={() => setActivate(!activate)}>
-                <MenuIcon />
+                <FontAwesomeIcon icon={faEllipsisVertical} />
             </div>
         </Tippy>
     )
