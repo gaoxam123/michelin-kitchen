@@ -5,7 +5,6 @@ import Popper from "../../Popper";
 import MenuIcon from '@mui/icons-material/Menu';
 
 import React, { useState, useEffect, useRef } from "react";
-import { SettingsAccessibility } from "@mui/icons-material";
 
 const cls = classNames.bind(styles)
 
@@ -14,21 +13,13 @@ function Menu({ items }) {
     const currentList = history[history.length - 1]
     const [activate, setActivate] = useState(false)
 
-    const menuRef = useRef()
-
-    useEffect(() => {
-        const handleClickOutside = (event) => setActivate(menuRef.current && menuRef.current.contains(event.target))
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [])
-
     return (
         <Tippy
             interactive
             visible={activate}
             placement="bottom-end"
             render={attrs => (
-                <div className={cls("menu-list")} tabIndex="-1" {...attrs} ref={menuRef}>
+                <div className={cls("menu-list")} tabIndex="-1" {...attrs}>
                     <Popper>
                         {currentList.map((item, index) => {
                             let Component = 'div'
@@ -57,8 +48,9 @@ function Menu({ items }) {
                 </div>
             )}
             onHidden={() => setHistory(prev => prev.slice(0, 1))}
+            onClickOutside={() => setActivate(false)}
         >
-            <div className={cls("menu-btn")} onClick={() => setActivate(true)}>
+            <div className={cls("menu-btn")} onClick={() => setActivate(!activate)}>
                 <MenuIcon />
             </div>
         </Tippy>
