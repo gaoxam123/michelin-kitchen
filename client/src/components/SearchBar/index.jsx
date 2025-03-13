@@ -52,6 +52,7 @@ function SearchBar({ placeholder }) {
                                 key={user.id}
                                 profileImage={user.image}
                                 displayName={`${user.firstName} ${user.lastName}`}
+                                to={`/user/${user.id}`}
                             />
                         ))}
                     </Popper>

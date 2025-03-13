@@ -2,10 +2,12 @@
     display: flex;
     align-items: center;
     border-radius: 8pt;
+    text-decoration: none;
+    color: black;
 }
 
 .wrapper:hover {
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     cursor: pointer;
 }
 
