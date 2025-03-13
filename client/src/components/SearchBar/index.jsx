@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faCircleXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 import { useState, useRef, useEffect } from "react"
+import useDebounce from "../../hooks/useDebounce"
 
 import classNames from "classnames/bind"
 import styles from './SearchBar.module.css'
@@ -16,15 +17,20 @@ const SEARCH_API = "https://dummyjson.com/users/search"
 const cls = classNames.bind(styles)
 
 function SearchBar({ placeholder }) {
+    // delay time before sending search request
+    const SEARCH_BAR_DELAY = 200
+
     const [loading, setLoading] = useState(false)
     const [showSearchResults, setShowSearchResults] = useState(false)
     const [searchValue, setSearchValue] = useState('')
     const [searchResults, setSearchResults] = useState([])
 
+    const searchValueDebounce = useDebounce(searchValue, SEARCH_BAR_DELAY)
+
     useEffect(() => {
         setLoading(true)
 
-        const query = encodeURIComponent(searchValue.trim())
+        const query = encodeURIComponent(searchValueDebounce.trim())
 
         if (query) {
             fetch(`${SEARCH_API}?q=${query}`)
@@ -35,7 +41,7 @@ function SearchBar({ placeholder }) {
         }
 
         setTimeout(() => setLoading(false), 200)
-    }, [searchValue])
+    }, [searchValueDebounce])
 
     const inputRef = useRef()
 
