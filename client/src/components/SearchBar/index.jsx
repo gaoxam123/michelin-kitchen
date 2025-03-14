@@ -25,12 +25,14 @@ function SearchBar({ placeholder }) {
     const [searchValue, setSearchValue] = useState('')
     const [searchResults, setSearchResults] = useState([])
 
+    const inputRef = useRef()
+
     const searchValueDebounce = useDebounce(searchValue, SEARCH_BAR_DELAY)
 
     useEffect(() => {
         setLoading(true)
 
-        const query = encodeURIComponent(searchValueDebounce.trim())
+        const query = searchValueDebounce.trim()
 
         if (query) {
             const fetchAPI = async () => {
@@ -49,8 +51,6 @@ function SearchBar({ placeholder }) {
 
         setTimeout(() => setLoading(false), 200)
     }, [searchValueDebounce])
-
-    const inputRef = useRef()
 
     return (
         <Tippy

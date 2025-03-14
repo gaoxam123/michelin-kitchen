@@ -43,21 +43,23 @@ export default function Leftbar() {
         },
     ]
 
+    const renderItems = (items) => items.map(
+        item => {
+            const Component = Icons[item.icon]
+            return (
+                <li key={item.icon} className="leftbar-list-item">
+                    <Component className="leftbar-icon" />
+                    <span className="leftbar-list-item-text">{item.title}</span>
+                </li>
+            )
+        }
+    )
+
     return (
         <div className="leftbar">
             <div className="leftbar-wrapper">
                 <ul className="leftbar-list">
-                    {items.map(
-                        item => {
-                            const Component = Icons[item.icon]
-                            return (
-                                <li key={item.icon} className="leftbar-list-item">
-                                    <Component className="leftbar-icon" />
-                                    <span className="leftbar-list-item-text">{item.title}</span>
-                                </li>
-                            )
-                        }
-                    )}
+                    {renderItems(items)}
                 </ul>
                 <Button className="leftbar-button">Show more</Button>
                 <hr className="leftbar-hr" />
