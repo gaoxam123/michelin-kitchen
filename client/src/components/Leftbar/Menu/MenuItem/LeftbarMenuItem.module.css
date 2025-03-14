@@ -1,4 +1,9 @@
 .menu-item {
     text-decoration: none;
     transition: background-color ease-in-out 200ms;
+    color: black;
+
+    &.active {
+        color: #306dad;
+    }
 }

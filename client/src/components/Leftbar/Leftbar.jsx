@@ -28,10 +28,12 @@ export default function Leftbar() {
         {
             title: 'Groups',
             icon: <FontAwesomeIcon icon={faUserGroup} />,
+            to: "/TODO"
         },
         {
             title: 'Bookmarks',
             icon: <FontAwesomeIcon icon={faBookmark} />,
+            to: "TODO"
         },
     ]
 

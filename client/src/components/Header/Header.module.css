@@ -1,7 +1,7 @@
 .header-container {
     height: 50px;
     width: 100%;
-    background-color: lightblue;
+    background-color: #306dad;
     display: flex;
     align-items: center;
     position: fixed;

@@ -79,10 +79,10 @@ function Header() {
         ) : (
           <>
             <div className={cls('login-btn')}>
-              <CustomButton text="Log In"></CustomButton>
+              <CustomButton title="Log In"></CustomButton>
             </div>
             <div className={cls('signup-btn')}>
-              <CustomButton text="Sign Up"></CustomButton>
+              <CustomButton title="Sign Up"></CustomButton>
             </div>
           </>
         )}
