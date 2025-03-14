@@ -42,7 +42,7 @@ function Header() {
   {
     icon: null,
     title: "Settings",
-    href: "/settings"
+    to: "/settings"
   }]
 
   return (

@@ -2,6 +2,7 @@ import Tippy from "@tippyjs/react/headless";
 import Popper from "../../Popper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 
 import React, { useState } from "react";
 
@@ -26,13 +27,13 @@ function Menu({ items }) {
                         {currentList.map((item, index) => {
                             let Component = 'div'
 
-                            if (!!item.href) {
+                            if (!!item.to) {
                                 // TODO use router
-                                Component = 'a'
+                                Component = Link
                             }
 
                             return (
-                                <Component key={index} className={cls('item')} href={item.href} onClick={() => {
+                                <Component key={index} className={cls('item')} to={item.to} onClick={() => {
                                     if (!!item.children) {
                                         setHistory(prev => [...prev, item.children])
                                     } else if (item.back) {
