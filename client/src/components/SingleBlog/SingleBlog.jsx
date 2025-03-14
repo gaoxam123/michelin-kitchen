@@ -1,7 +1,7 @@
 import classNames from "classnames/bind"
 import styles from './SingleBlog.module.css'
 import CustomButton from '../CustomButton'
-import { ChatBubbleOutline, SendOutlined, ThumbUpOffAlt } from "@mui/icons-material"
+import { ChatBubbleOutline, SendOutlined, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material"
 import ExpandableContent from "../ExpandableContent"
 import { formatDate } from '../../utils/formatDate'
 const cls = classNames.bind(styles)
@@ -46,9 +46,9 @@ export default function SingleBlog({ username = "unknown", postDate = Date.now()
             </div>
         </div>
         <div className={cls("buttons")}>
-            <CustomButton icon={ThumbUpOffAlt} text="Like" />
-            <CustomButton icon={ChatBubbleOutline} text={"Comment"} />
-            <CustomButton icon={SendOutlined} text={"Share"} />
+            <CustomButton icon={<ThumbUpAlt />} title="Like" />
+            <CustomButton icon={<ChatBubbleOutline />} title={"Comment"} />
+            <CustomButton icon={<SendOutlined />} title={"Share"} />
         </div>
     </div>
 }

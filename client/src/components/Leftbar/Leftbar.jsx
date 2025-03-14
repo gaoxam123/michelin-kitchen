@@ -1,70 +1,53 @@
+import Menu from "./Menu"
+import MenuItem from "./Menu/MenuItem"
+
+import configRoutes from "../../config/routes"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHouse, faUserGroup, faBookmark, faGear } from '@fortawesome/free-solid-svg-icons'
+
 import { Button } from "@mui/material"
 import ProfileListItem from "../ProfileListItem"
-import { Bookmark, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline, Event } from "@mui/icons-material"
 
 import styles from "./Leftbar.module.css"
 import classNames from "classnames/bind"
 
 const cls = classNames.bind(styles)
 
-const Icons = {
-    Bookmark, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline, Event
-}
-
 export default function Leftbar() {
     const items = [
         {
-            icon: 'RssFeed',
             title: 'Feed',
+            icon: <FontAwesomeIcon icon={faHouse} />,
+            to: configRoutes.home,
         },
         {
-            icon: 'PlayCircleFilledOutlined',
-            title: 'Video',
+            title: 'Settings',
+            icon: <FontAwesomeIcon icon={faGear} />,
+            to: configRoutes.settings,
         },
         {
-            icon: 'Group',
             title: 'Groups',
+            icon: <FontAwesomeIcon icon={faUserGroup} />,
         },
         {
-            icon: 'Bookmark',
             title: 'Bookmarks',
-        },
-        {
-            icon: 'HelpOutline',
-            title: 'QA',
-        },
-        {
-            icon: 'WorkOutline',
-            title: 'Work',
-        },
-        {
-            icon: 'Event',
-            title: 'Events',
-        },
-        {
-            icon: 'School',
-            title: 'Courses',
+            icon: <FontAwesomeIcon icon={faBookmark} />,
         },
     ]
 
-    const renderItems = (items) => items.map(
-        item => {
-            const Component = Icons[item.icon]
-            return (
-                <li key={item.icon} className={cls("leftbar-list-item")}>
-                    <Component className={cls("leftbar-icon")} />
-                    <span className={cls("leftbar-list-item-text")}>{item.title}</span>
-                </li>
-            )
-        }
+    const renderMenu = () => (
+        <Menu>
+            {items.map(item => (
+                <MenuItem key={item.title} title={item.title} to={item.to} icon={item.icon} />
+            ))}
+        </Menu>
     )
 
     return (
         <div className={cls("leftbar")}>
             <div className={cls("leftbar-wrapper")}>
-                <ul className={cls("leftbar-list")}>
-                    {renderItems(items)}
-                </ul>
+                {renderMenu()}
+
                 <Button className={cls("leftbar-button")}>Show more</Button>
                 <hr className={cls("leftbar-hr")} />
                 <div className={cls("leftbar-friend-list")}>

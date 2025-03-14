@@ -10,8 +10,6 @@ export default function Feed() {
     <div className={cls("feed")}>
       <div className={cls("feed-wrapper")}>
         <SingleBlog />
-        <SingleBlog />
-        <SingleBlog />
       </div>
     </div>
   )
