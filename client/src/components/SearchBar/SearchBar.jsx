@@ -65,7 +65,7 @@ function SearchBar({ placeholder }) {
                                 key={user.id}
                                 profileImage={user.image}
                                 displayName={`${user.firstName} ${user.lastName}`}
-                                to={`${configRoutes.profile}${user.id}`}
+                                to={`${configRoutes.profile}/${user.id}`}
                                 onClick={() => setShowSearchResults(false)}
                             />
                         ))}
