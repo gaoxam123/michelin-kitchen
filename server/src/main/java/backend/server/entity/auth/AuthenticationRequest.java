@@ -1,4 +1,4 @@
-package backend.server.models.auth;
+package backend.server.entity.auth;
 
 public class AuthenticationRequest {
 }
