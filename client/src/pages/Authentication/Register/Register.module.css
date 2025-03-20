@@ -1,0 +1,33 @@
+.wrapper {
+    flex: 5.5;
+    overflow-y: scroll;
+}
+
+.container {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #acdee7;
+    border-radius: 10px;
+    height: 90%;
+    width: 500px;
+}
+
+.to-login {
+    margin-top: 10px;
+}
+
+.link-and-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
