@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import configRoutes from "../../config/routes"
 
 import classNames from "classnames/bind"
@@ -14,6 +14,8 @@ import { Person, Chat, Notifications } from "@mui/icons-material"
 const currentUser = null
 
 function Header() {
+
+  const navigate = useNavigate()
 
   const menuItems = [{
     icon: null,
@@ -79,10 +81,10 @@ function Header() {
         ) : (
           <>
             <div className={cls('login-btn')}>
-              <CustomButton title="Log In"></CustomButton>
+              <CustomButton title="Log In" onClick={() => navigate("/login")}/>
             </div>
             <div className={cls('signup-btn')}>
-              <CustomButton title="Sign Up"></CustomButton>
+              <CustomButton title="Sign Up" onClick={() => navigate("/register")}/>
             </div>
           </>
         )}

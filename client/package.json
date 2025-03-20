@@ -17,12 +17,15 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^6.3.0",
     "@mui/material": "^6.3.0",
+    "@reduxjs/toolkit": "^2.6.1",
     "@tippyjs/react": "^4.2.6",
     "axios": "^1.8.3",
     "classnames": "^2.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.1"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.1.1",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

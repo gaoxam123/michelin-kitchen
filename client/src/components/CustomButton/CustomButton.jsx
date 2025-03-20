@@ -3,9 +3,13 @@ import styles from './CustomButton.module.css'
 
 const cls = classNames.bind(styles)
 
-export default function CustomButton({ icon, title = "NoText", active = false }) {
+export default function CustomButton({ icon = null, title = "NoText", active = false, onClick = null, isButton = false, ...props }) {
+    let Component = 'div'
+    if (isButton) {
+        Component = 'button'
+    }
     return (
-        <div className={cls("wrapper")}>
+        <Component className={cls("wrapper")} onClick={onClick} {...props}>
             <div className={cls("button", { active: active })}>
                 {icon && (
                     <div className={cls("icon")}>
@@ -14,6 +18,6 @@ export default function CustomButton({ icon, title = "NoText", active = false })
                 )}
                 <span className={cls("title")}>{title}</span>
             </div>
-        </div>
+        </Component>
     )
 }
