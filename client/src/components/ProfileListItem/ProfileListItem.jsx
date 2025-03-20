@@ -6,13 +6,13 @@ import styles from './ProfileListItem.module.css'
 const cls = classNames.bind(styles)
 
 function ProfileListItem({
-    profileImage = "profile_pics.jpg",
+    profileImage,
     displayName = "NONAME",
     to,
     onClick
 }) {
     return <Link to={to} className={cls("wrapper")} onClick={onClick}>
-        <img src={profileImage} className={cls("profile-picture")} />
+        <img src={profileImage || "profile_pics.jpg"} className={cls("profile-picture")} />
         <span className={cls("display-name")}>{displayName}</span>
     </Link>
 }

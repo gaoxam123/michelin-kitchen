@@ -37,12 +37,13 @@ function SearchBar({ placeholder }) {
         if (query) {
             const fetchAPI = async () => {
                 const result = await request
-                    .get('search', {
+                    .get('/search', {
                         params: {
-                            q: query
+                            name: query,
+                            less: true
                         }
                     });
-                setSearchResults(result.data.users)
+                setSearchResults(result.data)
             }
             fetchAPI();
         } else {
@@ -59,11 +60,10 @@ function SearchBar({ placeholder }) {
             render={attrs => (
                 <div className={cls("search-result")} tabIndex="-1" {...attrs}>
                     <Popper>
-                        {/* TODO: slice(0, 10) -> API returning maximum 10 accounts */}
-                        {searchResults.slice(0, 10).map((user) => (
+                        {searchResults.map((user) => (
                             <ProfileListItem
                                 key={user.id}
-                                profileImage={user.image}
+                                profileImage={user.image && `data:${user.imageType};base64,${user.image}`}
                                 displayName={`${user.firstName} ${user.lastName}`}
                                 to={`${configRoutes.profile}/${user.id}`}
                                 onClick={() => setShowSearchResults(false)}
