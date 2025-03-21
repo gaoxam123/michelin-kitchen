@@ -3,6 +3,7 @@ import styles from './Register.module.css'
 
 const cls = classNames.bind(styles)
 
+import configRoutes from "../../../config/routes"
 import { useInput } from "../../../hooks/useInput"
 import { isEmail, isNotEmpty, hasMinLength } from "../../../utils/validation"
 import Input from "../../../components/Input"
@@ -57,7 +58,7 @@ export default function Register() {
             return
         }
 
-        navigate("/")
+        navigate(configRoutes.home)
     }
 
     const input = [

@@ -3,6 +3,7 @@ import styles from './Login.module.css'
 
 const cls = classNames.bind(styles)
 
+import configRoutes from "../../../config/routes"
 import { useInput } from "../../../hooks/useInput"
 import { isNotEmpty, hasMinLength } from "../../../utils/validation"
 import Input from "../../../components/Input"
@@ -46,7 +47,7 @@ export default function Register() {
             return
         }
 
-        navigate("/")
+        navigate(configRoutes.home)
     }
 
     const input = [
@@ -84,9 +85,9 @@ export default function Register() {
                         <div className={cls("to-register")}><span><Link to="/register">No account yet?</Link></span></div>
                         <div className={cls("buttons")}>
                             {/* <button type="button" onClick={handleReset} className="register-login-button">Reset</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Reset" onClick={handleReset} isButton={true} />
+                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Reset" onClick={handleReset} isButton={true} />
                             {/* <button className="register-login-button">Submit</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Submit" isButton={true} />
+                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Submit" isButton={true} />
                         </div>
                     </div>
                 </Form>

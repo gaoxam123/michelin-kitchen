@@ -81,10 +81,10 @@ function Header() {
         ) : (
           <>
             <div className={cls('login-btn')}>
-              <CustomButton title="Log In" onClick={() => navigate("/login")}/>
+              <CustomButton title="Log In" onClick={() => navigate(configRoutes.login)}/>
             </div>
             <div className={cls('signup-btn')}>
-              <CustomButton title="Sign Up" onClick={() => navigate("/register")}/>
+              <CustomButton title="Sign Up" onClick={() => navigate(configRoutes.register)}/>
             </div>
           </>
         )}
