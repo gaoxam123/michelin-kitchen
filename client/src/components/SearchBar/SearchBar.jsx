@@ -39,7 +39,7 @@ function SearchBar({ placeholder }) {
                 const result = await request
                     .get('/search', {
                         params: {
-                            name: query,
+                            q: query,
                             less: true
                         }
                     });
