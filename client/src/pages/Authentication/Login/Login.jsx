@@ -10,15 +10,20 @@ import { PermIdentity, Password } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
 import Form from "../../../components/Form"
 import CustomButton from "../../../components/CustomButton/CustomButton"
+import { userActions } from "../../../store/user"
+import { useDispatch } from 'react-redux'
+import request from "../../../utils/request"
 
 export default function Register() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const {
         value: enteredUsername,
         handleValueChange: handleUsernameChange,
         handleValueBlur: handleUsernameBlur,
-        hasError: usernameInvalid,
+        showErrorMessage: showErrorMessageUsername,
+        hasError: usernameHasError,
         setEnteredValue: setEnteredUsername,
         setDidEditValue: setDidEditUsername
     } = useInput('', isNotEmpty)
@@ -27,7 +32,8 @@ export default function Register() {
         value: enteredPassword,
         handleValueChange: handlePasswordChange,
         handleValueBlur: handlePasswordBlur,
-        hasError: passwordInvalid,
+        showErrorMessage: showErrorMessagePassword,
+        hasError: passwordHasError,
         setEnteredValue: setEnteredPassword,
         setDidEditValue: setDidEditPassword
     } = useInput('', (v) => hasMinLength(v, 8))
@@ -42,10 +48,25 @@ export default function Register() {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if (usernameInvalid || passwordInvalid) {
+        if (usernameHasError || passwordHasError) {
             return
         }
 
+        const post = async () => {
+            const response = await request.post('/', {
+                username: enteredUsername,
+                password: enteredPassword
+            })
+            if (!response.ok()) {
+                throw new Error('Login failed')
+            }
+        }
+        post()
+        // TODO: retrieve data from backend to dispatch
+        dispatch(userActions.login({
+            username: enteredUsername,
+            id: 1
+        }))
         navigate("/")
     }
 
@@ -60,7 +81,7 @@ export default function Register() {
             onChange={handleUsernameChange}
             value={enteredUsername}
             icon={<PermIdentity />}
-            error={usernameInvalid && "Username is required"}
+            error={showErrorMessageUsername && "Username is required"}
             onBlur={handleUsernameBlur} />,
         <Input
             key={2}
@@ -72,7 +93,7 @@ export default function Register() {
             onChange={handlePasswordChange}
             value={enteredPassword}
             icon={<Password />}
-            error={passwordInvalid && "Password must contain at least 8 characters"}
+            error={showErrorMessagePassword && "Password must contain at least 8 characters"}
             onBlur={handlePasswordBlur} />,
     ]
 
@@ -84,9 +105,9 @@ export default function Register() {
                         <div className={cls("to-register")}><span><Link to="/register">No account yet?</Link></span></div>
                         <div className={cls("buttons")}>
                             {/* <button type="button" onClick={handleReset} className="register-login-button">Reset</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Reset" onClick={handleReset} isButton={true} />
+                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Reset" onClick={handleReset} isButton={true} />
                             {/* <button className="register-login-button">Submit</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Submit" isButton={true} />
+                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Submit" isButton={true} />
                         </div>
                     </div>
                 </Form>

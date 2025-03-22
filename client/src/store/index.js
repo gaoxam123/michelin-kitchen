@@ -1,9 +1,8 @@
-import { createStore } from 'redux'
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from './user'
 
-const counterReducer = (state, action) => {
-    return state
-}
-
-const store = createStore(counterReducer)
+const store = configureStore({
+    reducer: { user: userReducer}
+})
 
 export default store
