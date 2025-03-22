@@ -1,11 +1,11 @@
 package backend.server.service.auth;
 
-import backend.server.entity.auth.AuthenticationRequest;
-import backend.server.entity.auth.AuthenticationResponse;
-import backend.server.entity.auth.RegisterRequest;
+import backend.server.controller.auth.AuthenticationRequest;
+import backend.server.controller.auth.AuthenticationResponse;
+import backend.server.controller.auth.RegisterRequest;
 
 public interface AuthenticationService {
-    AuthenticationResponse register(RegisterRequest request);
+    String register(RegisterRequest request);
 
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    String authenticate(AuthenticationRequest request);
 }

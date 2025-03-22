@@ -4,23 +4,16 @@ import backend.server.dao.user.UserRepository;
 import backend.server.entity.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     @Override
     public List<User> findAll() {
@@ -43,20 +36,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findByUsername(String name) {
-        return entityManager.createQuery(
-                        "SELECT u FROM User u WHERE u.username LIKE :name"
-                ).setParameter("name", "%" + name + "%")
-                .getResultList();
+    public List<User> findUsers(String query) {
+        return userRepository.findAllByUsernameContainingOrFirstNameContainingOrLastNameContaining(query, query, query);
     }
 
     @Override
-    public List<User> findByUsernameTopTen(String name) {
-        return entityManager.createQuery(
-                        "SELECT u FROM User u WHERE u.username LIKE :name"
-                ).setParameter("name", "%" + name + "%")
-                .setMaxResults(10)
-                .getResultList();
+    public List<User> findUsersTopTen(String query) {
+        return userRepository.findTop10ByUsernameContainingOrFirstNameContainingOrLastNameContaining(query, query, query);
     }
-
 }

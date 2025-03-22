@@ -2,9 +2,9 @@ package backend.server.service.auth;
 
 import backend.server.config.JwtService;
 import backend.server.dao.user.UserRepository;
-import backend.server.entity.auth.AuthenticationRequest;
-import backend.server.entity.auth.AuthenticationResponse;
-import backend.server.entity.auth.RegisterRequest;
+import backend.server.controller.auth.AuthenticationRequest;
+import backend.server.controller.auth.AuthenticationResponse;
+import backend.server.controller.auth.RegisterRequest;
 import backend.server.entity.user.Role;
 import backend.server.entity.user.User;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public String register(RegisterRequest request) {
         User user = User
                 .builder()
                 .username(request.getUsername())
@@ -32,14 +32,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
-        return AuthenticationResponse
-                .builder()
-                .token(jwtService.generateToken(user))
-                .build();
+        return jwtService.generateToken(user);
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -48,9 +45,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
         User user = userRepository.findByUsername(request.getUsername()).get();
-        return AuthenticationResponse
-                .builder()
-                .token(jwtService.generateToken(user))
-                .build();
+        return jwtService.generateToken(user);
     }
 }

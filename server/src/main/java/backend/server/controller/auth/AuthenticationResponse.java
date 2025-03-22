@@ -1,4 +1,4 @@
-package backend.server.entity.auth;
+package backend.server.controller.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

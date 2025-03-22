@@ -3,7 +3,7 @@ package backend.server.controller.user;
 import backend.server.controller.RestException;
 import backend.server.entity.user.User;
 import backend.server.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,13 +16,9 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class UserController {
-    private UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @GetMapping("/users")
     public List<User> findAll() {
@@ -101,12 +97,12 @@ public class UserController {
     }
 
     @GetMapping("/users/search")
-    public List<User> findByUsername(
-            @RequestParam String name,
+    public List<User> searchUsers(
+            @RequestParam String q,
             @RequestParam(required = false) boolean less) {
         if (less) {
-            return userService.findByUsernameTopTen(name);
+            return userService.findUsersTopTen(q);
         }
-        return userService.findByUsername(name);
+        return userService.findUsers(q);
     }
 }

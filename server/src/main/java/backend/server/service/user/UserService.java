@@ -14,7 +14,7 @@ public interface UserService {
 
     void deleteById(UUID id);
 
-    List<User> findByUsername(String name);
+    List<User> findUsers(String query);
 
-    List<User> findByUsernameTopTen(String name);
+    List<User> findUsersTopTen(String query);
 }
