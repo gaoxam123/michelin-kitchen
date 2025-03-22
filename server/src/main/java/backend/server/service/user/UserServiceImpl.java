@@ -1,6 +1,6 @@
 package backend.server.service.user;
 
-import backend.server.dao.UserRepository;
+import backend.server.dao.user.UserRepository;
 import backend.server.entity.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

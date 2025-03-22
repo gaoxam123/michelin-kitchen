@@ -15,3 +15,7 @@ spring:
   data:
     rest:
       base-path: /api
+
+security:
+  jwt:
+    encryption_secret: ${JWT_ENCRYPTION_SECRET}
