@@ -19,7 +19,8 @@ export function useInput(defaultValue, validateFunc) {
         value: enteredValue,
         handleValueChange,
         handleValueBlur,
-        hasError: didEditValue && valueInvalid,
+        showErrorMessage: didEditValue && valueInvalid,
+        hasError: valueInvalid,
         setEnteredValue,
         setDidEditValue
     }

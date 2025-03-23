@@ -3,6 +3,8 @@ import Popper from "../../Popper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
+import { userActions } from '../../../store/user'
+import { useDispatch, useSelector } from "react-redux";
 
 import React, { useState } from "react";
 
@@ -15,6 +17,8 @@ function Menu({ items }) {
     const [history, setHistory] = useState([items])
     const currentList = history[history.length - 1]
     const [activate, setActivate] = useState(false)
+    const dispatch = useDispatch()
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
 
     return (
         <Tippy
@@ -25,6 +29,9 @@ function Menu({ items }) {
                 <div className={cls("menu-list")} tabIndex="-1" {...attrs}>
                     <Popper>
                         {currentList.map((item, index) => {
+                            if (!isAuthenticated && item.to === '/') {
+                                return null
+                            }
                             let Component = 'div'
 
                             if (!!item.to) {
@@ -38,6 +45,8 @@ function Menu({ items }) {
                                         setHistory(prev => [...prev, item.children])
                                     } else if (item.back) {
                                         setHistory(prev => prev.slice(0, -1))
+                                    } else if (item.to === '/') {
+                                        dispatch(userActions.logout())
                                     } else {
                                         // TODO
                                         alert('clicked on ' + item.title)

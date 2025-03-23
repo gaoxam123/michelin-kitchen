@@ -6,16 +6,17 @@ import styles from './Header.module.css'
 import Menu from './Menu'
 import CustomButton from "../CustomButton"
 import SearchBar from "../SearchBar"
+import { useSelector } from 'react-redux'
+
 
 const cls = classNames.bind(styles)
 
 import { Person, Chat, Notifications } from "@mui/icons-material"
 
-const currentUser = null
-
 function Header() {
 
   const navigate = useNavigate()
+  const currentUser = useSelector((state) => state.user)
 
   const menuItems = [{
     icon: null,
@@ -45,6 +46,11 @@ function Header() {
     icon: null,
     title: "Settings",
     to: "/settings"
+  },
+  {
+    icon: null,
+    title: "Logout",
+    to: "/"
   }]
 
   return (
@@ -56,7 +62,7 @@ function Header() {
         <SearchBar placeholder="Search" />
       </div>
       <div className={cls("header-right")}>
-        {currentUser ? (
+        {currentUser.isAuthenticated ? (
           <>
             <div className={cls("header-links")}>
               <span className={cls("header-link")}>Homepage</span>
@@ -76,7 +82,7 @@ function Header() {
                 <span className={cls("header-icon-badge")}>1</span>
               </div>
             </div>
-            <img src="profile_pics.jpg" alt="" className={cls("header-img")} />
+            <img src={currentUser.profilePicture || "profile_pics.jpg"} alt="" className={cls("header-img")} onClick={() => navigate(`/profile/${currentUser.id}`)}/>
           </>
         ) : (
           <>
@@ -95,3 +101,8 @@ function Header() {
 }
 
 export default Header
+
+// (<>
+//   <div className={cls('login-btn')} onClick={() => dispatch(userActions.logout())}>
+//     <CustomButton title='Log Out'/>  
+//   </div></>)

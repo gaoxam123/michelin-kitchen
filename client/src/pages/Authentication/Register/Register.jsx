@@ -11,15 +11,19 @@ import { PermIdentity, Password, Email } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
 import Form from "../../../components/Form"
 import CustomButton from "../../../components/CustomButton/CustomButton"
+import { userActions } from "../../../store/user"
+import { useDispatch } from 'react-redux'
 
 export default function Register() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const {
         value: enteredUsername,
         handleValueChange: handleUsernameChange,
         handleValueBlur: handleUsernameBlur,
-        hasError: usernameInvalid,
+        showErrorMessage: showErrorMessageUsername,
+        hasError: usernameHasError,
         setEnteredValue: setEnteredUsername,
         setDidEditValue: setDidEditUsername
     } = useInput('', isNotEmpty)
@@ -28,7 +32,8 @@ export default function Register() {
         value: enteredPassword,
         handleValueChange: handlePasswordChange,
         handleValueBlur: handlePasswordBlur,
-        hasError: passwordInvalid,
+        showErrorMessage: showErrorMessagePassword,
+        hasError: passwordHasError,
         setEnteredValue: setEnteredPassword,
         setDidEditValue: setDidEditPassword
     } = useInput('', (v) => hasMinLength(v, 8))
@@ -37,7 +42,8 @@ export default function Register() {
         value: enteredEmail,
         handleValueChange: handleEmailChange,
         handleValueBlur: handleEmailBlur,
-        hasError: emailInvalid,
+        showErrorMessage: showErrorMessageEmail,
+        hasError: emailHasError,
         setEnteredValue: setEnteredEmail,
         setDidEditValue: setDidEditEmail
     } = useInput('', isEmail)
@@ -54,11 +60,15 @@ export default function Register() {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if (usernameInvalid || passwordInvalid || emailInvalid) {
+        if (usernameHasError || passwordHasError || emailHasError) {
             return
         }
 
         navigate(configRoutes.home)
+        dispatch(userActions.login({
+            username: enteredUsername
+        }))
+        navigate("/")
     }
 
     const input = [
@@ -72,7 +82,7 @@ export default function Register() {
             onChange={handleUsernameChange}
             value={enteredUsername}
             icon={<PermIdentity />}
-            error={usernameInvalid && "Username is required"}
+            error={showErrorMessageUsername && "Username is required"}
             onBlur={handleUsernameBlur} />,
         <Input
             key={2}
@@ -84,7 +94,7 @@ export default function Register() {
             onChange={handlePasswordChange}
             value={enteredPassword}
             icon={<Password />}
-            error={passwordInvalid && "Password must contain at least 8 characters"}
+            error={showErrorMessagePassword && "Password must contain at least 8 characters"}
             onBlur={handlePasswordBlur} />,
         <Input
             key={3}
@@ -96,7 +106,7 @@ export default function Register() {
             onChange={handleEmailChange}
             value={enteredEmail}
             icon={<Email />}
-            error={emailInvalid && "Invalid email"}
+            error={showErrorMessageEmail && "Invalid email"}
             onBlur={handleEmailBlur} />
     ]
 

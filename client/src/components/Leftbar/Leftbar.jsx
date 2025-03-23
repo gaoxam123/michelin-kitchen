@@ -7,6 +7,7 @@ import { faHouse, faUserGroup, faBookmark, faGear } from '@fortawesome/free-soli
 
 import { Button } from "@mui/material"
 import ProfileListItem from "../ProfileListItem"
+import { useSelector } from "react-redux"
 
 import styles from "./Leftbar.module.css"
 import classNames from "classnames/bind"
@@ -14,6 +15,8 @@ import classNames from "classnames/bind"
 const cls = classNames.bind(styles)
 
 export default function Leftbar() {
+    const following = useSelector((state) => state.user.following)
+
     const items = [
         {
             title: 'Feed',
@@ -53,12 +56,13 @@ export default function Leftbar() {
                 <Button className={cls("leftbar-button")}>Show more</Button>
                 <hr className={cls("leftbar-hr")} />
                 <div className={cls("leftbar-friend-list")}>
+                    {following.map((user) => <ProfileListItem key={user.id} profileImage={user.profilePicture || "profile_pics.jpg"} displayName={user.username}/>)}
+                    {/* <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
                     <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
+                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" /> */}
                 </div>
             </div>
         </div>

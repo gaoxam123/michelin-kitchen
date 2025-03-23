@@ -5,11 +5,11 @@ import styles from "./Feed.module.css"
 
 const cls = classNames.bind(styles)
 
-export default function Feed() {
+export default function Feed({ blogs = [<SingleBlog key={1}/>] }) {
   return (
     <div className={cls("feed")}>
       <div className={cls("feed-wrapper")}>
-        <SingleBlog />
+        {blogs.map((blog) => blog)}
       </div>
     </div>
   )
