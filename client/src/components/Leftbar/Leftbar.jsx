@@ -56,13 +56,16 @@ export default function Leftbar() {
                 <Button className={cls("leftbar-button")}>Show more</Button>
                 <hr className={cls("leftbar-hr")} />
                 <div className={cls("leftbar-friend-list")}>
-                    {following.map((user) => <ProfileListItem key={user.id} profileImage={user.profilePicture || "profile_pics.jpg"} displayName={user.username}/>)}
-                    {/* <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" />
-                    <ProfileListItem profileImage={"profile_pics.jpg"} displayName="Name" /> */}
+                    {following.map(
+                        (user) =>
+                            <ProfileListItem key={user.id}
+                                profileImage={user.profilePicture || "profile_pics.jpg"}
+                                displayName={user.username}
+                            />
+                    )}
+                    <ProfileListItem profileImage={"TODO: Add image"} displayName="Name" />
+                    <ProfileListItem profileImage={"TODO: Add image"} displayName="Name" />
+                    <ProfileListItem profileImage={"TODO: Add image"} displayName="Name" />
                 </div>
             </div>
         </div>

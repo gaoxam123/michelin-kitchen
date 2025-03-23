@@ -1,10 +1,14 @@
-import classNames from "classnames/bind"
-import styles from './SingleBlog.module.css'
-import CustomButton from '../CustomButton'
 import { ChatBubbleOutline, SendOutlined, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material"
+import { useState } from "react"
+
+import CustomButton from '../CustomButton'
 import ExpandableContent from "../ExpandableContent"
 import { formatDate } from '../../utils/formatDate'
-import { useState } from "react"
+import Image from "../Image"
+
+import classNames from "classnames/bind"
+import styles from './SingleBlog.module.css'
+
 const cls = classNames.bind(styles)
 
 export default function SingleBlog({ username = "unknown", postDate = Date.now(), userFollowed = true, numLikes = 0, numComments = 0, numShares = 0 }) {
@@ -28,7 +32,7 @@ export default function SingleBlog({ username = "unknown", postDate = Date.now()
     return <div className={cls("wrapper")}>
         <div className={cls("header")}>
             <div className={cls("profile-picture")}>
-                <img src="profile_pics.jpg" />
+                <Image src="TODO: Add image"/>
             </div>
             <div className={cls("username-date-follow")}>
                 <div className={cls("username-follow")}>
@@ -48,7 +52,7 @@ export default function SingleBlog({ username = "unknown", postDate = Date.now()
             <ExpandableContent text={"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt ea aliquam minima ipsam aut vero alias quam dicta accusamus. Minus quis quia tempora doloribus. Consectetur adipisci facere ad tempore ratione!Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur repellendus nostrum accusantium asperiores, facere, suscipit libero explicabo quia qui ex aspernatur, ea harum voluptatem. A repellat sapiente aliquam corporis totam?"} />
         </div>
         <div className={cls("image")}>
-            <img src="profile_pics.jpg" />
+            <Image src="TODO: add image" />
         </div>
         <div className={cls("likes-comments-shares")}>
             <div className={cls("likes")}>

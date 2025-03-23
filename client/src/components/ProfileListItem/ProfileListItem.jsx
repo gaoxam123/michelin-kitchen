@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 
+import Image from "../Image"
+
 import classNames from "classnames/bind"
 import styles from './ProfileListItem.module.css'
 
@@ -12,7 +14,7 @@ function ProfileListItem({
     onClick
 }) {
     return <Link to={to} className={cls("wrapper")} onClick={onClick}>
-        <img src={profileImage || "profile_pics.jpg"} className={cls("profile-picture")} />
+        <Image src={profileImage} className={cls("profile-picture")} />
         <span className={cls("display-name")}>{displayName}</span>
     </Link>
 }
