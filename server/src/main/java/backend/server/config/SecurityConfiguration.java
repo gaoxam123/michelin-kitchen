@@ -27,6 +27,7 @@ public class SecurityConfiguration {
                         request -> request
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/error").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(

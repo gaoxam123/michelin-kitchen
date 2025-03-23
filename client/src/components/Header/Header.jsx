@@ -1,62 +1,63 @@
-import { Link, useNavigate } from 'react-router-dom'
-import configRoutes from "../../config/routes"
+import { Link, useNavigate } from "react-router-dom";
+import configRoutes from "../../config/routes";
 
-import classNames from "classnames/bind"
-import styles from './Header.module.css'
-import Menu from './Menu'
-import CustomButton from "../CustomButton"
-import SearchBar from "../SearchBar"
-import { useSelector } from 'react-redux'
+import classNames from "classnames/bind";
+import styles from "./Header.module.css";
+import Menu from "./Menu";
+import CustomButton from "../CustomButton";
+import SearchBar from "../SearchBar";
+import { useSelector } from "react-redux";
 
+const cls = classNames.bind(styles);
 
-const cls = classNames.bind(styles)
-
-import { Person, Chat, Notifications } from "@mui/icons-material"
+import { Person, Chat, Notifications } from "@mui/icons-material";
 
 function Header() {
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user);
 
-  const navigate = useNavigate()
-  const currentUser = useSelector((state) => state.user)
-
-  const menuItems = [{
-    icon: null,
-    title: "Language",
-    children:
-      [
+  const menuItems = [
+    {
+      icon: null,
+      title: "Language",
+      children: [
         {
           icon: null,
           title: "Back",
-          back: true
+          back: true,
         },
         {
           icon: null,
-          title: "English"
+          title: "English",
         },
         {
           icon: null,
-          title: "Tiếng Việt"
+          title: "Tiếng Việt",
         },
         {
           icon: null,
-          title: "Deutsch"
-        }
-      ]
-  },
-  {
-    icon: null,
-    title: "Settings",
-    to: "/settings"
-  },
-  {
-    icon: null,
-    title: "Logout",
-    to: "/"
-  }]
+          title: "Deutsch",
+        },
+      ],
+    },
+    {
+      icon: null,
+      title: "Settings",
+      to: "/settings",
+    },
+    {
+      icon: null,
+      title: "Logout",
+      to: "/",
+    },
+  ];
 
   return (
     <div className={cls("header-container")}>
       <div className={cls("header-left")}>
-        <Link className={cls("logo")} to={configRoutes.home}>MichelinKitchen</Link>
+        <Link className={cls("logo")} to={configRoutes.home}>
+          MichelinKitchen
+        </Link>
       </div>
       <div className={cls("header-center")}>
         <SearchBar placeholder="Search" />
@@ -82,27 +83,38 @@ function Header() {
                 <span className={cls("header-icon-badge")}>1</span>
               </div>
             </div>
-            <img src={currentUser.profilePicture || "profile_pics.jpg"} alt="" className={cls("header-img")} onClick={() => navigate(`/profile/${currentUser.id}`)}/>
+            <img
+              src={currentUser.profilePicture || "profile_pics.jpg"}
+              alt=""
+              className={cls("header-img")}
+              onClick={() => navigate(`/profile/${currentUser.id}`)}
+            />
           </>
         ) : (
           <>
-            <div className={cls('login-btn')}>
-              <CustomButton title="Log In" onClick={() => navigate(configRoutes.login)}/>
+            <div className={cls("login-btn")}>
+              <CustomButton
+                title="Log In"
+                onClick={() => navigate(configRoutes.login)}
+              />
             </div>
-            <div className={cls('signup-btn')}>
-              <CustomButton title="Sign Up" onClick={() => navigate(configRoutes.register)}/>
+            <div className={cls("signup-btn")}>
+              <CustomButton
+                title="Sign Up"
+                onClick={() => navigate(configRoutes.register)}
+              />
             </div>
           </>
         )}
         <Menu items={menuItems} />
       </div>
     </div>
-  )
+  );
 }
 
-export default Header
+export default Header;
 
 // (<>
 //   <div className={cls('login-btn')} onClick={() => dispatch(userActions.logout())}>
-//     <CustomButton title='Log Out'/>  
+//     <CustomButton title='Log Out'/>
 //   </div></>)

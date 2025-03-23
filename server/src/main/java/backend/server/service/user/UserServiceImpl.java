@@ -1,10 +1,12 @@
 package backend.server.service.user;
 
+import backend.server.controller.RestException;
 import backend.server.dao.user.UserRepository;
 import backend.server.entity.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +24,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(UUID id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No user with id " + id + " found!",
+                        System.currentTimeMillis()
+                )
+        );
     }
 
     @Override
@@ -32,6 +40,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(UUID id) {
+        userRepository.findById(id).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No user with id " + id + " found!",
+                        System.currentTimeMillis()
+                )
+        );
         userRepository.deleteById(id);
     }
 

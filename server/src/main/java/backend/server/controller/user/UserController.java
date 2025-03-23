@@ -27,23 +27,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User findById(@PathVariable UUID id) {
-        User user = userService.findById(id);
-
-        if (user == null) {
-            throw new RestException(
-                    HttpStatus.NOT_FOUND,
-                    "No user with id " + id + " found!",
-                    System.currentTimeMillis()
-            );
-        }
-
-        return user;
-    }
-
-    @PostMapping("/users")
-    public User addUser(@RequestBody User user) {
-        user.setId(null);
-        return userService.save(user);
+        return userService.findById(id);
     }
 
     @PutMapping("/users")
@@ -53,30 +37,14 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable UUID id) {
-        if (userService.findById(id) == null) {
-            throw new RestException(
-                    HttpStatus.NOT_FOUND,
-                    "No user with id " + id + " found!",
-                    System.currentTimeMillis()
-            );
-        }
-
         userService.deleteById(id);
 
         return "Deleted user with id " + id;
     }
 
     @PostMapping("/users/{id}/edit-profile-picture")
-    public String addProfilePicture(@RequestParam MultipartFile image, @PathVariable UUID id) {
+    public String editProfilePicture(@RequestParam MultipartFile image, @PathVariable UUID id) {
         User user = userService.findById(id);
-
-        if (user == null) {
-            throw new RestException(
-                    HttpStatus.NOT_FOUND,
-                    "No user with id " + id + " found!",
-                    System.currentTimeMillis()
-            );
-        }
 
         try {
             user.setImageName(image.getName());
