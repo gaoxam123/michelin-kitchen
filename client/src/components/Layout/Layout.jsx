@@ -13,7 +13,9 @@ function Layout({ children }) {
       <Header />
       <div className={cls("layout-content")}>
         <Leftbar />
-        {children}
+        <div className={cls("main-block")}>
+          {children}
+        </div>
         <Rightbar />
       </div>
     </div>

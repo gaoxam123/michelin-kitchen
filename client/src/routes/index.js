@@ -4,16 +4,16 @@ import Settings from "../pages/Settings";
 
 import configRoutes from "../config/routes";
 import Register from "../pages/Authentication/Register";
-import Login from "../pages/Authentication/Login"
-import CommentForm from "../pages/CommentForm";
+import Login from "../pages/Authentication/Login";
+import BlogWithComment from "../pages/BlogWithComment/BlogWithComment";
 
 export const publicRoutes = [
-    { path: configRoutes.home, component: Homepage },
-    { path: `${configRoutes.profile}/:id`, component: UserPage },
-    { path: configRoutes.settings, component: Settings },
-    { path: configRoutes.register, component: Register },
-    { path: configRoutes.login, component: Login },
-    { path: configRoutes.commets, component: CommentForm}
-    // Demo for other (possible) paths with different Layout
-    // { path: '/search', component: Search, layout: SearchLayout }
+  { path: configRoutes.home, component: Homepage },
+  { path: `${configRoutes.profile}/:id`, component: UserPage },
+  { path: configRoutes.settings, component: Settings },
+  { path: configRoutes.register, component: Register },
+  { path: configRoutes.login, component: Login },
+  { path: `${configRoutes.blog}/:id`, component: BlogWithComment },
+  // Demo for other (possible) paths with different Layout
+  // { path: '/search', component: Search, layout: SearchLayout }
 ];
