@@ -6,7 +6,7 @@ const cls = classNames.bind(styles)
 export default function Form({ handleSubmit, action, method, inputs = [], title, children, ...props }) {
     return <div className={cls("wrapper")} {...props}>
         <div className={cls("img-container")}>
-            <img src="profile_pics.jpg"/>
+            <Image src="TODO: add image" />
         </div>
         <div className={cls("text")}><h2>{title}</h2></div>
         <div className={cls("form-container")}>
