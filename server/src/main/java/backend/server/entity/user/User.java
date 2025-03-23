@@ -1,5 +1,7 @@
 package backend.server.entity.user;
 
+import backend.server.entity.blog.Blog;
+import backend.server.entity.like.Like;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +30,10 @@ public class User implements UserDetails {
     @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "second_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")
@@ -49,6 +51,12 @@ public class User implements UserDetails {
 
     @Column(name = "image_type")
     private String imageType;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Blog> blogs;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
