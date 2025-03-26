@@ -1,6 +1,8 @@
 package backend.server.entity.user;
 
 import backend.server.entity.blog.Blog;
+import backend.server.entity.comment.Comment;
+import backend.server.entity.follow.Follow;
 import backend.server.entity.like.Like;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,6 +59,15 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followed; // users who this user follows
+
+    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers; // users who follow this user
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

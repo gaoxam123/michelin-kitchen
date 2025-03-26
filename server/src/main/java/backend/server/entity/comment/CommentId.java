@@ -1,4 +1,4 @@
-package backend.server.entity.follow;
+package backend.server.entity.comment;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -15,21 +15,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-public class FollowId implements Serializable {
-    private UUID followerId;
-    private UUID followedId;
+public class CommentId implements Serializable {
+    private UUID userId;
+    private UUID blogId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FollowId that = (FollowId) o;
-        return Objects.equals(followerId, that.followerId) &&
-                Objects.equals(followedId, that.followedId);
+        CommentId that = (CommentId) o;
+        return Objects.equals(userId, that.userId) &&
+                Objects.equals(blogId, that.blogId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(followedId, followerId);
+        return Objects.hash(userId, blogId);
     }
 }

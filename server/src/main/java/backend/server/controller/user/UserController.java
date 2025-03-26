@@ -1,7 +1,9 @@
 package backend.server.controller.user;
 
 import backend.server.controller.RestException;
+import backend.server.entity.blog.Blog;
 import backend.server.entity.user.User;
+import backend.server.service.blog.BlogService;
 import backend.server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final BlogService blogService;
 
     @GetMapping("/users")
     public List<User> findAll() {
@@ -30,9 +33,17 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @GetMapping("/users/{id}/blogs")
+    public List<Blog> findAllBlogs(@PathVariable UUID id, @RequestParam(name = "sort", required = false) String sort) {
+        if (sort != null) {
+            return blogService.findBlogsByUserIdSortByPostDate(id);
+        }
+        return blogService.findBlogsByUserId(id);
+    }
+
     @PutMapping("/users")
-    public User editUser(@RequestBody User user) {
-        return userService.save(user);
+    public User editUser(@RequestBody UserRequest userRequest) {
+        return userService.update(userRequest);
     }
 
     @DeleteMapping("/users/{id}")
