@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Entity
 @Data
 @Builder
@@ -17,9 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "comments")
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @EmbeddedId
+    private CommentId id;
 
     @Column(name = "comment_date")
     private Long commentDate;
@@ -28,10 +25,12 @@ public class Comment {
     private String content;
 
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @MapsId("blogId")
     @JoinColumn(name = "blog_id", nullable = false)
     private Blog blog;
 }

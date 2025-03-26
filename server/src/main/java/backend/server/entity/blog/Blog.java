@@ -1,5 +1,6 @@
 package backend.server.entity.blog;
 
+import backend.server.entity.comment.Comment;
 import backend.server.entity.like.Like;
 import backend.server.entity.user.User;
 import jakarta.persistence.*;
@@ -27,12 +28,24 @@ public class Blog {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
+    @Column(name = "image_name")
+    private String imageName;
+
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private String image;
+
+    @Column(name = "image_type")
+    private String imageType;
+
     @Column(name = "content")
     private String content;
 
     @Column(name = "blog_date")
-    private Long postDate;
+    private Long blogDate;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 }

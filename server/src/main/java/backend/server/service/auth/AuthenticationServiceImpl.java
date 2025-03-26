@@ -10,6 +10,7 @@ import backend.server.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 )
         );
 
-        User user = userRepository.findByUsername(request.getUsername()).get();
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return jwtService.generateToken(user);
     }
 }

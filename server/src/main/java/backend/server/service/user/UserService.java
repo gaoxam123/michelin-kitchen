@@ -1,5 +1,6 @@
 package backend.server.service.user;
 
+import backend.server.controller.user.UserRequest;
 import backend.server.entity.user.User;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public interface UserService {
     User findById(UUID id);
 
     User save(User user);
+
+    User update(UserRequest userRequest);
 
     void deleteById(UUID id);
 
