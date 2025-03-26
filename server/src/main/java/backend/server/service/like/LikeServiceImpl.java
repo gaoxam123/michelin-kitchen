@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
@@ -26,7 +28,7 @@ public class LikeServiceImpl implements LikeService {
         Blog blog = blogRepository.findById(likeId.getBlogId()).orElseThrow(
                 () -> new RestException(
                         HttpStatus.NOT_FOUND,
-                        "No user with id " + likeRequest.getBlogId() + " found!",
+                        "No blog with id " + likeRequest.getBlogId() + " found!",
                         System.currentTimeMillis()
                 )
         );
@@ -38,11 +40,39 @@ public class LikeServiceImpl implements LikeService {
                 )
         );
         Like like = new Like(likeId, blog, user);
+        blog.getLikes().add(like);
+        user.getLikes().add(like);
         likeRepository.save(like);
     }
 
     @Override
-    public void removeLike(LikeRequest likeId) {
-        likeRepository.deleteById(new LikeId(likeId.getUserId(), likeId.getBlogId()));
+    public void removeLike(LikeRequest likeRequest) {
+        LikeId likeId = new LikeId(likeRequest.getUserId(), likeRequest.getBlogId());
+        likeRepository.findById(likeId).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No like with id " + likeId + " found!",
+                        System.currentTimeMillis()
+                )
+        );
+        Blog blog = blogRepository.findById(likeId.getBlogId()).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No blog with id " + likeRequest.getBlogId() + " found!",
+                        System.currentTimeMillis()
+                )
+        );
+        User user = userRepository.findById(likeRequest.getUserId()).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No user with id " + likeRequest.getUserId() + " found!",
+                        System.currentTimeMillis()
+                )
+        );
+        List<Like> blogLikes = blog.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
+        List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
+        blog.setLikes(blogLikes);
+        user.setLikes(userLikes);
+        likeRepository.deleteById(likeId);
     }
 }

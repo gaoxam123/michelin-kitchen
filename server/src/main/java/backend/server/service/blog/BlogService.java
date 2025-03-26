@@ -15,11 +15,11 @@ public interface BlogService {
 
     List<Blog> findBlogsByUserIdSortByPostDate(UUID userId);
 
+    List<Blog> findBlogsLikedByUserId(UUID userId);
+
     Blog findById(UUID id);
 
     void deleteById(UUID id);
 
-    void save(Blog blog);
-
-    void createAndUpdate(BlogRequest blogRequest);
+    void createAndUpdate(BlogRequest blogRequest, boolean create);
 }

@@ -17,8 +17,8 @@ public class BlogController {
     private final BlogService blogService;
 
     @GetMapping("/blogs")
-    public List<Blog> getAllBlogs(@RequestParam(name = "sort", required = false) String sort) {
-        if (sort != null) {
+    public List<Blog> getAllBlogs(@RequestParam(name = "sort", required = false) boolean sort) {
+        if (sort) {
             return blogService.findAllSortByPostDate();
         }
         return blogService.findAll();
@@ -36,12 +36,12 @@ public class BlogController {
 
     @PutMapping("/blogs")
     public void updateBlog(@RequestBody BlogRequest blogRequest) {
-        blogService.createAndUpdate(blogRequest);
+        blogService.createAndUpdate(blogRequest, false);
     }
 
     @PostMapping("/blogs")
-    public void createBlog(@RequestParam("image") MultipartFile image, @RequestParam("userId") UUID userId, @RequestParam("content") String content, @RequestParam("blogDate") Long blogDate) {
-        BlogRequest blogRequest = new BlogRequest(content, userId, blogDate, image);
-        blogService.createAndUpdate(blogRequest);
+    public void createBlog(@RequestParam("image") MultipartFile image, @RequestParam("userId") UUID userId, @RequestParam("content") String content, @RequestParam("blogDate") Long blogDate, @RequestParam("id") UUID id) {
+        BlogRequest blogRequest = new BlogRequest(content, userId, id, blogDate, image);
+        blogService.createAndUpdate(blogRequest, true);
     }
 }
