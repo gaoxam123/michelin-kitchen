@@ -7,5 +7,5 @@ import backend.server.entity.follow.FollowId;
 public interface FollowService {
     void addFollow(FollowRequest followRequest);
 
-    void removeFollow(FollowId followId);
+    void removeFollow(FollowRequest followRequest);
 }

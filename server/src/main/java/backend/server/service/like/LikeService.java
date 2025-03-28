@@ -5,5 +5,5 @@ import backend.server.controller.like.LikeRequest;
 public interface LikeService {
     void addLike(LikeRequest likeRequest);
 
-    void removeLike(LikeRequest likeId);
+    void removeLike(LikeRequest likeRequest);
 }

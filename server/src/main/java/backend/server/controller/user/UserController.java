@@ -34,7 +34,10 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/blogs")
-    public List<Blog> findAllBlogs(@PathVariable UUID id, @RequestParam(name = "sort", required = false) String sort) {
+    public List<Blog> findAllBlogs(@PathVariable UUID id, @RequestParam(name = "sort", required = false) String sort, @RequestParam(name = "like", required = false) String like) {
+        if (like != null) {
+            return blogService.findBlogsLikedByUserId(id);
+        }
         if (sort != null) {
             return blogService.findBlogsByUserIdSortByPostDate(id);
         }

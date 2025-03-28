@@ -15,6 +15,7 @@ import java.util.UUID;
 public class BlogRequest {
     private String content;
     private UUID userId;
+    private UUID id;
     private Long blogDate;
     private MultipartFile image;
 }

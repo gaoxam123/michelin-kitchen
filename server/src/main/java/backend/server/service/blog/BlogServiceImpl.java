@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.findById(id).orElseThrow(
                 () -> new RestException(
                         HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
+                        "No blog with id " + id + " found!",
                         System.currentTimeMillis()
                 )
         );
@@ -45,23 +46,28 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void deleteById(UUID id) {
-        blogRepository.findById(id).orElseThrow(
+        Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new RestException(
                         HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
+                        "No blog with id " + id + " found!",
                         System.currentTimeMillis()
                 )
         );
+        User user = userRepository.findById(blog.getUser().getId()).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No user with id " + blog.getUser().getId() + " found!",
+                        System.currentTimeMillis()
+                )
+        );
+        // update blog list of user after deleting
+        List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
+        user.setBlogs(updatedBlogList);
         blogRepository.deleteById(id);
     }
 
     @Override
-    public void save(Blog blog) {
-        blogRepository.save(blog);
-    }
-
-    @Override
-    public void createAndUpdate(BlogRequest blogRequest) {
+    public void createAndUpdate(BlogRequest blogRequest, boolean create) {
         UUID userId = blogRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new RestException(
@@ -82,7 +88,21 @@ public class BlogServiceImpl implements BlogService {
             blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
             blog.setImageType(image.getContentType());
 
-            blogRepository.save(blog);
+            if (!create) {
+                // set old id if updating and modify existing blog
+                blog.setId(blogRequest.getId());
+                List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
+                updatedBlogList.add(blog);
+                user.setBlogs(updatedBlogList);
+
+                blogRepository.save(blog);
+            }
+            else {
+                // add new blog
+                UUID blogId = blogRepository.save(blog).getId();
+                blog.setId(blogId);
+                user.getBlogs().add(blog);
+            }
         }
         catch (IOException e) {
             throw new RestException(
@@ -108,12 +128,23 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<Blog> findAllSortByPostDate() {
         String query = "SELECT b from Blog b ORDER BY b.blogDate DESC";
-        return entityManager.createQuery(query, Blog.class).getResultList();
+        return entityManager.createQuery(query, Blog.class)
+                            .getResultList();
     }
 
     @Override
     public List<Blog> findBlogsByUserIdSortByPostDate(UUID userId) {
         String query = "SELECT b from Blog b WHERE b.user.id = :userId ORDER BY b.blogDate DESC";
-        return entityManager.createQuery(query, Blog.class).setParameter("userId", userId).getResultList();
+        return entityManager.createQuery(query, Blog.class)
+                            .setParameter("userId", userId)
+                            .getResultList();
+    }
+
+    @Override
+    public List<Blog> findBlogsLikedByUserId(UUID userId) {
+        String query = "SELECT b from Blog b JOIN b.likes l WHERE l.user.id = :userId ORDER BY b.blogDate DESC";
+        return entityManager.createQuery(query, Blog.class)
+                            .setParameter("userId", userId)
+                            .getResultList();
     }
 }

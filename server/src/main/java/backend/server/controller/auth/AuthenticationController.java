@@ -1,13 +1,11 @@
 package backend.server.controller.auth;
 
 import backend.server.service.auth.AuthenticationService;
+import backend.server.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -40,6 +39,16 @@ public class AuthenticationController {
                         .build(),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyToken(@RequestParam("token") String token) {
+        return ResponseEntity.ok(authenticationService.verifyEmail(token));
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<String> resendVerification(@RequestParam("email") String email) {
+        return ResponseEntity.ok(authenticationService.resendVerificationEmail(email));
     }
 
 }

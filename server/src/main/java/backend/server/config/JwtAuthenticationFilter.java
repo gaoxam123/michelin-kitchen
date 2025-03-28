@@ -20,7 +20,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -31,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
+        String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
         if (authHeader == null || !authHeader.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
