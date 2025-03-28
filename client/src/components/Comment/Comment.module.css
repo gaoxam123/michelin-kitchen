@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.content {
+  background-color: #f2f2f2;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  max-width: 500px;
+}

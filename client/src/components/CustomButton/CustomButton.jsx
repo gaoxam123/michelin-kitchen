@@ -3,7 +3,7 @@ import styles from './CustomButton.module.css'
 
 const cls = classNames.bind(styles)
 
-export default function CustomButton({ icon = null, title = "NoText", active = false, onClick = null, isButton = false, ...props }) {
+export default function CustomButton({ icon, title = "NoText", active = false, onClick, isButton = false, ...props }) {
     let Component = 'div'
     if (isButton) {
         Component = 'button'

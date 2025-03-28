@@ -1,7 +1,6 @@
 .input-wrapper {
     display: flex;
     align-items: center;
-    gap: 5px;
     input {
         height: 2em;
         width: 25em;
@@ -11,7 +10,6 @@
 .input-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
 }
 
 .control-error {

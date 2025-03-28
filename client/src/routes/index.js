@@ -7,6 +7,10 @@ import Register from "../pages/Authentication/Register";
 import Login from "../pages/Authentication/Login";
 import BlogWithComment from "../pages/BlogWithComment/BlogWithComment";
 
+// Testing zone
+// TODO: Remove
+import CommentSection from "../components/CommentSection/CommentSection";
+
 export const publicRoutes = [
   { path: configRoutes.home, component: Homepage },
   { path: `${configRoutes.profile}/:id`, component: UserPage },
@@ -16,4 +20,8 @@ export const publicRoutes = [
   { path: `${configRoutes.blog}/:id`, component: BlogWithComment },
   // Demo for other (possible) paths with different Layout
   // { path: '/search', component: Search, layout: SearchLayout }
+
+// Testing zone
+// TODO: Remove
+  { path: "/test", component: CommentSection },
 ];

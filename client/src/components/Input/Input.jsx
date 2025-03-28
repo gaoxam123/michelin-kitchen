@@ -3,7 +3,7 @@ import styles from './Input.module.css'
 
 const cls = classNames.bind(styles)
 
-export default function Input({ componentType, id, error, icon = "", ...props }) {
+export default function Input({ componentType, id, error, icon = "", hideError, ...props }) {
     const ComponentType = componentType
     return (
         <div className={cls("input-container")}>
@@ -13,7 +13,13 @@ export default function Input({ componentType, id, error, icon = "", ...props })
                     {...props}
                     id={id} />
             </div>
-            <div className={cls("control-error")}><p style={{ display: error ? "block" : "none"}}>{error}</p></div>
+            {
+                hideError || (
+                    <div className={cls("control-error")}>
+                        <p style={{ display: error ? "block" : "none" }}>{error}</p>
+                    </div>
+                )
+            }
         </div>
     )
 }
