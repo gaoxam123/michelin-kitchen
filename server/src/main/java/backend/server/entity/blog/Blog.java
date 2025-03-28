@@ -23,7 +23,8 @@ import java.util.UUID;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
+    @NotNull
     private UUID id;
 
     @NotNull
