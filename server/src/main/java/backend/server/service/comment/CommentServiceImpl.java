@@ -9,6 +9,9 @@ import backend.server.entity.blog.Blog;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
 import backend.server.entity.user.User;
+import backend.server.service.blog.BlogService;
+import backend.server.service.email.EmailService;
+import backend.server.service.user.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +26,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
+    private final BlogService blogService;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -52,21 +56,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void createAndUpdateComment(CommentRequest commentRequest, boolean create) {
         UUID userId = commentRequest.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(userId);
         UUID blogId = commentRequest.getBlogId();
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No blog with id " + blogId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        Blog blog = blogService.findById(blogId);
         CommentId commentId = new CommentId(userId, blogId);
         Comment comment = Comment
                 .builder()
@@ -89,6 +81,26 @@ public class CommentServiceImpl implements CommentService {
         else {
             blog.getComments().add(comment);
             user.getComments().add(comment);
+
+            // notify users who commented on or own the blog
+            String subjectForOwner = blog.getUser().getUsername() + " commented on your blog";
+            String blogUrl = "http://localhost:8080/api/blogs/" + blog.getId();
+            String body = "Check it out at " + blogUrl;
+
+            if (!user.getId().equals(blog.getUser().getId())) {
+                // no email when comment on owned blogs
+                emailService.sendGeneralEmail(blog.getUser().getEmail(), subjectForOwner, body);
+            }
+
+            String subjectForOthers = blog.getUser().getUsername() + " commented on the blog that you are interested in";
+            List<User> others = userService
+                    .findUsersCommentedOnBlogByBlogId(blogId)
+                    .stream()
+                    .filter(u -> !u.getId().equals(userId))
+                    .toList();
+            for (User other : others) {
+                emailService.sendGeneralEmail(blog.getUser().getEmail(), subjectForOthers, body);
+            }
         }
         commentRepository.save(comment);
     }
@@ -103,21 +115,9 @@ public class CommentServiceImpl implements CommentService {
                 )
         );
         UUID blogId = commentId.getBlogId();
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No blog with id " + blogId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        Blog blog = blogService.findById(blogId);
         UUID userId = commentId.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(userId);
         List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         blog.setComments(blogComments);

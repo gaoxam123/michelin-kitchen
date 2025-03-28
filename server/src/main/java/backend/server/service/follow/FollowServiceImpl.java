@@ -3,10 +3,10 @@ package backend.server.service.follow;
 import backend.server.controller.RestException;
 import backend.server.controller.follow.FollowRequest;
 import backend.server.dao.follow.FollowRepository;
-import backend.server.dao.user.UserRepository;
 import backend.server.entity.follow.Follow;
 import backend.server.entity.follow.FollowId;
 import backend.server.entity.user.User;
+import backend.server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,24 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public void addFollow(FollowRequest followRequest) {
-        User follower = userRepository.findById(followRequest.getFollowerId()).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + followRequest.getFollowerId() + " found!",
-                        System.currentTimeMillis()
-                )
-        );
-        User followed = userRepository.findById(followRequest.getFollowedId()).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + followRequest.getFollowedId() + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+
+        if (followRequest.getFollowerId().equals(followRequest.getFollowedId())) {
+            throw new IllegalArgumentException("You can't follow yourself");
+        }
+
+        User follower = userService.findById(followRequest.getFollowerId());
+        User followed = userService.findById(followRequest.getFollowedId());
         FollowId followId = new FollowId(followRequest.getFollowerId(), followRequest.getFollowedId());
         Follow newFollow = new Follow(followId, follower, followed);
         follower.getFollowed().add(newFollow);
@@ -52,20 +45,10 @@ public class FollowServiceImpl implements FollowService {
                         System.currentTimeMillis()
                 )
         );
-        User follower = userRepository.findById(followRequest.getFollowerId()).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + followRequest.getFollowerId() + " found!",
-                        System.currentTimeMillis()
-                )
-        );
-        User followed = userRepository.findById(followRequest.getFollowedId()).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + followRequest.getFollowedId() + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+
+        User follower = userService.findById(followRequest.getFollowerId());
+        User followed = userService.findById(followRequest.getFollowedId());
+
         List<Follow> newFollowedList = follower.getFollowed().stream().filter(f -> !f.getId().equals(followId)).toList();
         List<Follow> newFollowerList = followed.getFollowers().stream().filter(f -> !f.getId().equals(followId)).toList();
         follower.setFollowed(newFollowedList);

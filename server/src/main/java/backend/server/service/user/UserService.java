@@ -20,4 +20,8 @@ public interface UserService {
     List<User> findUsers(String query);
 
     List<User> findUsersTopTen(String query);
+
+    List<User> findUsersCommentedOnBlogByBlogId(UUID blogId);
+
+    List<User> findUsersLikedByBlogId(UUID blogId);
 }

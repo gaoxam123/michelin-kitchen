@@ -3,9 +3,11 @@ package backend.server.service.blog;
 import backend.server.controller.RestException;
 import backend.server.controller.blog.BlogRequest;
 import backend.server.dao.blog.BlogRepository;
-import backend.server.dao.user.UserRepository;
 import backend.server.entity.blog.Blog;
+import backend.server.entity.follow.Follow;
 import backend.server.entity.user.User;
+import backend.server.service.email.EmailService;
+import backend.server.service.user.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -53,13 +56,7 @@ public class BlogServiceImpl implements BlogService {
                         System.currentTimeMillis()
                 )
         );
-        User user = userRepository.findById(blog.getUser().getId()).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + blog.getUser().getId() + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(blog.getUser().getId());
         // update blog list of user after deleting
         List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
         user.setBlogs(updatedBlogList);
@@ -69,13 +66,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void createAndUpdate(BlogRequest blogRequest, boolean create) {
         UUID userId = blogRequest.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(userId);
         Blog blog = Blog
                 .builder()
                 .user(user)
@@ -102,6 +93,15 @@ public class BlogServiceImpl implements BlogService {
                 UUID blogId = blogRepository.save(blog).getId();
                 blog.setId(blogId);
                 user.getBlogs().add(blog);
+
+                // notify users who follow the blog owner
+                List<User> followers = user.getFollowers().stream().map(Follow::getFollower).toList();
+                for (User u : followers) {
+                    String subject = "New blog from " + user.getUsername();
+                    String blogUrl = "http://localhost:8080/api/blogs/" + blogId;
+                    String body = user.getUsername() + " just posted a new blog, check it out! " + blogUrl;
+                    emailService.sendGeneralEmail(u.getEmail(), subject, body);
+                }
             }
         }
         catch (IOException e) {
@@ -115,13 +115,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<Blog> findBlogsByUserId(UUID userId) {
-        userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        userService.findById(userId);
         return blogRepository.findBlogsByUserId(userId);
     }
 

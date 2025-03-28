@@ -32,4 +32,19 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send verification email", e);
         }
     }
+
+    @Override
+    public void sendGeneralEmail(String to, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            mailSender.send(message);
+        }
+        catch (MessagingException e) {
+            throw new RuntimeException("Failed to send general email", e);
+        }
+    }
 }
