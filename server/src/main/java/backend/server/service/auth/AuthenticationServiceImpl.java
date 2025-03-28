@@ -27,6 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final int tokenExpirationInMinutes = 15;
 
     @Override
     public String register(RegisterRequest request) {
@@ -35,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         String token = UUID.randomUUID().toString();
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(15);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(tokenExpirationInMinutes);
 
         User user = User
                 .builder()
@@ -52,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
 
         userRepository.save(user);
-        String body = "Click here to verify your account. \n This link expires in 15 minutes. \n";
+        String body = "Click here to verify your account. \n This link expires in " + tokenExpirationInMinutes + " minutes. \n";
         String subject = request.getFirstName() + " " + request.getLastName() + "'s activation link";
 
         // Email Service sends email
@@ -103,13 +104,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         String newToken = UUID.randomUUID().toString();
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(15);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(tokenExpirationInMinutes);
 
         user.setTokenExpiry(expiryTime);
         user.setVerificationToken(newToken);
         userRepository.save(user);
 
-        String body = "Click here to verify your account. \n This link expires in 15 minutes. \n";
+        String body = "Click here to verify your account. \n This link expires in " + tokenExpirationInMinutes + " minutes. \n";
         String subject = "Your new activation link";
 
         emailService.sendVerificationEmail(user.getEmail(), newToken, subject, body);
