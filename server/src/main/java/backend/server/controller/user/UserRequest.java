@@ -19,4 +19,5 @@ public class UserRequest {
     private String lastName;
     private Role role;
     private UUID id;
+    private String email;
 }

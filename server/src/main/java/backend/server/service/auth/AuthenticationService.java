@@ -8,4 +8,8 @@ public interface AuthenticationService {
     String register(RegisterRequest request);
 
     String authenticate(AuthenticationRequest request);
+
+    String verifyEmail(String token);
+
+    String resendVerificationEmail(String email);
 }

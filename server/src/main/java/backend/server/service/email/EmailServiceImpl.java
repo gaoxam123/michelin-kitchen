@@ -1,0 +1,33 @@
+package backend.server.service.email;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class EmailServiceImpl implements EmailService {
+
+    private final JavaMailSender mailSender;
+
+    @Override
+    public void sendVerificationEmail(String to, String token, String subject, String body) {
+        String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + token;
+        String bodyWithUrl = body + verificationUrl;
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(bodyWithUrl, true);
+            mailSender.send(message);
+        }
+        catch (MessagingException e) {
+            throw new RuntimeException("Failed to send verification email", e);
+        }
+    }
+}

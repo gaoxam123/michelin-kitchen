@@ -8,7 +8,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
+
+    Optional<User> findByVerificationToken(String token);
+
     Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
 
     List<User> findAllByUsernameContainingOrFirstNameContainingOrLastNameContaining(
             String username,
