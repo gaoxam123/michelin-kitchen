@@ -1,6 +1,8 @@
 import classNames from "classnames/bind"
 import styles from './Form.module.css'
 
+import Image from "../Image"
+
 const cls = classNames.bind(styles)
 
 export default function Form({ handleSubmit, action, method, inputs = [], title, children, ...props }) {

@@ -15,7 +15,7 @@ import { userActions } from "../../../store/user"
 import { useDispatch } from 'react-redux'
 import request from "../../../utils/request"
 
-export default function Register() {
+export default function Login() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
