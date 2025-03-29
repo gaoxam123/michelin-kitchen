@@ -6,7 +6,6 @@ import backend.server.dao.comment.CommentRepository;
 import backend.server.entity.blog.Blog;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
-import backend.server.entity.user.Role;
 import backend.server.entity.user.User;
 import backend.server.service.blog.BlogService;
 import backend.server.service.email.EmailService;
