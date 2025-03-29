@@ -71,7 +71,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void create(BlogRequest blogRequest) {
+    public Blog create(BlogRequest blogRequest) {
         UUID userId = blogRequest.getUserId();
         User user = userService.findById(userId);
 
@@ -111,6 +111,7 @@ public class BlogServiceImpl implements BlogService {
                 String body = user.getUsername() + " just posted a new blog, check it out! " + blogUrl;
                 emailService.sendGeneralEmail(u.getEmail(), subject, body);
             }
+            return blog;
         } catch (IOException e) {
             throw new RestException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -121,7 +122,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void update(BlogRequest blogRequest) {
+    public Blog update(BlogRequest blogRequest) {
         Blog blog = findById(blogRequest.getId());
         blog.setContent(blogRequest.getContent());
 
@@ -150,7 +151,7 @@ public class BlogServiceImpl implements BlogService {
             updatedBlogList.add(blog);
             user.setBlogs(updatedBlogList);
 
-            blogRepository.save(blog);
+            return blogRepository.save(blog);
 
         } catch (IOException e) {
             throw new RestException(

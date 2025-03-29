@@ -21,9 +21,9 @@ public interface BlogService {
 
     void deleteById(UUID id);
 
-    void create(BlogRequest blogRequest);
+    Blog create(BlogRequest blogRequest);
 
-    void update(BlogRequest blogRequest);
+    Blog update(BlogRequest blogRequest);
 
     boolean isOwner(UUID blogId, String username);
 }
