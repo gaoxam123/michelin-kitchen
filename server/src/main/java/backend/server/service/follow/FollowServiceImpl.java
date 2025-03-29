@@ -9,6 +9,7 @@ import backend.server.entity.user.User;
 import backend.server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +30,22 @@ public class FollowServiceImpl implements FollowService {
 
         User follower = userService.findById(followRequest.getFollowerId());
         User followed = userService.findById(followRequest.getFollowedId());
+
         FollowId followId = new FollowId(followRequest.getFollowerId(), followRequest.getFollowedId());
         Follow newFollow = new Follow(followId, follower, followed);
+
+        boolean authorized = follower.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to follow user with id " + followRequest.getFollowedId(),
+                    System.currentTimeMillis()
+            );
+        }
+
         follower.getFollowed().add(newFollow);
         followed.getFollowers().add(newFollow);
+
         followRepository.save(newFollow);
     }
 
@@ -50,10 +63,20 @@ public class FollowServiceImpl implements FollowService {
         User follower = userService.findById(followRequest.getFollowerId());
         User followed = userService.findById(followRequest.getFollowedId());
 
+        boolean authorized = follower.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to unfollow user with id " + followRequest.getFollowedId(),
+                    System.currentTimeMillis()
+            );
+        }
+
         List<Follow> newFollowedList = follower.getFollowed().stream().filter(f -> !f.getId().equals(followId)).toList();
         List<Follow> newFollowerList = followed.getFollowers().stream().filter(f -> !f.getId().equals(followId)).toList();
         follower.setFollowed(newFollowedList);
         followed.setFollowers(newFollowerList);
+
         followRepository.deleteById(followId);
     }
 
@@ -61,7 +84,7 @@ public class FollowServiceImpl implements FollowService {
     public boolean isOwner(UUID followerId, UUID followedId, String username) {
         FollowId followId = new FollowId(followerId, followedId);
         return followRepository.findById(followId)
-                .map(follow -> follow.getFollower().getUsername().equals(username))
-                .orElse(false);
+                               .map(follow -> follow.getFollower().getUsername().equals(username))
+                               .orElse(false);
     }
 }

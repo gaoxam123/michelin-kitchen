@@ -6,6 +6,7 @@ import backend.server.dao.comment.CommentRepository;
 import backend.server.entity.blog.Blog;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
+import backend.server.entity.user.Role;
 import backend.server.entity.user.User;
 import backend.server.service.blog.BlogService;
 import backend.server.service.email.EmailService;
@@ -14,6 +15,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,8 +38,8 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getAllCommentsByBlogId(UUID blogId) {
         String query = "SELECT c FROM Comment c WHERE c.blog.id = :blogId";
         return entityManager.createQuery(query, Comment.class)
-                .setParameter("blogId", blogId)
-                .getResultList();
+                            .setParameter("blogId", blogId)
+                            .getResultList();
     }
 
     @Override
@@ -69,6 +72,14 @@ public class CommentServiceImpl implements CommentService {
 
         UUID blogId = commentRequest.getBlogId();
         Blog blog = blogService.findById(blogId);
+
+        if (commentRequest.getCommentDate() == null) {
+            throw new RestException(
+                    HttpStatus.BAD_REQUEST,
+                    "No comment date found",
+                    System.currentTimeMillis()
+            );
+        }
 
         CommentId commentId = new CommentId(userId, blogId);
         Comment comment = Comment
@@ -118,6 +129,15 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findById(commentId);
         comment.setContent(commentRequest.getContent());
 
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to edit comment with id " + commentId,
+                    System.currentTimeMillis()
+            );
+        }
+
         List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         blogComments.add(comment);
         blog.setComments(blogComments);
@@ -139,6 +159,16 @@ public class CommentServiceImpl implements CommentService {
         UUID userId = commentId.getUserId();
         User user = userService.findById(userId);
 
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())
+                || SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to delete comment with id " + commentId,
+                    System.currentTimeMillis()
+            );
+        }
+
         List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         blog.setComments(blogComments);
@@ -151,7 +181,7 @@ public class CommentServiceImpl implements CommentService {
     public boolean isOwner(UUID userId, UUID blogId, String username) {
         CommentId commentId = new CommentId(userId, blogId);
         return commentRepository.findById(commentId)
-                .map(comment -> comment.getUser().getUsername().equals(username))
-                .orElse(false);
+                                .map(comment -> comment.getUser().getUsername().equals(username))
+                                .orElse(false);
     }
 }

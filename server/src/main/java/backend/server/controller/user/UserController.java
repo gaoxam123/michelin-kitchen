@@ -5,6 +5,7 @@ import backend.server.entity.blog.Blog;
 import backend.server.entity.user.User;
 import backend.server.service.blog.BlogService;
 import backend.server.service.user.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +48,7 @@ public class UserController {
 
     @PutMapping("/users")
     @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userRequest.id")
-    public User editUser(@RequestBody UserRequest userRequest) {
+    public User editUser(@Valid @RequestBody UserRequest userRequest) {
         return userService.update(userRequest);
     }
 

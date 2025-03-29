@@ -1,5 +1,6 @@
 package backend.server.controller.follow;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class FollowRequest {
+
+    @NotNull
     private UUID followerId;
+
+    @NotNull
     private UUID followedId;
 }

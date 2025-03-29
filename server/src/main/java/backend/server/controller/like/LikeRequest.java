@@ -1,5 +1,6 @@
 package backend.server.controller.like;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LikeRequest {
+
+    @NotNull
     private UUID userId;
+
+    @NotNull
     private UUID blogId;
 }

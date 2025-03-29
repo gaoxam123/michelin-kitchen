@@ -1,5 +1,6 @@
 package backend.server.controller.comment;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,15 @@ import java.util.UUID;
 @Data
 @Builder
 public class CommentRequest {
+
+    @NotNull
     private String content;
+
     private Long commentDate;
+
+    @NotNull
     private UUID userId;
+
+    @NotNull
     private UUID blogId;
 }

@@ -3,6 +3,7 @@ package backend.server.controller.comment;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
 import backend.server.service.comment.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,19 +28,19 @@ public class CommentController {
 
     @PutMapping("/comments")
     @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
-    public void updateComment(@RequestBody CommentRequest commentRequest) {
+    public void updateComment(@Valid @RequestBody CommentRequest commentRequest) {
         commentService.update(commentRequest);
     }
 
     @PostMapping("/comments")
     @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
-    public void addComment(@RequestBody CommentRequest commentRequest) {
+    public void addComment(@Valid @RequestBody CommentRequest commentRequest) {
         commentService.create(commentRequest);
     }
 
     @DeleteMapping("/comments")
     @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentId.userId, #commentId.blogId, authentication.name)")
-    public void deleteComment(@RequestBody CommentId commentId) {
+    public void deleteComment(@Valid @RequestBody CommentId commentId) {
         commentService.deleteCommentById(commentId);
     }
 }

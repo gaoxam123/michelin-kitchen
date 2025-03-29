@@ -12,6 +12,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +54,15 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = findById(id);
 
         User user = userService.findById(blog.getUser().getId());
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())
+                || SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to delete blog with id " + id,
+                    System.currentTimeMillis()
+            );
+        }
         // update blog list of user after deleting
         List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
         user.setBlogs(updatedBlogList);
@@ -64,6 +75,14 @@ public class BlogServiceImpl implements BlogService {
         UUID userId = blogRequest.getUserId();
         User user = userService.findById(userId);
 
+        if (blogRequest.getBlogDate() == null) {
+            throw new RestException(
+                    HttpStatus.BAD_REQUEST,
+                    "No blog date found",
+                    System.currentTimeMillis()
+            );
+        }
+
         Blog blog = Blog
                 .builder()
                 .user(user)
@@ -72,10 +91,12 @@ public class BlogServiceImpl implements BlogService {
                 .build();
 
         try {
-            MultipartFile image = blogRequest.getImage();
-            blog.setImageName(image.getName());
-            blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
-            blog.setImageType(image.getContentType());
+            if (blog.getImage() != null) {
+                MultipartFile image = blogRequest.getImage();
+                blog.setImageName(image.getName());
+                blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+                blog.setImageType(image.getContentType());
+            }
 
             // add new blog
             UUID blogId = blogRepository.save(blog).getId();
@@ -107,11 +128,22 @@ public class BlogServiceImpl implements BlogService {
         UUID userId = blogRequest.getUserId();
         User user = userService.findById(userId);
 
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to edit blog with id " + blog.getId(),
+                    System.currentTimeMillis()
+            );
+        }
+
         try {
-            MultipartFile image = blogRequest.getImage();
-            blog.setImageName(image.getName());
-            blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
-            blog.setImageType(image.getContentType());
+            if (blog.getImage() != null) {
+                MultipartFile image = blogRequest.getImage();
+                blog.setImageName(image.getName());
+                blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+                blog.setImageType(image.getContentType());
+            }
 
             // set old id if updating and modify existing blog
             List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
@@ -132,8 +164,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public boolean isOwner(UUID blogId, String username) {
         return blogRepository.findById(blogId)
-                .map(blog -> blog.getUser().getUsername().equals(username))
-                .orElse(false);
+                             .map(blog -> blog.getUser().getUsername().equals(username))
+                             .orElse(false);
     }
 
     @Override
@@ -146,22 +178,22 @@ public class BlogServiceImpl implements BlogService {
     public List<Blog> findAllSortByPostDate() {
         String query = "SELECT b from Blog b ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                .getResultList();
+                            .getResultList();
     }
 
     @Override
     public List<Blog> findBlogsByUserIdSortByPostDate(UUID userId) {
         String query = "SELECT b from Blog b WHERE b.user.id = :userId ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                .setParameter("userId", userId)
-                .getResultList();
+                            .setParameter("userId", userId)
+                            .getResultList();
     }
 
     @Override
     public List<Blog> findBlogsLikedByUserId(UUID userId) {
         String query = "SELECT b from Blog b JOIN b.likes l WHERE l.user.id = :userId ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                .setParameter("userId", userId)
-                .getResultList();
+                            .setParameter("userId", userId)
+                            .getResultList();
     }
 }

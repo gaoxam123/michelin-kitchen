@@ -12,6 +12,7 @@ import backend.server.service.email.EmailService;
 import backend.server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,15 @@ public class LikeServiceImpl implements LikeService {
         Blog blog = blogService.findById(likeRequest.getBlogId());
         User user = userService.findById(likeRequest.getUserId());
         Like like = new Like(likeId, blog, user);
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to like blog id " + blog.getId(),
+                    System.currentTimeMillis()
+            );
+        }
 
         blog.getLikes().add(like);
         user.getLikes().add(like);
@@ -58,6 +68,15 @@ public class LikeServiceImpl implements LikeService {
 
         Blog blog = blogService.findById(likeRequest.getBlogId());
         User user = userService.findById(likeRequest.getUserId());
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to unlike blog with id " + blog.getId(),
+                    System.currentTimeMillis()
+            );
+        }
 
         List<Like> blogLikes = blog.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
         List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();

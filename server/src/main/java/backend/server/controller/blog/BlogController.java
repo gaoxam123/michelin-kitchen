@@ -2,6 +2,7 @@ package backend.server.controller.blog;
 
 import backend.server.entity.blog.Blog;
 import backend.server.service.blog.BlogService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class BlogController {
 
     @DeleteMapping("/blogs")
     @PreAuthorize("hasRole('ADMIN') or @blogServiceImpl.isOwner(#blogRequest.id, authentication.name)")
-    public void deleteBlogById(@RequestBody BlogRequest blogRequest) {
+    public void deleteBlogById(@Valid @RequestBody BlogRequest blogRequest) {
         blogService.deleteById(blogRequest.getId());
     }
 
     @PutMapping("/blogs")
     @PreAuthorize("hasRole('ADMIN') or @blogServiceImpl.isOwner(#blogRequest.id, authentication.name)")
-    public void updateBlog(@RequestBody BlogRequest blogRequest) {
+    public void updateBlog(@Valid @RequestBody BlogRequest blogRequest) {
         blogService.update(blogRequest);
     }
 
