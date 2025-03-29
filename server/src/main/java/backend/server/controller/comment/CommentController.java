@@ -4,6 +4,7 @@ import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
 import backend.server.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,16 +26,19 @@ public class CommentController {
     }
 
     @PutMapping("/comments")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
     public void updateComment(@RequestBody CommentRequest commentRequest) {
         commentService.createAndUpdateComment(commentRequest, false);
     }
 
     @PostMapping("/comments")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
     public void addComment(@RequestBody CommentRequest commentRequest) {
         commentService.createAndUpdateComment(commentRequest, true);
     }
 
     @DeleteMapping("/comments")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentId.userId, #commentId.blogId, authentication.name)")
     public void deleteComment(@RequestBody CommentId commentId) {
         commentService.deleteCommentById(commentId);
     }

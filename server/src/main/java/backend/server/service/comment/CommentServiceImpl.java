@@ -124,4 +124,12 @@ public class CommentServiceImpl implements CommentService {
         user.setComments(userComments);
         commentRepository.deleteById(commentId);
     }
+
+    @Override
+    public boolean isOwner(UUID userId, UUID blogId, String username) {
+        CommentId commentId = new CommentId(userId, blogId);
+        return commentRepository.findById(commentId)
+                .map(comment -> comment.getUser().getUsername().equals(username))
+                .orElse(false);
+    }
 }

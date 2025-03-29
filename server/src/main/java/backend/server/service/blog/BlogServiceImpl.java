@@ -114,6 +114,13 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public boolean isOwner(UUID blogId, String username) {
+        return blogRepository.findById(blogId)
+                .map(blog -> blog.getUser().getUsername().equals(username))
+                .orElse(false);
+    }
+
+    @Override
     public List<Blog> findBlogsByUserId(UUID userId) {
         userService.findById(userId);
         return blogRepository.findBlogsByUserId(userId);

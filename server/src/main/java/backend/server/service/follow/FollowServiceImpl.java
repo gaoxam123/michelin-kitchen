@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +55,13 @@ public class FollowServiceImpl implements FollowService {
         follower.setFollowed(newFollowedList);
         followed.setFollowers(newFollowerList);
         followRepository.deleteById(followId);
+    }
+
+    @Override
+    public boolean isOwner(UUID followerId, UUID followedId, String username) {
+        FollowId followId = new FollowId(followerId, followedId);
+        return followRepository.findById(followId)
+                .map(follow -> follow.getFollower().getUsername().equals(username))
+                .orElse(false);
     }
 }

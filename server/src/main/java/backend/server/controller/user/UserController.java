@@ -7,6 +7,7 @@ import backend.server.service.blog.BlogService;
 import backend.server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,11 +46,13 @@ public class UserController {
     }
 
     @PutMapping("/users")
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userRequest.id")
     public User editUser(@RequestBody UserRequest userRequest) {
         return userService.update(userRequest);
     }
 
     @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
     public String deleteUser(@PathVariable UUID id) {
         userService.deleteById(id);
 
@@ -57,6 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/edit-profile-picture")
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == id")
     public String editProfilePicture(@RequestParam MultipartFile image, @PathVariable UUID id) {
         User user = userService.findById(id);
 

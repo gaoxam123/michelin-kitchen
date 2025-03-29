@@ -15,4 +15,6 @@ public interface CommentService {
     void createAndUpdateComment(CommentRequest commentRequest, boolean create);
 
     void deleteCommentById(CommentId commentId);
+
+    boolean isOwner(UUID userId, UUID blogId, String username);
 }

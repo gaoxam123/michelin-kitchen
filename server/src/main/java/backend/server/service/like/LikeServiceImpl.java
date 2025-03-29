@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +62,13 @@ public class LikeServiceImpl implements LikeService {
         blog.setLikes(blogLikes);
         user.setLikes(userLikes);
         likeRepository.deleteById(likeId);
+    }
+
+    @Override
+    public boolean isOwner(UUID userId, UUID blogId, String username) {
+        LikeId likeId = new LikeId(userId, blogId);
+        return likeRepository.findById(likeId)
+                .map(like -> like.getUser().getUsername().equals(username))
+                .orElse(false);
     }
 }
