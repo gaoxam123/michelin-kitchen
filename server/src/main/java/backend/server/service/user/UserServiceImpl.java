@@ -4,8 +4,14 @@ import backend.server.controller.RestException;
 import backend.server.controller.user.UserRequest;
 import backend.server.dao.user.UserRepository;
 import backend.server.entity.user.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +23,10 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Override
     public List<User> findAll() {
@@ -42,31 +52,66 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(UserRequest userRequest) {
         UUID id = userRequest.getId();
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
+        User user = findById(id);
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to update user with id " + id,
+                    System.currentTimeMillis()
+            );
+        }
+
+        if (userRequest.isPasswordIsChanged()) {
+            if (userRequest.getOldPassword() == null || userRequest.getOldPassword().isEmpty() || userRequest.getOldPassword().length() < 6) {
+                throw new RestException(
+                        HttpStatus.BAD_REQUEST,
+                        "Current password is invalid",
                         System.currentTimeMillis()
-                )
-        );
+                );
+            }
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            userRequest.getUsername(),
+                            userRequest.getOldPassword()
+                    )
+            );
+
+            if (userRequest.getNewPassword() == null || userRequest.getNewPassword().isEmpty() || userRequest.getNewPassword().length() < 6) {
+                throw new RestException(
+                        HttpStatus.BAD_REQUEST,
+                        "New password is invalid",
+                        System.currentTimeMillis()
+                );
+            }
+            user.setPassword(passwordEncoder.encode(userRequest.getNewPassword()));
+        }
+
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setUsername(userRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setRole(userRequest.getRole());
         user.setEmail(userRequest.getEmail());
+
         return userRepository.save(user);
     }
 
     @Override
     public void deleteById(UUID id) {
-        userRepository.findById(id).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = findById(id);
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())
+                || SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to delete user with id " + id,
+                    System.currentTimeMillis()
+            );
+        }
+
         userRepository.deleteById(id);
     }
 
@@ -78,5 +123,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findUsersTopTen(String query) {
         return userRepository.findTop10ByUsernameContainingOrFirstNameContainingOrLastNameContaining(query, query, query);
+    }
+
+    @Override
+    public List<User> findUsersCommentedOnBlogByBlogId(UUID blogId) {
+        String query = "SELECT DISTINCT c.user FROM Comment c WHERE c.blog.id = :blogId";
+        return entityManager.createQuery(query, User.class)
+                            .setParameter("blogId", blogId)
+                            .getResultList();
+    }
+
+    @Override
+    public List<User> findUsersLikedByBlogId(UUID blogId) {
+        String query = "SELECT DISTINCT l.user FROM Like l WHERE l.blog = :blogId";
+        return entityManager.createQuery(query, User.class)
+                            .setParameter("blogId", blogId)
+                            .getResultList();
     }
 }

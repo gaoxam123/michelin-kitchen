@@ -3,7 +3,6 @@ package backend.server.service.auth;
 import backend.server.config.JwtService;
 import backend.server.dao.user.UserRepository;
 import backend.server.controller.auth.AuthenticationRequest;
-import backend.server.controller.auth.AuthenticationResponse;
 import backend.server.controller.auth.RegisterRequest;
 import backend.server.entity.user.Role;
 import backend.server.entity.user.User;
@@ -31,6 +30,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String register(RegisterRequest request) {
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username is already in use");
         }

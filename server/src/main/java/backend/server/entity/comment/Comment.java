@@ -3,6 +3,7 @@ package backend.server.entity.comment;
 import backend.server.entity.blog.Blog;
 import backend.server.entity.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,12 @@ public class Comment {
     @EmbeddedId
     private CommentId id;
 
-    @Column(name = "comment_date")
+    @NotNull
+    @Column(name = "comment_date", nullable = false)
     private Long commentDate;
 
-    @Column(name = "content")
+    @NotNull
+    @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne

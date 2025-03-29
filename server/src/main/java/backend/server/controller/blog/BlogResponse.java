@@ -1,6 +1,5 @@
 package backend.server.controller.blog;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +12,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 @Builder
-public class BlogRequest {
-
-    @NotNull
-    private String content;
-
-    @NotNull
-    private UUID userId;
-
-    @NotNull
+public class BlogResponse {
     private UUID id;
-
+    private UUID userId;
+    private String content;
     private Long blogDate;
     private MultipartFile image;
 }

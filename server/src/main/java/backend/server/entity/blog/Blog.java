@@ -4,6 +4,7 @@ import backend.server.entity.comment.Comment;
 import backend.server.entity.like.Like;
 import backend.server.entity.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,11 @@ import java.util.UUID;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
+    @NotNull
     private UUID id;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
@@ -41,7 +44,8 @@ public class Blog {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "blog_date")
+    @NotNull
+    @Column(name = "blog_date", nullable = false)
     private Long blogDate;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)

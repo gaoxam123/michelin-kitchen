@@ -2,17 +2,20 @@ package backend.server.service.comment;
 
 import backend.server.controller.RestException;
 import backend.server.controller.comment.CommentRequest;
-import backend.server.dao.blog.BlogRepository;
 import backend.server.dao.comment.CommentRepository;
-import backend.server.dao.user.UserRepository;
 import backend.server.entity.blog.Blog;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.comment.CommentId;
 import backend.server.entity.user.User;
+import backend.server.service.blog.BlogService;
+import backend.server.service.email.EmailService;
+import backend.server.service.user.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,8 +26,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
+    private final BlogService blogService;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -50,23 +54,32 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void createAndUpdateComment(CommentRequest commentRequest, boolean create) {
+    public Comment findById(CommentId id) {
+        return commentRepository.findById(id).orElseThrow(
+                () -> new RestException(
+                        HttpStatus.NOT_FOUND,
+                        "No comment with id " + id + " found!",
+                        System.currentTimeMillis()
+                )
+        );
+    }
+
+    @Override
+    public void create(CommentRequest commentRequest) {
         UUID userId = commentRequest.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(userId);
+
         UUID blogId = commentRequest.getBlogId();
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No blog with id " + blogId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        Blog blog = blogService.findById(blogId);
+
+        if (commentRequest.getCommentDate() == null) {
+            throw new RestException(
+                    HttpStatus.BAD_REQUEST,
+                    "No comment date found",
+                    System.currentTimeMillis()
+            );
+        }
+
         CommentId commentId = new CommentId(userId, blogId);
         Comment comment = Comment
                 .builder()
@@ -76,52 +89,98 @@ public class CommentServiceImpl implements CommentService {
                 .commentDate(commentRequest.getCommentDate())
                 .id(commentId)
                 .build();
-        if (!create) {
-            comment.setId(commentId);
-            List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-            blogComments.add(comment);
-            blog.setComments(blogComments);
+        blog.getComments().add(comment);
+        user.getComments().add(comment);
 
-            List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-            userComments.add(comment);
-            user.setComments(userComments);
+        // notify users who commented on or own the blog
+        String subjectForOwner = blog.getUser().getUsername() + " commented on your blog";
+        String blogUrl = "http://localhost:8080/api/blogs/" + blog.getId();
+        String body = "Check it out at " + blogUrl;
+
+        if (!user.getId().equals(blog.getUser().getId())) {
+            // no email when comment on owned blogs
+            emailService.sendGeneralEmail(blog.getUser().getEmail(), subjectForOwner, body);
         }
-        else {
-            blog.getComments().add(comment);
-            user.getComments().add(comment);
+
+        String subjectForOthers = blog.getUser().getUsername() + " commented on the blog that you are interested in";
+        List<User> others = userService
+                .findUsersCommentedOnBlogByBlogId(blogId)
+                .stream()
+                .filter(u -> !u.getId().equals(userId))
+                .toList();
+
+        for (User other : others) {
+            emailService.sendGeneralEmail(other.getEmail(), subjectForOthers, body);
         }
+
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public void update(CommentRequest commentRequest) {
+        UUID userId = commentRequest.getUserId();
+        User user = userService.findById(userId);
+
+        UUID blogId = commentRequest.getBlogId();
+        Blog blog = blogService.findById(blogId);
+
+        CommentId commentId = new CommentId(userId, blogId);
+        Comment comment = findById(commentId);
+        comment.setContent(commentRequest.getContent());
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to edit comment with id " + commentId,
+                    System.currentTimeMillis()
+            );
+        }
+
+        List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+        blogComments.add(comment);
+        blog.setComments(blogComments);
+
+        List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+        userComments.add(comment);
+        user.setComments(userComments);
+
         commentRepository.save(comment);
     }
 
     @Override
     public void deleteCommentById(CommentId commentId) {
-        commentRepository.findById(commentId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + commentId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        findById(commentId);
+
         UUID blogId = commentId.getBlogId();
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No blog with id " + blogId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        Blog blog = blogService.findById(blogId);
+
         UUID userId = commentId.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + userId + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = userService.findById(userId);
+
+        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())
+                || SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        if (!authorized) {
+            throw new RestException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Unauthorized to delete comment with id " + commentId,
+                    System.currentTimeMillis()
+            );
+        }
+
         List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
         blog.setComments(blogComments);
         user.setComments(userComments);
+
         commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public boolean isOwner(UUID userId, UUID blogId, String username) {
+        CommentId commentId = new CommentId(userId, blogId);
+        return commentRepository.findById(commentId)
+                                .map(comment -> comment.getUser().getUsername().equals(username))
+                                .orElse(false);
     }
 }

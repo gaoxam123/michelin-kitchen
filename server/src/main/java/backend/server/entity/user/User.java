@@ -5,6 +5,7 @@ import backend.server.entity.comment.Comment;
 import backend.server.entity.follow.Follow;
 import backend.server.entity.like.Like;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,25 +29,32 @@ import java.util.UUID;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
+    @NotNull
     private UUID id;
 
-    @Column(name = "first_name")
+    @NotNull
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @NotNull
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "username", unique = true)
+    @NotNull
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @NotNull
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @NotNull
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "role")
+    @NotNull
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -56,7 +64,7 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled = false;
 
-    @Column(name = "verificationToken")
+    @Column(name = "verification_token")
     private String verificationToken;
 
     @Column(name = "token_expiry")

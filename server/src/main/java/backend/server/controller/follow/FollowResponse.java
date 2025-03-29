@@ -1,6 +1,5 @@
-package backend.server.controller.like;
+package backend.server.controller.follow;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Builder
-public class LikeRequest {
-
-    @NotNull
-    private UUID userId;
-
-    @NotNull
-    private UUID blogId;
+public class FollowResponse {
+    private UUID followerId;
+    private UUID followedId;
 }

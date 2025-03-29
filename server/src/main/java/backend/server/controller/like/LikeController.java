@@ -1,7 +1,9 @@
 package backend.server.controller.like;
 
 import backend.server.service.like.LikeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,12 +14,14 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/likes")
-    public void addLike(@RequestBody LikeRequest likeRequest) {
+    @PreAuthorize("@likeServiceImpl.isOwner(#likeRequest.userId, #likeRequest.blogId, authentication.name)")
+    public void addLike(@Valid @RequestBody LikeRequest likeRequest) {
         likeService.addLike(likeRequest);
     }
 
     @DeleteMapping("/likes")
-    public void removeLike(@RequestBody LikeRequest likeRequest) {
+    @PreAuthorize("@likeServiceImpl.isOwner(#likeRequest.userId, #likeRequest.blogId, authentication.name)")
+    public void removeLike(@Valid @RequestBody LikeRequest likeRequest) {
         likeService.removeLike(likeRequest);
     }
 }
