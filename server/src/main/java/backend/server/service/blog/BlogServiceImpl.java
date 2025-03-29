@@ -49,62 +49,78 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void deleteById(UUID id) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No blog with id " + id + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        Blog blog = findById(id);
+
         User user = userService.findById(blog.getUser().getId());
         // update blog list of user after deleting
         List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
         user.setBlogs(updatedBlogList);
+
         blogRepository.deleteById(id);
     }
 
     @Override
-    public void createAndUpdate(BlogRequest blogRequest, boolean create) {
+    public void create(BlogRequest blogRequest) {
         UUID userId = blogRequest.getUserId();
         User user = userService.findById(userId);
+
         Blog blog = Blog
                 .builder()
                 .user(user)
                 .content(blogRequest.getContent())
                 .blogDate(blogRequest.getBlogDate())
                 .build();
+
         try {
             MultipartFile image = blogRequest.getImage();
             blog.setImageName(image.getName());
             blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
             blog.setImageType(image.getContentType());
 
-            if (!create) {
-                // set old id if updating and modify existing blog
-                blog.setId(blogRequest.getId());
-                List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
-                updatedBlogList.add(blog);
-                user.setBlogs(updatedBlogList);
+            // add new blog
+            UUID blogId = blogRepository.save(blog).getId();
+            blog.setId(blogId);
+            user.getBlogs().add(blog);
 
-                blogRepository.save(blog);
+            // notify users who follow the blog owner
+            List<User> followers = user.getFollowers().stream().map(Follow::getFollower).toList();
+            for (User u : followers) {
+                String subject = "New blog from " + user.getUsername();
+                String blogUrl = "http://localhost:8080/api/blogs/" + blogId;
+                String body = user.getUsername() + " just posted a new blog, check it out! " + blogUrl;
+                emailService.sendGeneralEmail(u.getEmail(), subject, body);
             }
-            else {
-                // add new blog
-                UUID blogId = blogRepository.save(blog).getId();
-                blog.setId(blogId);
-                user.getBlogs().add(blog);
-
-                // notify users who follow the blog owner
-                List<User> followers = user.getFollowers().stream().map(Follow::getFollower).toList();
-                for (User u : followers) {
-                    String subject = "New blog from " + user.getUsername();
-                    String blogUrl = "http://localhost:8080/api/blogs/" + blogId;
-                    String body = user.getUsername() + " just posted a new blog, check it out! " + blogUrl;
-                    emailService.sendGeneralEmail(u.getEmail(), subject, body);
-                }
-            }
+        } catch (IOException e) {
+            throw new RestException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage(),
+                    System.currentTimeMillis()
+            );
         }
-        catch (IOException e) {
+    }
+
+    @Override
+    public void update(BlogRequest blogRequest) {
+        Blog blog = findById(blogRequest.getId());
+        blog.setContent(blogRequest.getContent());
+
+        UUID userId = blogRequest.getUserId();
+        User user = userService.findById(userId);
+
+        try {
+            MultipartFile image = blogRequest.getImage();
+            blog.setImageName(image.getName());
+            blog.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+            blog.setImageType(image.getContentType());
+
+            // set old id if updating and modify existing blog
+            List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
+            updatedBlogList.add(blog);
+            user.setBlogs(updatedBlogList);
+
+            blogRepository.save(blog);
+
+        } catch (IOException e) {
             throw new RestException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     e.getMessage(),
@@ -130,22 +146,22 @@ public class BlogServiceImpl implements BlogService {
     public List<Blog> findAllSortByPostDate() {
         String query = "SELECT b from Blog b ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                            .getResultList();
+                .getResultList();
     }
 
     @Override
     public List<Blog> findBlogsByUserIdSortByPostDate(UUID userId) {
         String query = "SELECT b from Blog b WHERE b.user.id = :userId ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                            .setParameter("userId", userId)
-                            .getResultList();
+                .setParameter("userId", userId)
+                .getResultList();
     }
 
     @Override
     public List<Blog> findBlogsLikedByUserId(UUID userId) {
         String query = "SELECT b from Blog b JOIN b.likes l WHERE l.user.id = :userId ORDER BY b.blogDate DESC";
         return entityManager.createQuery(query, Blog.class)
-                            .setParameter("userId", userId)
-                            .getResultList();
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

@@ -39,12 +39,12 @@ public class BlogController {
     @PutMapping("/blogs")
     @PreAuthorize("hasRole('ADMIN') or @blogServiceImpl.isOwner(#blogRequest.id, authentication.name)")
     public void updateBlog(@RequestBody BlogRequest blogRequest) {
-        blogService.createAndUpdate(blogRequest, false);
+        blogService.update(blogRequest);
     }
 
     @PostMapping("/blogs")
     public void createBlog(@RequestParam("image") MultipartFile image, @RequestParam("userId") UUID userId, @RequestParam("content") String content, @RequestParam("blogDate") Long blogDate, @RequestParam("id") UUID id) {
         BlogRequest blogRequest = new BlogRequest(content, userId, id, blogDate, image);
-        blogService.createAndUpdate(blogRequest, true);
+        blogService.create(blogRequest);
     }
 }

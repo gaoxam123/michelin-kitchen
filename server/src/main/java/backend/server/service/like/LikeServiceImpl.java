@@ -31,8 +31,10 @@ public class LikeServiceImpl implements LikeService {
         Blog blog = blogService.findById(likeRequest.getBlogId());
         User user = userService.findById(likeRequest.getUserId());
         Like like = new Like(likeId, blog, user);
+
         blog.getLikes().add(like);
         user.getLikes().add(like);
+
         likeRepository.save(like);
 
         // notify user who own the blog
@@ -61,6 +63,7 @@ public class LikeServiceImpl implements LikeService {
         List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
         blog.setLikes(blogLikes);
         user.setLikes(userLikes);
+
         likeRepository.deleteById(likeId);
     }
 

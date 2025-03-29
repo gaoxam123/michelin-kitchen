@@ -2,7 +2,6 @@ package backend.server.service.user;
 
 import backend.server.controller.RestException;
 import backend.server.controller.user.UserRequest;
-import backend.server.dao.blog.BlogRepository;
 import backend.server.dao.user.UserRepository;
 import backend.server.entity.user.User;
 import jakarta.persistence.EntityManager;
@@ -55,6 +54,7 @@ public class UserServiceImpl implements UserService {
                         System.currentTimeMillis()
                 )
         );
+
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setUsername(userRequest.getUsername());

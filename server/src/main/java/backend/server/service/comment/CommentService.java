@@ -12,7 +12,11 @@ public interface CommentService {
 
     List<Comment> get10CommentsByBlogId(UUID userId);
 
-    void createAndUpdateComment(CommentRequest commentRequest, boolean create);
+    Comment findById(CommentId id);
+
+    void create(CommentRequest commentRequest);
+
+    void update(CommentRequest commentRequest);
 
     void deleteCommentById(CommentId commentId);
 

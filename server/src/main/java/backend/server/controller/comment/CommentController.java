@@ -28,13 +28,13 @@ public class CommentController {
     @PutMapping("/comments")
     @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
     public void updateComment(@RequestBody CommentRequest commentRequest) {
-        commentService.createAndUpdateComment(commentRequest, false);
+        commentService.update(commentRequest);
     }
 
     @PostMapping("/comments")
     @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
     public void addComment(@RequestBody CommentRequest commentRequest) {
-        commentService.createAndUpdateComment(commentRequest, true);
+        commentService.create(commentRequest);
     }
 
     @DeleteMapping("/comments")
