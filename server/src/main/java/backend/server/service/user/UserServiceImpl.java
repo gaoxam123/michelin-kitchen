@@ -47,13 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(UserRequest userRequest) {
         UUID id = userRequest.getId();
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        User user = findById(id);
 
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
@@ -66,13 +60,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(UUID id) {
-        userRepository.findById(id).orElseThrow(
-                () -> new RestException(
-                        HttpStatus.NOT_FOUND,
-                        "No user with id " + id + " found!",
-                        System.currentTimeMillis()
-                )
-        );
+        findById(id);
+
         userRepository.deleteById(id);
     }
 
