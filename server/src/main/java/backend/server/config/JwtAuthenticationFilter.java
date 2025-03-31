@@ -2,6 +2,7 @@ package backend.server.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
-        if (authHeader == null || !authHeader.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String jwt = authHeader.substring(AUTHORIZATION_HEADER_PREFIX.length());
-        final String username = jwtService.extractUsername(jwt);
+        String token = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("token")) {
+                token = cookie.getValue();
+                break;
+            }
+        }
+
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String username = jwtService.extractUsername(token);
 
         if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
@@ -44,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (jwtService.isTokenValid(jwt, userDetails)) {
+        if (jwtService.isTokenValid(token, userDetails)) {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
@@ -57,5 +70,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+
     }
+
+//    *** OLD CODE USING BEARER AUTH HEADER ***
+//    @Override
+//    protected void doFilterInternal(
+//            @NonNull HttpServletRequest request,
+//            @NonNull HttpServletResponse response,
+//            @NonNull FilterChain filterChain
+//    ) throws ServletException, IOException {
+//        final String authHeader = request.getHeader("Authorization");
+//        String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
+//        if (authHeader == null || !authHeader.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        final String jwt = authHeader.substring(AUTHORIZATION_HEADER_PREFIX.length());
+//        final String username = jwtService.extractUsername(jwt);
+//
+//        if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        if (jwtService.isTokenValid(jwt, userDetails)) {
+//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+//                    userDetails,
+//                    null,
+//                    userDetails.getAuthorities()
+//            );
+//            authenticationToken.setDetails(
+//                    new WebAuthenticationDetailsSource().buildDetails(request)
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//        }
+//
+//        filterChain.doFilter(request, response);
+//    }
 }
