@@ -36,14 +36,19 @@ function SearchBar({ placeholder }) {
 
         if (query) {
             const fetchAPI = async () => {
-                const result = await request
-                    .get('/search', {
-                        params: {
-                            q: query,
-                            less: true
-                        }
-                    });
-                setSearchResults(result.data)
+                try {
+                    const result = await request
+                        .get('/search', {
+                            params: {
+                                q: query,
+                                less: true
+                            }
+                        });
+                    setSearchResults(result.data)
+                } catch (error) {
+                    // TODO: Error handling
+                    alert(error)
+                }
             }
             fetchAPI();
         } else {
