@@ -7,6 +7,7 @@ import backend.server.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +42,16 @@ public class AuthenticationController {
         User authenticatedUser = userService.findByUsername(request.getUsername());
         UserResponse response = new UserResponse(authenticatedUser);
 
-        return ResponseEntity
-                .ok()
+        return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, createAuthCookie(token))
                 .body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, createLogoutCookie())
+                .build();
     }
 
     @GetMapping("/verify")
@@ -58,11 +65,24 @@ public class AuthenticationController {
     }
 
     private String createAuthCookie(String token) {
-        return "token=" + token + "; " +
-                "HttpOnly; " +
-                "Secure; " +
-                "Path=/; " +
-                "Max-Age=3600; " +
-                "SameSite=Strict";
+        return ResponseCookie.from("auth_token", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(3600)
+                .sameSite("Strict")
+                .build()
+                .toString();
+    }
+
+    private String createLogoutCookie() {
+        return ResponseCookie.from("auth_token", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0) // Expires immediately
+                .sameSite("Strict")
+                .build()
+                .toString();
     }
 }
