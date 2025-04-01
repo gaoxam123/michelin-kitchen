@@ -1,6 +1,8 @@
-import classNames from "classnames"
+import classNames from "classnames/bind"
 import styles from "./Image.module.css"
 import { useState } from "react"
+
+const cls = classNames.bind(styles)
 
 function Image({
     src,
@@ -14,7 +16,7 @@ function Image({
     return (
         <div>
             <img
-                className={classNames(styles.wrapper, className)}
+                className={cls("wrapper", className)}
                 src={image || fallback}
                 onError={handleError}
             />

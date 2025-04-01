@@ -117,10 +117,17 @@ export default function Register() {
                     <div className={cls("link-and-button")}>
                         <div className={cls("to-login")}><span><Link to="/login">Already have an account?</Link></span></div>
                         <div className={cls("buttons")}>
-                            {/* <button type="button" onClick={handleReset} className="register-login-button">Reset</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Reset" onClick={handleReset} isButton={true} />
-                            {/* <button className="register-login-button">Submit</button> */}
-                            <CustomButton style={{ border : "none", backgroundColor : "lightblue"}} title="Submit" isButton={true} />
+                            <CustomButton
+                                className={cls("submit-btn")}
+                                title="Submit"
+                                isButton
+                            />
+                            <CustomButton
+                                className={cls("reset-btn")}
+                                title="Reset"
+                                onClick={handleReset}
+                                isButton
+                            />
                         </div>
                     </div>
                 </Form>

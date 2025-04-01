@@ -3,13 +3,21 @@ import styles from './CustomButton.module.css'
 
 const cls = classNames.bind(styles)
 
-export default function CustomButton({ icon, title = "NoText", active = false, onClick, isButton = false, ...props }) {
+export default function CustomButton({
+    icon,
+    title = "NoText",
+    className,
+    active = false,
+    onClick,
+    isButton = false,
+    ...props
+}) {
     let Component = 'div'
     if (isButton) {
         Component = 'button'
     }
     return (
-        <Component className={cls("wrapper")} onClick={onClick} {...props}>
+        <Component className={cls("wrapper", className)} onClick={onClick} {...props}>
             <div className={cls("button", { active: active })}>
                 {icon && (
                     <div className={cls("icon")}>

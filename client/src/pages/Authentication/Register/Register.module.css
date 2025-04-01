@@ -31,3 +31,9 @@
     gap: 20px;
     margin-top: 10px;
 }
+
+.submit-btn,
+.reset-btn {
+  border: none;
+  background-color: lightblue;
+}

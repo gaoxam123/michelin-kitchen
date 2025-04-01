@@ -10,7 +10,7 @@ import Input from "../../../components/Input"
 import { PermIdentity, Password } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
 import Form from "../../../components/Form"
-import CustomButton from "../../../components/CustomButton/CustomButton"
+import CustomButton from "../../../components/CustomButton"
 import { userActions } from "../../../store/user"
 import { useDispatch } from 'react-redux'
 import request from "../../../utils/request"
@@ -106,10 +106,17 @@ export default function Login() {
                     <div className={cls("link-and-button")}>
                         <div className={cls("to-register")}><span><Link to="/register">No account yet?</Link></span></div>
                         <div className={cls("buttons")}>
-                            {/* <button type="button" onClick={handleReset} className="register-login-button">Reset</button> */}
-                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Reset" onClick={handleReset} isButton={true} />
-                            {/* <button className="register-login-button">Submit</button> */}
-                            <CustomButton style={{ border: "none", backgroundColor: "lightblue" }} title="Submit" isButton={true} />
+                            <CustomButton
+                                className={cls("submit-btn")}
+                                title="Submit"
+                                isButton
+                            />
+                            <CustomButton
+                                className={cls("reset-btn")}
+                                title="Reset"
+                                onClick={handleReset}
+                                isButton
+                            />
                         </div>
                     </div>
                 </Form>
