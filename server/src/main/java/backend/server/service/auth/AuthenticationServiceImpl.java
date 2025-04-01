@@ -32,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String register(RegisterRequest request) {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new IllegalArgumentException("Email is already in use");
         }
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
