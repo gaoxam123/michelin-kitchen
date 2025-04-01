@@ -1,12 +1,12 @@
 package backend.server.controller.auth;
 
+import backend.server.controller.user.UserResponse;
 import backend.server.entity.user.User;
 import backend.server.service.auth.AuthenticationService;
 import backend.server.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,16 +32,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<User> authenticate(
+    public ResponseEntity<UserResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request
     ) {
 
         String token = authenticationService.authenticate(request);
 
+        User authenticatedUser = userService.findByUsername(request.getUsername());
+        UserResponse response = new UserResponse(authenticatedUser);
+
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, createAuthCookie(token))
-                .body(userService.findByUsername(request.getUsername()));
+                .body(response);
     }
 
     @GetMapping("/verify")
