@@ -1,6 +1,7 @@
 package backend.server.controller.user;
 
 import backend.server.entity.user.Role;
+import backend.server.service.utils.Utils;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,13 +35,18 @@ public class UserRequest {
     @NotNull(message = "Lastname is required")
     private String lastName;
 
-    @NotNull(message = "Role is required")
-    private Role role;
-
     @NotNull
     private UUID id;
 
     @NotNull
     @Email
     private String email;
+
+    public boolean validOldPassword() {
+        return Utils.Password.validPassword(oldPassword);
+    }
+
+    public boolean validNewPassword() {
+        return Utils.Password.validPassword(newPassword);
+    }
 }

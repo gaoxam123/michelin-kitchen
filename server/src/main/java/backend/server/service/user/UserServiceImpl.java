@@ -65,7 +65,14 @@ public class UserServiceImpl implements UserService {
         UUID id = userRequest.getId();
         User user = findById(id);
 
-        boolean authorized = user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
+        boolean authorized = user
+                .getUsername()
+                .equals(
+                        SecurityContextHolder
+                                .getContext()
+                                .getAuthentication()
+                                .getName()
+                );
         if (!authorized) {
             throw new RestException(
                     HttpStatus.UNAUTHORIZED,
@@ -75,10 +82,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userRequest.isPasswordIsChanged()) {
-            if (userRequest.getOldPassword() == null || userRequest.getOldPassword().isEmpty() || userRequest.getOldPassword().length() < 6) {
+            if (!userRequest.validOldPassword() || !userRequest.validNewPassword()) {
                 throw new RestException(
                         HttpStatus.BAD_REQUEST,
-                        "Current password is invalid",
+                        "Credentials invalid",
                         System.currentTimeMillis()
                 );
             }
@@ -89,21 +96,12 @@ public class UserServiceImpl implements UserService {
                             userRequest.getOldPassword()
                     )
             );
-
-            if (userRequest.getNewPassword() == null || userRequest.getNewPassword().isEmpty() || userRequest.getNewPassword().length() < 6) {
-                throw new RestException(
-                        HttpStatus.BAD_REQUEST,
-                        "New password is invalid",
-                        System.currentTimeMillis()
-                );
-            }
             user.setPassword(passwordEncoder.encode(userRequest.getNewPassword()));
         }
 
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setUsername(userRequest.getUsername());
-        user.setRole(userRequest.getRole());
         user.setEmail(userRequest.getEmail());
 
         return userRepository.save(user);
