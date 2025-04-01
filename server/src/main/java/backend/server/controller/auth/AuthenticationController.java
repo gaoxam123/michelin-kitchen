@@ -1,6 +1,8 @@
 package backend.server.controller.auth;
 
+import backend.server.entity.user.User;
 import backend.server.service.auth.AuthenticationService;
+import backend.server.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<String> register(
             @Valid
             @RequestBody
             RegisterRequest request
@@ -25,12 +28,11 @@ public class AuthenticationController {
 
         return ResponseEntity
                 .ok()
-                .header(HttpHeaders.SET_COOKIE, createAuthCookie(token))
                 .body("Created new account!");
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(
+    public ResponseEntity<User> authenticate(
             @Valid @RequestBody AuthenticationRequest request
     ) {
 
@@ -39,7 +41,7 @@ public class AuthenticationController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, createAuthCookie(token))
-                .body("Login successful");
+                .body(userService.findByUsername(request.getUsername()));
     }
 
     @GetMapping("/verify")

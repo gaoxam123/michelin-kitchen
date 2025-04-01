@@ -11,6 +11,8 @@ public interface UserService {
 
     User findById(UUID id);
 
+    User findByUsername(String username);
+
     User save(User user);
 
     User update(UserRequest userRequest);
