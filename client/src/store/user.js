@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import configRoutes from "../config/routes";
+import request from "../utils/request";
 
 // Thunk to add a follower
 // TODO: use custom axios from request.js
@@ -7,7 +8,7 @@ export const addFollower = createAsyncThunk(
   "user/addFollower",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/follows", {
+      const response = await request.post(`/${configRoutes.follows}`, {
         followerId,
         followedId,
       });
@@ -25,7 +26,7 @@ export const removeFollower = createAsyncThunk(
   "user/removeFollower",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      await axios.delete("/follows", {
+      await request.delete(`/${configRoutes.follows}`, {
         data: { followerId, followedId },
       });
       return followedId;

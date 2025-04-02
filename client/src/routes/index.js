@@ -1,7 +1,6 @@
 import Homepage from "../pages/Homepage";
 import UserPage from "../pages/UserPage";
 import Settings from "../pages/Settings";
-import InfoPage from "../pages/InfoPage";
 
 import configRoutes from "../config/routes";
 import Register from "../pages/Authentication/Register";
@@ -15,7 +14,6 @@ import CommentSection from "../components/CommentSection/CommentSection";
 export const publicRoutes = [
   { path: configRoutes.home, component: Homepage },
   { path: `${configRoutes.profile}/:id`, component: UserPage },
-  { path: `${configRoutes.info}/:id`, component: InfoPage },
   { path: configRoutes.settings, component: Settings },
   { path: configRoutes.register, component: Register },
   { path: configRoutes.login, component: Login },

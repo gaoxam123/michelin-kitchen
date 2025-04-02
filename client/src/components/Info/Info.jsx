@@ -5,9 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFollower, removeFollower } from "../../store/user";
 import Image from "../Image";
 import CustomButton from "../CustomButton";
-import axios from "axios";
-import SingleBlog from "../SingleBlog";
 import Feed from "../Feed";
+import request from "../../utils/request";
 
 const cls = classNames.bind(styles);
 
@@ -30,13 +29,13 @@ export default function Info({ userId }) {
       setError(null);
 
       try {
-        const response = await axios.get(`/users/${userId}`);
+        const response = await request.get(`/users/${userId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
         setUser(data);
-        const res = await axios.get(`/users/${userId}/blogs`);
+        const res = await request.get(`/users/${userId}/blogs`);
         if (!res.ok) {
           throw new Error("Failed to fetch blogs");
         }
