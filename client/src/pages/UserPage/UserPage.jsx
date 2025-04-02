@@ -4,11 +4,15 @@ import styles from "./UserPage.module.css";
 const cls = classNames.bind(styles);
 
 import Info from "../../components/Info";
+import { useParams } from "react-router-dom";
 
 function UserPage() {
+
+  const { id } = useParams()
+
   return (
     <div className={cls("wrapper")}>
-      <Info />
+      <Info userId={id} />
     </div>
   );
 }
