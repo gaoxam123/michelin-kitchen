@@ -1,19 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // Thunk to add a follower
+// TODO: use custom axios from request.js
 export const addFollower = createAsyncThunk(
   "user/addFollower",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/addFollower`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ followerId, followedId }),
+      const response = await axios.post("/follows", {
+        followerId,
+        followedId,
       });
-      if (!response.ok) throw new Error("Failed to follow user");
-      return await response.json();
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to follow user"
+      );
     }
   }
 );
@@ -23,15 +25,14 @@ export const removeFollower = createAsyncThunk(
   "user/removeFollower",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/removeFollower`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ followerId, followedId }),
+      await axios.delete("/follows", {
+        data: { followerId, followedId },
       });
-      if (!response.ok) throw new Error("Failed to unfollow user");
       return followedId;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to unfollow user"
+      );
     }
   }
 );

@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFollower, removeFollower } from "../../store/user";
 import Image from "../Image";
 import CustomButton from "../CustomButton";
+import axios from "axios";
+import SingleBlog from "../SingleBlog";
+import Feed from "../Feed";
 
 const cls = classNames.bind(styles);
 
@@ -14,8 +17,11 @@ export default function Info({ userId }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [blogs, setBlogs] = useState([]);
   const status = currentUser.status;
 
+  // TODO: use custom axios from request.js
+  // useEffect runs again if page reloaded
   useEffect(() => {
     if (!userId) return;
 
@@ -24,12 +30,18 @@ export default function Info({ userId }) {
       setError(null);
 
       try {
-        const response = await fetch(`/users/${userId}`);
+        const response = await axios.get(`/users/${userId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
         setUser(data);
+        const res = await axios.get(`/users/${userId}/blogs`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch blogs");
+        }
+        const resData = await res.json();
+        setBlogs(resData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -103,6 +115,7 @@ export default function Info({ userId }) {
           </div>
         </div>
       </div>
+      <Feed blogs={blogs} />
     </div>
   );
 }
