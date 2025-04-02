@@ -21,7 +21,7 @@ export const publicRoutes = [
   // Demo for other (possible) paths with different Layout
   // { path: '/search', component: Search, layout: SearchLayout }
 
-// Testing zone
-// TODO: Remove
+  // Testing zone
+  // TODO: Remove
   { path: "/test", component: CommentSection },
 ];

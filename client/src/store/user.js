@@ -1,12 +1,52 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import configRoutes from "../config/routes";
+import request from "../utils/request";
 
-// following contains username, profilePicture, id of users
+// Thunk to add a follower
+// TODO: use custom axios from request.js
+export const addFollower = createAsyncThunk(
+  "user/addFollower",
+  async ({ followerId, followedId }, { rejectWithValue }) => {
+    try {
+      const response = await request.post(`/${configRoutes.follows}`, {
+        followerId,
+        followedId,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to follow user"
+      );
+    }
+  }
+);
+
+// Thunk to remove a follower
+export const removeFollower = createAsyncThunk(
+  "user/removeFollower",
+  async ({ followerId, followedId }, { rejectWithValue }) => {
+    try {
+      await request.delete(`/${configRoutes.follows}`, {
+        data: { followerId, followedId },
+      });
+      return followedId;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to unfollow user"
+      );
+    }
+  }
+);
+
+// Initial state
 const initialUserState = {
   id: null,
   isAuthenticated: false,
   username: null,
   image: null,
   following: [],
+  status: "idle", // "idle" | "loading" | "succeeded" | "failed"
+  error: null,
 };
 
 const userSlice = createSlice({
@@ -14,17 +54,41 @@ const userSlice = createSlice({
   initialState: initialUserState,
   reducers: {
     login(state, action) {
-      state = {
-        ...state,
-        isAuthenticated: true,
-        ...action.payload,
-      };
+      state.isAuthenticated = true;
+      Object.assign(state, action.payload);
     },
     logout(state) {
-      state = {
-        ...initialUserState,
-      };
+      Object.assign(state, initialUserState);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Add follower
+      .addCase(addFollower.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addFollower.fulfilled, (state, action) => {
+        state.following.push(action.payload);
+        state.status = "succeeded";
+      })
+      .addCase(addFollower.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      })
+      // Remove follower
+      .addCase(removeFollower.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeFollower.fulfilled, (state, action) => {
+        state.following = state.following.filter(
+          (u) => u.id !== action.payload
+        );
+        state.status = "succeeded";
+      })
+      .addCase(removeFollower.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      });
   },
 });
 

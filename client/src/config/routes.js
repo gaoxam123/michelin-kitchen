@@ -6,6 +6,7 @@ const routes = {
   settings: "/settings",
   register: "/register",
   login: "/login",
+  follows: "/follows",
 };
 
 export default routes;
