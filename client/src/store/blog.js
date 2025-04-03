@@ -156,6 +156,20 @@ const blogSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+      // delete blog
+      .addCase(deleteBlog.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteBlog.fulfilled, (state) => {
+        state.status = "succeeded";
+        state = {
+          ...initialState,
+        };
+      })
+      .addCase(deleteBlog.error, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       // fetch comments
       .addCase(fetchCommentsByBlogId.pending, (state) => {
         state.status = "loading";
@@ -209,7 +223,7 @@ const blogSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      // update comment
+      // delete comment
       .addCase(removeComment.pending, (state) => {
         state.status = "loading";
       })
