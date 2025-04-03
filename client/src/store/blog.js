@@ -120,130 +120,66 @@ const initialState = {
   comments: [],
 };
 
+const handleAsyncCases = (builder, asyncThunk, onSuccess) => {
+  builder
+    .addCase(asyncThunk.pending, (state) => {
+      state.status = "loading";
+    })
+    .addCase(asyncThunk.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      onSuccess(state, action);
+    })
+    .addCase(asyncThunk.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
+};
+
 const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      // fetch blog
-      .addCase(fetchBlogById.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchBlogById.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          blog: action.payload,
-        };
-      })
-      .addCase(fetchBlogById.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // update blog
-      .addCase(updateBlog.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateBlog.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          blog: action.payload,
-        };
-      })
-      .addCase(updateBlog.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // delete blog
-      .addCase(deleteBlog.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(deleteBlog.fulfilled, (state) => {
-        state.status = "succeeded";
-        state = {
-          ...initialState,
-        };
-      })
-      .addCase(deleteBlog.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // fetch comments
-      .addCase(fetchCommentsByBlogId.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchCommentsByBlogId.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          comments: action.payload,
-        };
-      })
-      .addCase(fetchCommentsByBlogId.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // add comment
-      .addCase(addComment.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addComment.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          comments: state.comments.push(action.payload),
-        };
-      })
-      .addCase(addComment.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // update comment
-      .addCase(updateComment.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateComment.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          comments: state.comments
-            .filter(
-              (comment) =>
-                !(
-                  comment.userId === action.payload.userId &&
-                  comment.blogId === action.payload.blogId
-                )
-            )
-            .push(action.payload),
-        };
-      })
-      .addCase(updateComment.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      // delete comment
-      .addCase(removeComment.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(removeComment.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state = {
-          ...state,
-          comments: state.comments.filter(
-            (comment) =>
-              !(
-                comment.userId === action.payload.userId &&
-                comment.blogId === action.payload.blogId
-              )
-          ),
-        };
-      })
-      .addCase(removeComment.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      });
+    handleAsyncCases(builder, fetchBlogById, (state, action) => {
+      state.blog = action.payload;
+    });
+
+    handleAsyncCases(builder, updateBlog, (state, action) => {
+      state.blog = action.payload;
+    });
+
+    handleAsyncCases(builder, deleteBlog, (state) => {
+      Object.assign(state, initialState);
+    });
+
+    handleAsyncCases(builder, fetchCommentsByBlogId, (state, action) => {
+      state.comments = action.payload;
+    });
+
+    handleAsyncCases(builder, addComment, (state, action) => {
+      state.comments.push(action.payload);
+    });
+
+    handleAsyncCases(builder, updateComment, (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) =>
+          !(
+            comment.userId === action.payload.userId &&
+            comment.blogId === action.payload.blogId
+          )
+      );
+      state.comments.push(action.payload);
+    });
+
+    handleAsyncCases(builder, removeComment, (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) =>
+          !(
+            comment.userId === action.payload.userId &&
+            comment.blogId === action.payload.blogId
+          )
+      );
+    });
   },
 });
 
