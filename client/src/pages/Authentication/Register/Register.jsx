@@ -11,7 +11,7 @@ import { PermIdentity, Password, Email } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
 import Form from "../../../components/Form"
 import CustomButton from "../../../components/CustomButton/CustomButton"
-import { userActions } from "../../../store/user"
+import { register } from "../../../store/user"
 import { useDispatch } from 'react-redux'
 
 export default function Register() {
@@ -65,10 +65,15 @@ export default function Register() {
         }
 
         navigate(configRoutes.home)
-        dispatch(userActions.login({
-            username: enteredUsername
+        dispatch(register({
+            email: enteredEmail,
+            username: enteredUsername,
+            password: enteredPassword,
+            // TODO: Add input fields for first-lastname
+            firstName: "Max",
+            lastName: "Mustermann",
         }))
-        navigate("/")
+        navigate(configRoutes.login)
     }
 
     const input = [
@@ -107,7 +112,7 @@ export default function Register() {
             value={enteredEmail}
             icon={<Email />}
             error={showErrorMessageEmail && "Invalid email"}
-            onBlur={handleEmailBlur} />
+            onBlur={handleEmailBlur} />,
     ]
 
     return (

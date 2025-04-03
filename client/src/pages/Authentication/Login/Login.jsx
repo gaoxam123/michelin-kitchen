@@ -53,17 +53,6 @@ export default function Login() {
       return;
     }
 
-    // const post = async () => {
-    //   const response = await request.post(`/auth/${configRoutes.login}`, {
-    //     username: enteredUsername,
-    //     password: enteredPassword,
-    //   });
-    //   if (!response.ok()) {
-    //     throw new Error("Login failed");
-    //   }
-    // };
-    // post();
-    // TODO: retrieve data from backend to dispatch
     dispatch(
       login({
         username: enteredUsername,

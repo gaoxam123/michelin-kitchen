@@ -37,6 +37,20 @@ export const removeFollowed = createAsyncThunk(
   }
 );
 
+export const register = createAsyncThunk(
+  "user/register",
+  async (req, { rejectWithValue }) => {
+    try {
+      const response = await request.post(apiRoutes.auth.register, req);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Can't register account"
+      );
+    }
+  }
+);
+
 export const login = createAsyncThunk(
   "user/login",
   async ({ username, password }, { rejectWithValue }) => {
@@ -88,8 +102,12 @@ const userSlice = createSlice({
         state.following = state.following.filter((id) => id !== action.payload);
         state.status = "succeeded";
       })
+      .addCase(register.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.status = "succeeded";
+      })
       .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload
+        state.user = action.payload;
         state.status = "succeeded";
       })
       .addCase(logout.fulfilled, (state, _action) => {
