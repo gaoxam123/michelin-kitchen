@@ -1,18 +1,17 @@
+import apiRoutes from "../config/apiRoutes";
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import configRoutes from "../config/routes";
 import request from "../utils/request";
 
-// Thunk to add a follower
-// TODO: use custom axios from request.js
-export const addFollower = createAsyncThunk(
-  "user/addFollower",
+export const addFollowed = createAsyncThunk(
+  "user/addFollowed",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await request.post(`/${configRoutes.follows}`, {
+      const response = await request.post(apiRoutes.follows, {
         followerId,
         followedId,
       });
-      return response.data;
+      return response.data.followedId;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to follow user"
@@ -21,15 +20,15 @@ export const addFollower = createAsyncThunk(
   }
 );
 
-// Thunk to remove a follower
-export const removeFollower = createAsyncThunk(
-  "user/removeFollower",
+export const removeFollowed = createAsyncThunk(
+  "user/removeFollowed",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      await request.delete(`/${configRoutes.follows}`, {
-        data: { followerId, followedId },
+      const response = await request.delete(apiRoutes.follows, {
+        followerId,
+        followedId,
       });
-      return followedId;
+      return response.data.followedId;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to unfollow user"
@@ -38,12 +37,38 @@ export const removeFollower = createAsyncThunk(
   }
 );
 
-// Initial state
+export const login = createAsyncThunk(
+  "user/login",
+  async ({ username, password }, { rejectWithValue }) => {
+    try {
+      const response = await request.post(apiRoutes.auth.authenticate, {
+        username,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Can't log in right now :("
+      );
+    }
+  }
+);
+
+export const logout = createAsyncThunk("user/logout", async () => {
+  try {
+    await request.post(apiRoutes.auth.logout, {
+      username,
+      password,
+    });
+  } catch (error) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to log out"
+    );
+  }
+});
+
 const initialUserState = {
-  id: null,
-  isAuthenticated: false,
-  username: null,
-  image: null,
+  user: null,
   following: [],
   status: "idle", // "idle" | "loading" | "succeeded" | "failed"
   error: null,
@@ -52,43 +77,38 @@ const initialUserState = {
 const userSlice = createSlice({
   name: "user",
   initialState: initialUserState,
-  reducers: {
-    login(state, action) {
-      state.isAuthenticated = true;
-      Object.assign(state, action.payload);
-    },
-    logout(state) {
-      Object.assign(state, initialUserState);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // Add follower
-      .addCase(addFollower.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addFollower.fulfilled, (state, action) => {
+      .addCase(addFollowed.fulfilled, (state, action) => {
         state.following.push(action.payload);
         state.status = "succeeded";
       })
-      .addCase(addFollower.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      })
-      // Remove follower
-      .addCase(removeFollower.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(removeFollower.fulfilled, (state, action) => {
-        state.following = state.following.filter(
-          (u) => u.id !== action.payload
-        );
+      .addCase(removeFollowed.fulfilled, (state, action) => {
+        state.following = state.following.filter((id) => id !== action.payload);
         state.status = "succeeded";
       })
-      .addCase(removeFollower.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      });
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload
+        state.status = "succeeded";
+      })
+      .addCase(logout.fulfilled, (state, _action) => {
+        state.status = "succeeded";
+      })
+      .addMatcher(
+        (action) => action.type.endsWith("/pending"),
+        (state) => {
+          state.status = "loading";
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state) => {
+          state.status = "failed";
+          state.error = action.payload;
+        }
+      );
   },
 });
 

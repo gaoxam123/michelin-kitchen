@@ -14,7 +14,7 @@ import { Person, Chat, Notifications } from "@mui/icons-material";
 
 function Header() {
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.user);
+  const { user, status, error } = useSelector((state) => state.user);
 
   const menuItems = [
     {
@@ -63,7 +63,7 @@ function Header() {
         <SearchBar placeholder="Search" />
       </div>
       <div className={cls("header-right")}>
-        {currentUser.isAuthenticated ? (
+        {user ? (
           <>
             <div className={cls("header-links")}>
               <span className={cls("header-link")}>Homepage</span>
@@ -84,10 +84,10 @@ function Header() {
               </div>
             </div>
             <img
-              src={currentUser.profilePicture || "profile_pics.jpg"}
+              src={user.image || "profile_pics.jpg"}
               alt=""
               className={cls("header-img")}
-              onClick={() => navigate(`/profile/${currentUser.id}`)}
+              onClick={() => navigate(`/profile/${user.id}`)}
             />
           </>
         ) : (

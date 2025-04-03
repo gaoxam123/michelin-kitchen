@@ -1,79 +1,60 @@
-import classNames from "classnames/bind";
-import styles from "./Info.module.css";
+import apiRoutes from "../../config/apiRoutes";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addFollower, removeFollower } from "../../store/user";
+import { addFollowed, removeFollowed } from "../../store/user";
 import Image from "../Image";
 import CustomButton from "../CustomButton";
 import Feed from "../Feed";
 import request from "../../utils/request";
 
+import classNames from "classnames/bind";
+import styles from "./Info.module.css";
+
 const cls = classNames.bind(styles);
 
 export default function Info({ userId }) {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, following, status, error } = useSelector((state) => state.user);
+  const [viewedUser, setViewedUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const status = currentUser.status;
+  const [showFollowButton, setShowFollowButton] = useState(false)
+  const [followed, setFollowed] = useState(false)
 
-  // TODO: use custom axios from request.js
-  // useEffect runs again if page reloaded
   useEffect(() => {
     if (!userId) return;
 
     const fetchUser = async () => {
-      setLoading(true);
-      setError(null);
 
       try {
-        const response = await request.get(`/users/${userId}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const data = await response.json();
-        setUser(data);
-        const res = await request.get(`/users/${userId}/blogs`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch blogs");
-        }
-        const resData = await res.json();
-        setBlogs(resData);
+        const userResponse = await request.get(`${apiRoutes.users.base}/${userId}`);
+        setViewedUser(userResponse.data);
+        const blogsResponse = await request.get(`${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`);
+        setBlogs(blogsResponse.data);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        // TODO handle error
+        alert(error)
       }
     };
 
     fetchUser();
   }, [userId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-  if (!user) return <p>No user found</p>;
+  useEffect(() => {
+    setShowFollowButton(user && viewedUser && user.id !== viewedUser.id)
+    setFollowed(following.includes(viewedUser.id)
+    )
+  }, [viewedUser])
 
-  let showFollowButton =
-    currentUser.isAuthenticated && currentUser.id !== user.id;
-
-  let followed = currentUser.following.some(
-    (u) => u.username === user.username
-  );
 
   const handleFollowClick = () => {
     if (followed) {
       dispatch(
-        removeFollower({ followerId: currentUser.id, followedId: user.id })
+        removeFollowed({ followerId: user.id, followedId: viewedUser.id })
       );
     } else {
       dispatch(
-        addFollower({ followerId: currentUser.id, followedId: user.id })
+        addFollowed({ followerId: user.id, followedId: viewedUser.id })
       );
     }
   };
@@ -101,16 +82,16 @@ export default function Info({ userId }) {
       <div className={cls("infos")}>
         <div className={cls("names")}>
           <p className={cls("name")}>
-            {user.firstName} {user.lastName}
+            {viewedUser.firstName} {viewedUser.lastName}
           </p>
-          <p className={cls("username")}>@{user.username}</p>
+          <p className={cls("username")}>@{viewedUser.username}</p>
         </div>
         <div className={cls("follows-wrapper")}>
           <div className={cls("follows")}>
-            <p className={cls("num")}>{user.following.length}</p> Following
+            <p className={cls("num")}>{viewedUser.following.length}</p> Following
           </div>
           <div className={cls("follows")}>
-            <p className={cls("num")}>{user.followers.length}</p> Followers
+            <p className={cls("num")}>{viewedUser.followers.length}</p> Followers
           </div>
         </div>
       </div>

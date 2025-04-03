@@ -11,7 +11,7 @@ import { PermIdentity, Password } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import Form from "../../../components/Form";
 import CustomButton from "../../../components/CustomButton";
-import { userActions } from "../../../store/user";
+import { login } from "../../../store/user";
 import { useDispatch } from "react-redux";
 import request from "../../../utils/request";
 
@@ -53,25 +53,24 @@ export default function Login() {
       return;
     }
 
-    navigate(configRoutes.home);
-    const post = async () => {
-      const response = await request.post(`/auth/${configRoutes.login}`, {
-        username: enteredUsername,
-        password: enteredPassword,
-      });
-      if (!response.ok()) {
-        throw new Error("Login failed");
-      }
-    };
-    post();
+    // const post = async () => {
+    //   const response = await request.post(`/auth/${configRoutes.login}`, {
+    //     username: enteredUsername,
+    //     password: enteredPassword,
+    //   });
+    //   if (!response.ok()) {
+    //     throw new Error("Login failed");
+    //   }
+    // };
+    // post();
     // TODO: retrieve data from backend to dispatch
     dispatch(
-      userActions.login({
+      login({
         username: enteredUsername,
-        id: 1,
+        password: enteredPassword,
       })
     );
-    navigate("/");
+    navigate(configRoutes.home);
   };
 
   const input = [

@@ -1,5 +1,6 @@
 import request from "../../utils/request";
 import configRoutes from "../../config/routes";
+import apiRoutes from "../../config/apiRoutes";
 
 import Tippy from "@tippyjs/react/headless";
 import Popper from "../Popper";
@@ -41,7 +42,7 @@ function SearchBar({ placeholder }) {
     if (query) {
       const fetchAPI = async () => {
         try {
-          const result = await request.get("/users/search", {
+          const result = await request.get(apiRoutes.users.search, {
             params: {
               q: query,
               less: true,
