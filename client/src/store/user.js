@@ -105,7 +105,7 @@ const userSlice = createSlice({
         state.following = state.following.filter((id) => id !== action.payload);
         state.status = "succeeded";
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
         state.status = "succeeded";
       })
       .addCase(login.fulfilled, (state, action) => {
