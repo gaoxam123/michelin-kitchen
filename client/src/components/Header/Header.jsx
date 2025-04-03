@@ -84,7 +84,7 @@ function Header() {
               </div>
             </div>
             <img
-              src={user.image || "profile_pics.jpg"}
+              src={user.image || "/profile_pics.jpg"}
               alt=""
               className={cls("header-img")}
               onClick={() => navigate(`/profile/${user.id}`)}

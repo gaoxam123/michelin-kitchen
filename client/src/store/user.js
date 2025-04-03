@@ -68,18 +68,21 @@ export const login = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("user/logout", async () => {
-  try {
-    await request.post(apiRoutes.auth.logout, {
-      username,
-      password,
-    });
-  } catch (error) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to log out"
-    );
+export const logout = createAsyncThunk(
+  "user/logout",
+  async ({ username, password }, { rejectWithValue }) => {
+    try {
+      await request.post(apiRoutes.auth.logout, {
+        username,
+        password,
+      });
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to log out"
+      );
+    }
   }
-});
+);
 
 const initialUserState = {
   user: null,
@@ -110,7 +113,7 @@ const userSlice = createSlice({
         state.user = action.payload;
         state.status = "succeeded";
       })
-      .addCase(logout.fulfilled, (state, _action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.status = "succeeded";
       })
       .addMatcher(
@@ -122,7 +125,7 @@ const userSlice = createSlice({
       )
       .addMatcher(
         (action) => action.type.endsWith("/rejected"),
-        (state) => {
+        (state, action) => {
           state.status = "failed";
           state.error = action.payload;
         }

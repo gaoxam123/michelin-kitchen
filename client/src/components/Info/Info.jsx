@@ -18,34 +18,39 @@ export default function Info({ userId }) {
   const { user, following, status, error } = useSelector((state) => state.user);
   const [viewedUser, setViewedUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [showFollowButton, setShowFollowButton] = useState(false)
-  const [followed, setFollowed] = useState(false)
+  const [showFollowButton, setShowFollowButton] = useState(false);
+  const [followed, setFollowed] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
 
     const fetchUser = async () => {
-
       try {
-        const userResponse = await request.get(`${apiRoutes.users.base}/${userId}`);
+        const userResponse = await request.get(
+          `${apiRoutes.users.base}/${userId}`
+        );
         setViewedUser(userResponse.data);
-        const blogsResponse = await request.get(`${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`);
+        const blogsResponse = await request.get(
+          `${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`
+        );
         setBlogs(blogsResponse.data);
       } catch (error) {
         // TODO handle error
-        alert(error)
+        alert(error);
       }
     };
 
     fetchUser();
   }, [userId]);
 
-  useEffect(() => {
-    setShowFollowButton(user && viewedUser && user.id !== viewedUser.id)
-    setFollowed(following.includes(viewedUser.id)
-    )
-  }, [viewedUser])
+  // useEffect(() => {
+  //   setShowFollowButton(user && viewedUser && user.id !== viewedUser.id);
+  //   setFollowed(following.includes(viewedUser.id));
+  // }, [viewedUser, user, following]);
 
+  if (!viewedUser) {
+    return <p>...Loading</p>;
+  }
 
   const handleFollowClick = () => {
     if (followed) {
@@ -53,9 +58,7 @@ export default function Info({ userId }) {
         removeFollowed({ followerId: user.id, followedId: viewedUser.id })
       );
     } else {
-      dispatch(
-        addFollowed({ followerId: user.id, followedId: viewedUser.id })
-      );
+      dispatch(addFollowed({ followerId: user.id, followedId: viewedUser.id }));
     }
   };
 
@@ -88,10 +91,12 @@ export default function Info({ userId }) {
         </div>
         <div className={cls("follows-wrapper")}>
           <div className={cls("follows")}>
-            <p className={cls("num")}>{viewedUser.following.length}</p> Following
+            {/* <p className={cls("num")}>{viewedUser.following.length}</p>{" "}
+            Following
           </div>
           <div className={cls("follows")}>
-            <p className={cls("num")}>{viewedUser.followers.length}</p> Followers
+            <p className={cls("num")}>{viewedUser.followers.length}</p>{" "}
+            Followers */}
           </div>
         </div>
       </div>
