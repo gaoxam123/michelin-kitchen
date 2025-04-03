@@ -137,7 +137,7 @@ const blogSlice = createSlice({
           blog: action.payload,
         };
       })
-      .addCase(fetchBlogById.error, (state, action) => {
+      .addCase(fetchBlogById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -152,7 +152,7 @@ const blogSlice = createSlice({
           blog: action.payload,
         };
       })
-      .addCase(updateBlog.error, (state, action) => {
+      .addCase(updateBlog.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -166,7 +166,7 @@ const blogSlice = createSlice({
           ...initialState,
         };
       })
-      .addCase(deleteBlog.error, (state, action) => {
+      .addCase(deleteBlog.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -181,7 +181,7 @@ const blogSlice = createSlice({
           comments: action.payload,
         };
       })
-      .addCase(fetchCommentsByBlogId.error, (state, action) => {
+      .addCase(fetchCommentsByBlogId.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -196,7 +196,7 @@ const blogSlice = createSlice({
           comments: state.comments.push(action.payload),
         };
       })
-      .addCase(addComment.error, (state, action) => {
+      .addCase(addComment.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -219,7 +219,7 @@ const blogSlice = createSlice({
             .push(action.payload),
         };
       })
-      .addCase(updateComment.error, (state, action) => {
+      .addCase(updateComment.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -240,7 +240,7 @@ const blogSlice = createSlice({
           ),
         };
       })
-      .addCase(removeComment.error, (state, action) => {
+      .addCase(removeComment.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
