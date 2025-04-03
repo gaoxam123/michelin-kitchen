@@ -13,7 +13,6 @@ import Form from "../../../components/Form";
 import CustomButton from "../../../components/CustomButton";
 import { login } from "../../../store/user";
 import { useDispatch } from "react-redux";
-import request from "../../../utils/request";
 
 export default function Login() {
   const navigate = useNavigate();
