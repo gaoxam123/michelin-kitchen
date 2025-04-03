@@ -59,7 +59,7 @@ export default function Leftbar() {
                     {following.map(
                         (user) =>
                             <ProfileListItem key={user.id}
-                                profileImage={user.profilePicture || "profile_pics.jpg"}
+                                profileImage={user.profilePicture}
                                 displayName={user.username}
                             />
                     )}

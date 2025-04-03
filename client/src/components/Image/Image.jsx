@@ -1,13 +1,16 @@
+import { defaultProfilePicture } from "../../config/imagesPaths"
+
+import { useState } from "react"
+
 import classNames from "classnames/bind"
 import styles from "./Image.module.css"
-import { useState } from "react"
 
 const cls = classNames.bind(styles)
 
 function Image({
     src,
     className,
-    fallback = "/profile_pics.jpg"
+    fallback = defaultProfilePicture
 }) {
     const [image, setImage] = useState(src)
 

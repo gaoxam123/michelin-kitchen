@@ -1,3 +1,5 @@
+import { defaultProfilePicture } from "../../config/imagesPaths";
+
 import { Link, useNavigate } from "react-router-dom";
 import configRoutes from "../../config/routes";
 
@@ -84,7 +86,7 @@ function Header() {
               </div>
             </div>
             <img
-              src={user.image || "/profile_pics.jpg"}
+              src={user.image || defaultProfilePicture}
               alt=""
               className={cls("header-img")}
               onClick={() => navigate(`/profile/${user.id}`)}
