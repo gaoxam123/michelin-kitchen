@@ -54,6 +54,8 @@ function Header() {
     },
   ];
 
+  console.log(user);
+
   return (
     <div className={cls("header-container")}>
       <div className={cls("header-left")}>

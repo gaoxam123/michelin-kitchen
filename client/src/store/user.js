@@ -128,7 +128,8 @@ const userSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(logout.fulfilled, (state) => {
-        state = { ...initialUserState };
+        state.user = null;
+        state.following = [];
         state.status = "succeeded";
       })
       .addCase(getFollowed.fulfilled, (state, action) => {
