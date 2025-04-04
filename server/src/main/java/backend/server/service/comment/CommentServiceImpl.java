@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
             );
         }
 
-        CommentId commentId = new CommentId(userId, blogId);
+        CommentId commentId = new CommentId(userId, blogId, commentRequest.getCommentDate());
         Comment comment = Comment
                 .builder()
                 .user(user)
@@ -89,8 +89,8 @@ public class CommentServiceImpl implements CommentService {
                 .commentDate(commentRequest.getCommentDate())
                 .id(commentId)
                 .build();
-        blog.getComments().add(comment);
-        user.getComments().add(comment);
+//        blog.getComments().add(comment);
+//        user.getComments().add(comment);
 
         // notify users who commented on or own the blog
         String subjectForOwner = blog.getUser().getUsername() + " commented on your blog";
@@ -122,9 +122,9 @@ public class CommentServiceImpl implements CommentService {
         User user = userService.findById(userId);
 
         UUID blogId = commentRequest.getBlogId();
-        Blog blog = blogService.findById(blogId);
+//        Blog blog = blogService.findById(blogId);
 
-        CommentId commentId = new CommentId(userId, blogId);
+        CommentId commentId = new CommentId(userId, blogId, commentRequest.getCommentDate());
         Comment comment = findById(commentId);
         comment.setContent(commentRequest.getContent());
 
@@ -137,13 +137,13 @@ public class CommentServiceImpl implements CommentService {
             );
         }
 
-        List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-        blogComments.add(comment);
-        blog.setComments(blogComments);
-
-        List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-        userComments.add(comment);
-        user.setComments(userComments);
+//        List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+//        blogComments.add(comment);
+//        blog.setComments(blogComments);
+//
+//        List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+//        userComments.add(comment);
+//        user.setComments(userComments);
 
         commentRepository.save(comment);
     }
@@ -152,8 +152,8 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentById(CommentId commentId) {
         findById(commentId);
 
-        UUID blogId = commentId.getBlogId();
-        Blog blog = blogService.findById(blogId);
+//        UUID blogId = commentId.getBlogId();
+//        Blog blog = blogService.findById(blogId);
 
         UUID userId = commentId.getUserId();
         User user = userService.findById(userId);
@@ -168,17 +168,17 @@ public class CommentServiceImpl implements CommentService {
             );
         }
 
-        List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-        List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
-        blog.setComments(blogComments);
-        user.setComments(userComments);
+//        List<Comment> blogComments = new ArrayList<>(blog.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+//        List<Comment> userComments = new ArrayList<>(user.getComments().stream().filter(c -> !c.getId().equals(commentId)).toList());
+//        blog.setComments(blogComments);
+//        user.setComments(userComments);
 
         commentRepository.deleteById(commentId);
     }
 
     @Override
-    public boolean isOwner(UUID userId, UUID blogId, String username) {
-        CommentId commentId = new CommentId(userId, blogId);
+    public boolean isOwner(UUID userId, UUID blogId, Long commentDate, String username) {
+        CommentId commentId = new CommentId(userId, blogId, commentDate);
         return commentRepository.findById(commentId)
                                 .map(comment -> comment.getUser().getUsername().equals(username))
                                 .orElse(false);

@@ -18,6 +18,7 @@ import java.util.UUID;
 public class CommentId implements Serializable {
     private UUID userId;
     private UUID blogId;
+    private Long commentDate;
 
     @Override
     public boolean equals(Object o) {
@@ -25,11 +26,12 @@ public class CommentId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         CommentId that = (CommentId) o;
         return Objects.equals(userId, that.userId) &&
-                Objects.equals(blogId, that.blogId);
+                Objects.equals(blogId, that.blogId) &&
+                Objects.equals(commentDate, that.commentDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, blogId);
+        return Objects.hash(userId, blogId, commentDate);
     }
 }

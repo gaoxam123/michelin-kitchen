@@ -43,8 +43,8 @@ public class FollowServiceImpl implements FollowService {
             );
         }
 
-        follower.getFollowed().add(newFollow);
-        followed.getFollowers().add(newFollow);
+//        follower.getFollowed().add(newFollow);
+//        followed.getFollowers().add(newFollow);
 
         followRepository.save(newFollow);
     }
@@ -61,7 +61,7 @@ public class FollowServiceImpl implements FollowService {
         );
 
         User follower = userService.findById(followRequest.getFollowerId());
-        User followed = userService.findById(followRequest.getFollowedId());
+//        User followed = userService.findById(followRequest.getFollowedId());
 
         boolean authorized = follower.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!authorized) {
@@ -72,10 +72,10 @@ public class FollowServiceImpl implements FollowService {
             );
         }
 
-        List<Follow> newFollowedList = follower.getFollowed().stream().filter(f -> !f.getId().equals(followId)).toList();
-        List<Follow> newFollowerList = followed.getFollowers().stream().filter(f -> !f.getId().equals(followId)).toList();
-        follower.setFollowed(newFollowedList);
-        followed.setFollowers(newFollowerList);
+//        List<Follow> newFollowedList = follower.getFollowed().stream().filter(f -> !f.getId().equals(followId)).toList();
+//        List<Follow> newFollowerList = followed.getFollowers().stream().filter(f -> !f.getId().equals(followId)).toList();
+//        follower.setFollowed(newFollowedList);
+//        followed.setFollowers(newFollowerList);
 
         followRepository.deleteById(followId);
     }

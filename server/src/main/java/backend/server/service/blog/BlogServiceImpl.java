@@ -64,8 +64,8 @@ public class BlogServiceImpl implements BlogService {
             );
         }
         // update blog list of user after deleting
-        List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
-        user.setBlogs(updatedBlogList);
+//        List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
+//        user.setBlogs(updatedBlogList);
 
         blogRepository.deleteById(id);
     }
@@ -101,7 +101,7 @@ public class BlogServiceImpl implements BlogService {
             // add new blog
             UUID blogId = blogRepository.save(blog).getId();
             blog.setId(blogId);
-            user.getBlogs().add(blog);
+//            user.getBlogs().add(blog);
 
             // notify users who follow the blog owner
             List<User> followers = user.getFollowers().stream().map(Follow::getFollower).toList();
@@ -147,9 +147,9 @@ public class BlogServiceImpl implements BlogService {
             }
 
             // set old id if updating and modify existing blog
-            List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
-            updatedBlogList.add(blog);
-            user.setBlogs(updatedBlogList);
+//            List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(blogRequest.getId())).toList());
+//            updatedBlogList.add(blog);
+//            user.setBlogs(updatedBlogList);
 
             return blogRepository.save(blog);
 
