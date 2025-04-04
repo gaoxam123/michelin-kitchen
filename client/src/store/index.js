@@ -1,12 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user";
 import blogReducer from "./blog";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const store = configureStore({
+const persistConfig = {
+  key: "user",
+  storage,
+  whitelist: ["user"],
+};
+
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
+
+export const store = configureStore({
   reducer: {
-    user: userReducer,
+    user: persistedUserReducer,
     blog: blogReducer,
   },
 });
 
-export default store;
+export const persistor = persistStore(store);

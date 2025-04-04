@@ -42,7 +42,7 @@ export const getFollowed = createAsyncThunk(
   "user/getFollowed",
   async ({ userId }, { rejectWithValue }) => {
     try {
-      const response = await request.get(`/users/${userId}/follows`);
+      const response = await request.get(`/users/${userId}/followed`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
