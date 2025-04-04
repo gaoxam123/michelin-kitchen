@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> get10CommentsByBlogId(UUID userId) {
-        String query = "SELECT c FROM Comment c WHERE c.blog.id = :blogId ORDER BY c.commentDate DESC";
+        String query = "SELECT c FROM Comment c WHERE c.blog.id = :blogId ORDER BY c.id.commentDate DESC";
         return entityManager
                 .createQuery(query, Comment.class)
                 .setParameter("blogId", userId)
