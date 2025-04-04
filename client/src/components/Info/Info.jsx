@@ -1,6 +1,6 @@
 import apiRoutes from "../../config/apiRoutes";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addFollowed, removeFollowed, getFollowed } from "../../store/user";
 import Image from "../Image";
@@ -21,34 +21,31 @@ export default function Info({ userId }) {
   const [followedList, setFollowedList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
 
+  const fetchUser = useCallback(async () => {
+    try {
+      const userResponse = await request.get(
+        `${apiRoutes.users.base}/${userId}`
+      );
+      setViewedUser(userResponse.data);
+      const blogsResponse = await request.get(
+        `${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`
+      );
+      setBlogs(blogsResponse.data);
+      // TODO: apiRoutes
+      const followedResponse = await request.get(`/users/${userId}/followed`);
+      setFollowedList(followedResponse.data);
+      const followerResponse = await request.get(`/users/${userId}/followers`);
+      setFollowerList(followerResponse.data);
+    } catch (error) {
+      // TODO handle error
+      alert(error);
+    }
+  }, [userId]);
+
   useEffect(() => {
     if (!userId) return;
-
-    const fetchUser = async () => {
-      try {
-        const userResponse = await request.get(
-          `${apiRoutes.users.base}/${userId}`
-        );
-        setViewedUser(userResponse.data);
-        const blogsResponse = await request.get(
-          `${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`
-        );
-        setBlogs(blogsResponse.data);
-        // TODO: apiRoutes
-        const followedResponse = await request.get(`/users/${userId}/followed`);
-        setFollowedList(followedResponse.data);
-        const followerResponse = await request.get(
-          `/users/${userId}/followers`
-        );
-        setFollowerList(followerResponse.data);
-      } catch (error) {
-        // TODO handle error
-        alert(error);
-      }
-    };
-
     fetchUser();
-  }, [userId]);
+  }, [userId, fetchUser]);
 
   useEffect(() => {
     if (user) {
@@ -57,17 +54,13 @@ export default function Info({ userId }) {
   }, [user, dispatch]);
 
   const showFollowButton = user && viewedUser && user.id !== viewedUser.id;
-  console.log(user, viewedUser);
-  let followed = false;
-  if (viewedUser) {
-    followed = following.includes(viewedUser.id);
-  }
+  const followed = viewedUser && following.includes(viewedUser.id);
 
   if (!viewedUser) {
     return <p>...Loading</p>;
   }
 
-  const handleFollowClick = () => {
+  const handleFollowClick = async () => {
     if (followed) {
       dispatch(
         removeFollowed({ followerId: user.id, followedId: viewedUser.id })
@@ -75,6 +68,8 @@ export default function Info({ userId }) {
     } else {
       dispatch(addFollowed({ followerId: user.id, followedId: viewedUser.id }));
     }
+    await fetchUser();
+    dispatch(getFollowed({ userId: user.id }));
   };
 
   return (

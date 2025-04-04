@@ -25,8 +25,7 @@ export const removeFollowed = createAsyncThunk(
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
       const response = await request.delete(apiRoutes.follows, {
-        followerId,
-        followedId,
+        data: { followerId, followedId },
       });
       return response.data.followedId;
     } catch (error) {
@@ -134,7 +133,7 @@ const userSlice = createSlice({
       })
       .addCase(getFollowed.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.following = action.payload;
+        state.following = action.payload.map((user) => user.id);
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),

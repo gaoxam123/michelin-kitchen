@@ -69,7 +69,7 @@ export const addComment = createAsyncThunk(
   "blog/addComment",
   async ({ comment }, { rejectWithValue }) => {
     try {
-      const response = await request.post(`comments`, {
+      const response = await request.post(`/comments`, {
         data: comment,
       });
       return response.data;
@@ -85,7 +85,7 @@ export const updateComment = createAsyncThunk(
   "blog/updateComment",
   async ({ comment }, { rejectWithValue }) => {
     try {
-      const response = await request.put(`comments`, {
+      const response = await request.put(`/comments`, {
         data: comment,
       });
       return response.data;
@@ -101,7 +101,7 @@ export const removeComment = createAsyncThunk(
   "blog/removeComment",
   async ({ comment }, { rejectWithValue }) => {
     try {
-      const response = await request.delete(`comments`, {
+      const response = await request.delete(`/comments`, {
         data: comment,
       });
       return response.data;
@@ -113,11 +113,58 @@ export const removeComment = createAsyncThunk(
   }
 );
 
+export const getLikes = createAsyncThunk(
+  "blog/getLikes",
+  async (blogId, { rejectWithValue }) => {
+    try {
+      const response = await request.get(`/blogs/${blogId}/likes`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get users"
+      );
+    }
+  }
+);
+
+export const addLike = createAsyncThunk(
+  "blog/addLike",
+  async ({ userId, blogId }, { rejectWithValue }) => {
+    try {
+      const response = await request.post(`/likes`, {
+        data: { userId, blogId },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to like blog"
+      );
+    }
+  }
+);
+
+export const removeLike = createAsyncThunk(
+  "blog/removeLike",
+  async ({ userId, blogId }, { rejectWithValue }) => {
+    try {
+      const response = await request.delete(`/likes`, {
+        data: { userId, blogId },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to unlike blog"
+      );
+    }
+  }
+);
+
 const initialState = {
   blog: null,
   status: "idle", // "idle" | "loading" | "succeeded" | "failed"
   error: null,
   comments: [],
+  likes: [],
 };
 
 const handleAsyncCases = (builder, asyncThunk, onSuccess) => {
@@ -165,7 +212,8 @@ const blogSlice = createSlice({
         (comment) =>
           !(
             comment.userId === action.payload.userId &&
-            comment.blogId === action.payload.blogId
+            comment.blogId === action.payload.blogId &&
+            comment.commentDate === action.payload.commentDate
           )
       );
       state.comments.push(action.payload);
@@ -176,7 +224,26 @@ const blogSlice = createSlice({
         (comment) =>
           !(
             comment.userId === action.payload.userId &&
-            comment.blogId === action.payload.blogId
+            comment.blogId === action.payload.blogId &&
+            comment.commentDate === action.payload.commentDate
+          )
+      );
+    });
+
+    handleAsyncCases(builder, getLikes, (state, action) => {
+      state.likes = action.payload;
+    });
+
+    handleAsyncCases(builder, addLike, (state, action) => {
+      state.likes.push(action.payload);
+    });
+
+    handleAsyncCases(builder, removeLike, (state, action) => {
+      state.likes = state.likes.filter(
+        (like) =>
+          !(
+            like.userId === action.payload.userId &&
+            like.blogId === action.payload.blogId
           )
       );
     });
