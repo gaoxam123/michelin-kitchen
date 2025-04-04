@@ -27,6 +27,15 @@ spring:
           starttls:
             enable: true
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      orm:
+        jdbc:
+          bind: TRACE
+
 security:
   jwt:
     encryption_secret: ${JWT_ENCRYPTION_SECRET}
