@@ -14,7 +14,7 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping("/follows")
-    @PreAuthorize("@followServiceImpl.isOwner(#followRequest.followerId, #followRequest.followedId, authentication.name)")
+    @PreAuthorize("@authentication.principal.id == #followRequest.followerId")
     public void addFollow(@Valid @RequestBody FollowRequest followRequest) {
         followService.addFollow(followRequest);
     }

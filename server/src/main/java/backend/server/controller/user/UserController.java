@@ -106,8 +106,13 @@ public class UserController {
         return ResponseEntity.ok(convertUserList(userService.findUsers(q)));
     }
 
-    @GetMapping("/users/{id}/follows")
+    @GetMapping("/users/{id}/followed")
     public ResponseEntity<List<UserResponse>> getFollowedByUserId(@PathVariable UUID id) {
         return ResponseEntity.ok(convertUserList(userService.findFollowedByUserId(id)));
+    }
+
+    @GetMapping("/users/{id}/followers")
+    public ResponseEntity<List<UserResponse>> getFollowersByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(convertUserList(userService.findFollowersByUserId(id)));
     }
 }
