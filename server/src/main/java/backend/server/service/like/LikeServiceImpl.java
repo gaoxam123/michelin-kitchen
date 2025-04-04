@@ -2,6 +2,7 @@ package backend.server.service.like;
 
 import backend.server.controller.RestException;
 import backend.server.controller.like.LikeRequest;
+import backend.server.controller.like.LikeResponse;
 import backend.server.dao.like.LikeRepository;
 import backend.server.entity.blog.Blog;
 import backend.server.entity.like.Like;
@@ -27,7 +28,7 @@ public class LikeServiceImpl implements LikeService {
     private final EmailService emailService;
 
     @Override
-    public void addLike(LikeRequest likeRequest) {
+    public LikeResponse addLike(LikeRequest likeRequest) {
         LikeId likeId = new LikeId(likeRequest.getUserId(), likeRequest.getBlogId());
         Blog blog = blogService.findById(likeRequest.getBlogId());
         User user = userService.findById(likeRequest.getUserId());
@@ -42,10 +43,8 @@ public class LikeServiceImpl implements LikeService {
             );
         }
 
-        blog.getLikes().add(like);
-        user.getLikes().add(like);
-
-        likeRepository.save(like);
+//        blog.getLikes().add(like);
+//        user.getLikes().add(like);
 
         // notify user who own the blog
         User blogOwner = userService.findById(blog.getUser().getId());
@@ -53,10 +52,14 @@ public class LikeServiceImpl implements LikeService {
         String blogUrl = "http://localhost:8080/api/blogs/" + blog.getId();
         String body = "Check it out! " + blogUrl;
         emailService.sendGeneralEmail(blogOwner.getEmail(), subject, body);
+
+        likeRepository.save(like);
+
+        return new LikeResponse(likeId.getUserId(), likeId.getBlogId());
     }
 
     @Override
-    public void removeLike(LikeRequest likeRequest) {
+    public LikeResponse removeLike(LikeRequest likeRequest) {
         LikeId likeId = new LikeId(likeRequest.getUserId(), likeRequest.getBlogId());
         likeRepository.findById(likeId).orElseThrow(
                 () -> new RestException(
@@ -78,12 +81,14 @@ public class LikeServiceImpl implements LikeService {
             );
         }
 
-        List<Like> blogLikes = blog.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
-        List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
-        blog.setLikes(blogLikes);
-        user.setLikes(userLikes);
+//        List<Like> blogLikes = blog.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
+//        List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
+//        blog.setLikes(blogLikes);
+//        user.setLikes(userLikes);
 
         likeRepository.deleteById(likeId);
+
+        return new LikeResponse(likeId.getUserId(), likeId.getBlogId());
     }
 
     @Override

@@ -17,6 +17,7 @@ public class CommentRequest {
     @NotNull
     private String content;
 
+    @NotNull
     private Long commentDate;
 
     @NotNull
