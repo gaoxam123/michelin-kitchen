@@ -20,5 +20,5 @@ public interface CommentService {
 
     void deleteCommentById(CommentId commentId);
 
-    boolean isOwner(UUID userId, UUID blogId, String username);
+    boolean isOwner(UUID userId, UUID blogId, Long commentDate, String username);
 }

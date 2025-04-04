@@ -176,8 +176,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean isOwner(UUID userId, UUID blogId, String username) {
-        CommentId commentId = new CommentId(userId, blogId, null);
+    public boolean isOwner(UUID userId, UUID blogId, Long commentDate, String username) {
+        CommentId commentId = new CommentId(userId, blogId, commentDate);
         return commentRepository.findById(commentId)
                                 .map(comment -> comment.getUser().getUsername().equals(username))
                                 .orElse(false);
