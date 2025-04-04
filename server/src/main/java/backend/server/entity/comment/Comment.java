@@ -20,10 +20,6 @@ public class Comment {
     private CommentId id;
 
     @NotNull
-    @Column(name = "comment_date", nullable = false)
-    private Long commentDate;
-
-    @NotNull
     @Column(name = "content", nullable = false)
     private String content;
 

@@ -80,13 +80,12 @@ public class CommentServiceImpl implements CommentService {
             );
         }
 
-        CommentId commentId = new CommentId(userId, blogId);
+        CommentId commentId = new CommentId(userId, blogId, commentRequest.getCommentDate());
         Comment comment = Comment
                 .builder()
                 .user(user)
                 .blog(blog)
                 .content(commentRequest.getContent())
-                .commentDate(commentRequest.getCommentDate())
                 .id(commentId)
                 .build();
 //        blog.getComments().add(comment);
@@ -124,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
         UUID blogId = commentRequest.getBlogId();
 //        Blog blog = blogService.findById(blogId);
 
-        CommentId commentId = new CommentId(userId, blogId);
+        CommentId commentId = new CommentId(userId, blogId, commentRequest.getCommentDate());
         Comment comment = findById(commentId);
         comment.setContent(commentRequest.getContent());
 
@@ -178,7 +177,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean isOwner(UUID userId, UUID blogId, String username) {
-        CommentId commentId = new CommentId(userId, blogId);
+        CommentId commentId = new CommentId(userId, blogId, null);
         return commentRepository.findById(commentId)
                                 .map(comment -> comment.getUser().getUsername().equals(username))
                                 .orElse(false);
