@@ -62,14 +62,16 @@ export default function Info({ userId }) {
 
   const handleFollowClick = async () => {
     if (followed) {
-      dispatch(
+      await dispatch(
         removeFollowed({ followerId: user.id, followedId: viewedUser.id })
       );
     } else {
-      dispatch(addFollowed({ followerId: user.id, followedId: viewedUser.id }));
+      await dispatch(
+        addFollowed({ followerId: user.id, followedId: viewedUser.id })
+      );
     }
     await fetchUser();
-    dispatch(getFollowed({ userId: user.id }));
+    await dispatch(getFollowed({ userId: user.id }));
   };
 
   return (
