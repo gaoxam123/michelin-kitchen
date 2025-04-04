@@ -27,7 +27,7 @@ public class CommentController {
     }
 
     @PutMapping("/comments")
-    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, #commentRequest.commentDate, authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentRequest.userId, #commentRequest.blogId, authentication.name)")
     public void updateComment(@Valid @RequestBody CommentRequest commentRequest) {
         commentService.update(commentRequest);
     }
@@ -39,7 +39,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments")
-    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentId.userId, #commentId.blogId, #commentId.commentDate, authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.isOwner(#commentId.userId, #commentId.blogId, authentication.name)")
     public void deleteComment(@Valid @RequestBody CommentId commentId) {
         commentService.deleteCommentById(commentId);
     }
