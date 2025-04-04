@@ -18,8 +18,6 @@ export default function Info({ userId }) {
   const { user, following, status, error } = useSelector((state) => state.user);
   const [viewedUser, setViewedUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [showFollowButton, setShowFollowButton] = useState(false);
-  const [followed, setFollowed] = useState(false);
 
   useEffect(() => {
     if (!userId) return;

@@ -37,6 +37,21 @@ export const removeFollowed = createAsyncThunk(
   }
 );
 
+// TODO: apiRoutes
+export const getFollowed = createAsyncThunk(
+  "user/getFollowed",
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      const response = await request.get(`/users/${userId}/follows`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get followed users"
+      );
+    }
+  }
+);
+
 export const register = createAsyncThunk(
   "user/register",
   async (req, { rejectWithValue }) => {
@@ -114,6 +129,10 @@ const userSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.status = "succeeded";
+      })
+      .addCase(getFollowed.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.following = action.payload;
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),

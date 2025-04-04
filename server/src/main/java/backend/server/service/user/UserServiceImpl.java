@@ -149,4 +149,13 @@ public class UserServiceImpl implements UserService {
                 .setParameter("blogId", blogId)
                 .getResultList();
     }
+
+    @Override
+    public List<User> findFollowedByUserId(UUID userId) {
+        String query = "SELECT f.followed FROM Follow f WHERE f.follower.id = :userId";
+        return entityManager
+                .createQuery(query, User.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
 }

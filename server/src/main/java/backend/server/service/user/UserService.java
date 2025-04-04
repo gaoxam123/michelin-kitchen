@@ -26,4 +26,6 @@ public interface UserService {
     List<User> findUsersCommentedOnBlogByBlogId(UUID blogId);
 
     List<User> findUsersLikedByBlogId(UUID blogId);
+
+    List<User> findFollowedByUserId(UUID userId);
 }
