@@ -130,7 +130,6 @@ const userSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state = { ...initialUserState };
         state.status = "succeeded";
-        console.log(state.user);
       })
       .addCase(getFollowed.fulfilled, (state, action) => {
         state.status = "succeeded";
