@@ -112,3 +112,9 @@
     align-items: center;
     justify-content: space-between;
 }
+    .follow-button {
+        color: white;
+        background-color: rgb(77, 175, 223);
+        border-radius: 20px;
+        border: 0;
+    }
