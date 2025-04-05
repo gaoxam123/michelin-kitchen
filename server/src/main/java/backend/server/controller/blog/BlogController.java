@@ -38,8 +38,13 @@ public class BlogController {
     }
 
     @GetMapping("/blogs/{blogId}")
-    public ResponseEntity<BlogResponse> getBlogById(@PathVariable UUID blogId) {
-        return ResponseEntity.ok(convertBlog(blogService.findById(blogId)));
+    public ResponseEntity<Blog> getBlogById(@PathVariable UUID blogId) {
+        // quick and dirty fix TODO
+        Blog blog = blogService.findById(blogId);
+        blog.getUser().setBlogs(null);
+        blog.getUser().setFollowed(null);
+        blog.getUser().setFollowers(null);
+        return ResponseEntity.ok(blog);
     }
 
     @DeleteMapping("/blogs")
