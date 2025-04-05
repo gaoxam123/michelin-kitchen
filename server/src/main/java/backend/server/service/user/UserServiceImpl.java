@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findUsersLikedByBlogId(UUID blogId) {
-        String query = "SELECT DISTINCT l.user FROM Like l WHERE l.blog = :blogId";
+        String query = "SELECT DISTINCT l.user FROM Like l WHERE l.blog.id = :blogId";
         return entityManager.createQuery(query, User.class)
                 .setParameter("blogId", blogId)
                 .getResultList();
