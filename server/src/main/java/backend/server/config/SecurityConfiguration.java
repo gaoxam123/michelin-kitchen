@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                         request -> request
                                 .requestMatchers(HttpMethod.GET, "/api/blogs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/profile-picture/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/error").permitAll()
@@ -51,7 +52,7 @@ public class SecurityConfiguration {
                     corsConfiguration.setAllowCredentials(true);
                     corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173/"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
 
                     return corsConfiguration;
                 }))

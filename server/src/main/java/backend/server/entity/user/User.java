@@ -70,14 +70,8 @@ public class User implements UserDetails {
     @Column(name = "token_expiry")
     private LocalDateTime tokenExpiry;
 
-    @Column(name = "image_name")
-    private String imageName;
-
     @Column(name = "image", columnDefinition = "LONGBLOB")
-    private String image;
-
-    @Column(name = "image_type")
-    private String imageType;
+    private byte[] image;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Blog> blogs = new ArrayList<>();

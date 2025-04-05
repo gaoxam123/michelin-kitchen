@@ -1,6 +1,7 @@
 import request from "../../utils/request";
 import configRoutes from "../../config/routes";
 import apiRoutes from "../../config/apiRoutes";
+import { getProfilePictureURL } from "../../utils/getImages";
 
 import Tippy from "@tippyjs/react/headless";
 import Popper from "../Popper";
@@ -72,9 +73,7 @@ function SearchBar({ placeholder }) {
             {searchResults.map((user) => (
               <ProfileListItem
                 key={user.id}
-                profileImage={
-                  user.image && `data:${user.imageType};base64,${user.image}`
-                }
+                profileImage={getProfilePictureURL(user.id)}
                 displayName={`${user.firstName} ${user.lastName}`}
                 to={`${configRoutes.profile}/${user.id}`}
                 onClick={() => setShowSearchResults(false)}

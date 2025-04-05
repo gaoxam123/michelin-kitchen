@@ -8,7 +8,9 @@ import backend.server.service.blog.BlogService;
 import backend.server.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -74,16 +76,24 @@ public class UserController {
         return ResponseEntity.ok("Deleted user with id " + id);
     }
 
+    @GetMapping("/profile-picture/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable UUID id) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(user.getImage(), headers, HttpStatus.OK);
+    }
+
     @PostMapping("/users/{id}/edit-profile-picture")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == id")
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
     public ResponseEntity<String> editProfilePicture(@RequestParam MultipartFile image, @PathVariable UUID id) {
         User user = userService.findById(id);
 
         try {
-            user.setImageName(image.getName());
-            user.setImage(Base64.getEncoder()
-                    .encodeToString(image.getBytes()));
-            user.setImageType(image.getContentType());
+            user.setImage(image.getBytes());
 
             userService.save(user);
 

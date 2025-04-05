@@ -100,9 +100,7 @@ export default function SingleBlog({
   return (
     <div className={cls("wrapper")}>
       <div className={cls("header")}>
-        <div className={cls("profile-picture")}>
-          <Image src="TODO: Add image" />
-        </div>
+        <Image className={cls("profile-picture")} src="TODO: Add image" />
         <div className={cls("username-date-follow")}>
           <div className={cls("username-follow")}>
             <div className={cls("username")}>{blogOwner.username}</div>
