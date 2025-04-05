@@ -37,7 +37,7 @@ export default function SingleBlog({
 
   useEffect(() => {
     const tmp = async () => {
-      await dispatch(fetchBlogById({ blogId }));
+      dispatch(fetchBlogById({ blogId }));
       if (user) {
         await dispatch(getFollowed({ userId: user.id }));
       }
@@ -45,7 +45,7 @@ export default function SingleBlog({
     if (blogId) {
       tmp();
     }
-  });
+  }, [blogId, dispatch, user]);
 
   const fetchBlog = useCallback(async () => {
     dispatch(getLikes({ blogId }));
@@ -69,6 +69,8 @@ export default function SingleBlog({
   if (!blog || !blogOwner) {
     return <p>...Loading</p>;
   }
+
+  // console.log(blog);
 
   const handleFollowClick = async () => {
     if (followed) {
@@ -117,18 +119,14 @@ export default function SingleBlog({
         </div>
       </div>
       <div className={cls("caption")}>
-        <ExpandableContent
-          text={
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt ea aliquam minima ipsam aut vero alias quam dicta accusamus. Minus quis quia tempora doloribus. Consectetur adipisci facere ad tempore ratione!Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur repellendus nostrum accusantium asperiores, facere, suscipit libero explicabo quia qui ex aspernatur, ea harum voluptatem. A repellat sapiente aliquam corporis totam?"
-          }
-        />
+        <ExpandableContent text={blog.content} />
       </div>
       <div className={cls("image")}>
         <Image src="TODO: add image" />
       </div>
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
-          <ThumbUpOffAlt /> <p>{likes}</p>
+          {/* <ThumbUpOffAlt /> <p>{likes}</p> */}
         </div>
         <div className={cls("comments-shares")}>
           <div className={cls("comments")}>{comments} comments</div>
