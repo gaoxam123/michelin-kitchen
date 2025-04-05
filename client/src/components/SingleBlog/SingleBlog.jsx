@@ -28,7 +28,8 @@ import request from "../../utils/request";
 const cls = classNames.bind(styles);
 
 export default function SingleBlog({
-  blogId = "497bd2ce-5a12-43c8-8558-f0d785426e49",
+  // TODO: dirty testing, remove later
+  blogId = "a73f10ef-04b8-4302-b48f-f7ec8f264bd7",
 }) {
   const dispatch = useDispatch();
   const { blog, comments, likes } = useSelector((state) => state.blog);

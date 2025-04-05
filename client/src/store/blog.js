@@ -115,7 +115,7 @@ export const removeComment = createAsyncThunk(
 
 export const getLikes = createAsyncThunk(
   "blog/getLikes",
-  async (blogId, { rejectWithValue }) => {
+  async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await request.get(`/blogs/${blogId}/likes`);
       return response.data;
