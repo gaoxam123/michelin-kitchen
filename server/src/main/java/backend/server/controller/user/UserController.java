@@ -21,6 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -117,7 +118,7 @@ public class UserController {
     }
 
     @GetMapping("/blogs/{id}/likes")
-    public ResponseEntity<List<UserResponse>> getLikesByUserId(@PathVariable UUID id) {
+    public ResponseEntity<List<UserResponse>> getLikesByBlogId(@PathVariable UUID id) {
         return ResponseEntity.ok(convertUserList(userService.findUsersLikedByBlogId(id)));
     }
 }
