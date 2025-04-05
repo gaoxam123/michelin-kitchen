@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class LikeController {
