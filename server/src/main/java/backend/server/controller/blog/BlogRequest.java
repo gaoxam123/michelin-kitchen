@@ -15,15 +15,12 @@ import java.util.UUID;
 @Builder
 public class BlogRequest {
 
-    @NotNull
-    private String content;
+    private UUID id;
 
     @NotNull
     private UUID userId;
 
-    @NotNull
-    private UUID id;
+    private String content;
 
-    private Long blogDate;
     private MultipartFile image;
 }

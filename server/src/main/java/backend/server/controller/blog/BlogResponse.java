@@ -1,5 +1,6 @@
 package backend.server.controller.blog;
 
+import backend.server.entity.blog.Blog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,11 @@ public class BlogResponse {
     private UUID userId;
     private String content;
     private Long blogDate;
-    private MultipartFile image;
+
+    public BlogResponse(Blog blog) {
+        id = blog.getId();
+        userId = blog.getUser().getId();
+        content = blog.getContent();
+        blogDate = blog.getBlogDate();
+    }
 }

@@ -1,5 +1,6 @@
 package backend.server.entity.blog;
 
+import backend.server.controller.blog.BlogRequest;
 import backend.server.entity.comment.Comment;
 import backend.server.entity.like.Like;
 import backend.server.entity.user.User;
@@ -32,14 +33,8 @@ public class Blog {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
-    @Column(name = "image_name")
-    private String imageName;
-
     @Column(name = "image", columnDefinition = "LONGBLOB")
-    private String image;
-
-    @Column(name = "image_type")
-    private String imageType;
+    private byte[] image;
 
     @Column(name = "content")
     private String content;
