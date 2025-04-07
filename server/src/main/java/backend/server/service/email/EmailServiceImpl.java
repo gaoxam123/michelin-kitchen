@@ -34,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendGeneralEmail(String to, String subject, String body) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

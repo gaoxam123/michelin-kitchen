@@ -132,7 +132,8 @@ export const addLike = createAsyncThunk(
   async ({ userId, blogId }, { rejectWithValue }) => {
     try {
       const response = await request.post(`/likes`, {
-        data: { userId, blogId },
+        userId,
+        blogId,
       });
       return response.data;
     } catch (error) {

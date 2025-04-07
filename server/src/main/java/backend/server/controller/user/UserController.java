@@ -59,7 +59,7 @@ public class UserController {
         if (sort != null) {
             return ResponseEntity.ok(convertBlogList(blogService.findBlogsByUserIdSortByPostDate(id)));
         }
-        return ResponseEntity.ok(convertBlogList(blogService.findBlogsByUserId(id)));
+        return ResponseEntity.ok(blogService.findBlogsByUserId(id).stream().map(BlogResponse::new).toList());
     }
 
     @PutMapping("/users")

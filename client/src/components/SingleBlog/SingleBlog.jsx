@@ -20,6 +20,8 @@ import {
 } from "../../store/blog";
 
 import { addFollowed, removeFollowed, getFollowed } from "../../store/user";
+import { Link } from "react-router-dom";
+import routes from "../../config/routes";
 
 import classNames from "classnames/bind";
 import styles from "./SingleBlog.module.css";
@@ -29,7 +31,7 @@ const cls = classNames.bind(styles);
 
 export default function SingleBlog({
   // TODO: dirty testing, remove later
-  blogId = "a73f10ef-04b8-4302-b48f-f7ec8f264bd7",
+  blogId = "7193d391-f894-4833-8aed-bf45cdba7038",
 }) {
   const dispatch = useDispatch();
   const { blog, comments, likes } = useSelector((state) => state.blog);
@@ -51,9 +53,8 @@ export default function SingleBlog({
   const fetchBlog = useCallback(async () => {
     dispatch(getLikes({ blogId }));
     dispatch(fetchCommentsByBlogId({ blogId }));
-    if (!blog.user) return;
     const userResponse = await request.get(
-      `${apiRoutes.users.base}/${blog.user.id}`
+      `${apiRoutes.users.base}/${blog.userId}`
     );
     setBlogOwner(userResponse.data);
   }, [blogId, dispatch, blog]);
@@ -83,18 +84,16 @@ export default function SingleBlog({
         addFollowed({ followerId: user.id, followedId: blogOwner.id })
       );
     }
-    await dispatch(fetchBlogById({ blogId }));
-    await fetchBlog();
     await dispatch(getFollowed({ userId: user.id }));
   };
 
   const upLike = async () => {
     if (liked) {
-      await dispatch(addLike({ userId: user.id, blogId }));
-    } else {
       await dispatch(removeLike({ userId: user.id, blogId }));
+    } else {
+      await dispatch(addLike({ userId: user.id, blogId }));
     }
-    await fetchBlog();
+    await dispatch(getLikes({ blogId }));
   };
 
   return (
@@ -103,7 +102,24 @@ export default function SingleBlog({
         <Image className={cls("profile-picture")} src="TODO: Add image" />
         <div className={cls("username-date-follow")}>
           <div className={cls("username-follow")}>
-            <div className={cls("username")}>{blogOwner.username}</div>
+            <div className={cls("username")}>
+              <Link
+                to={
+                  blogOwner.id
+                    ? `${routes.profile}/${blogOwner.id}`
+                    : `${routes.home}`
+                }
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  font: "inherit",
+                  padding: "0",
+                  margin: "0",
+                }}
+              >
+                {blogOwner.username}
+              </Link>
+            </div>
             <div>
               {showFollowButton && (
                 <CustomButton
@@ -125,10 +141,10 @@ export default function SingleBlog({
       </div>
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
-          {/* <ThumbUpOffAlt /> <p>{likes}</p> */}
+          <ThumbUpOffAlt /> <p>{likes.length}</p>
         </div>
         <div className={cls("comments-shares")}>
-          <div className={cls("comments")}>{comments} comments</div>
+          <div className={cls("comments")}>{comments.length} comments</div>
         </div>
       </div>
       <div className={cls("buttons")}>
