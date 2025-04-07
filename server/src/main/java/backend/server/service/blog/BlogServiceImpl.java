@@ -57,9 +57,6 @@ public class BlogServiceImpl implements BlogService {
                     System.currentTimeMillis()
             );
         }
-        // update blog list of user after deleting
-//        List<Blog> updatedBlogList = new ArrayList<>(user.getBlogs().stream().filter(b -> !b.getId().equals(id)).toList());
-//        user.setBlogs(updatedBlogList);
 
         blogRepository.deleteById(id);
     }
@@ -88,10 +85,8 @@ public class BlogServiceImpl implements BlogService {
         String newContent = blog.getContent();
         byte[] newImage = blog.getImage();
 
+        // method findById already threw an error
         blog = findById(blog.getId());
-        if (blog == null) {
-            throw new IllegalArgumentException("No blog with id " + blog.getId() + " found!");
-        }
 
         boolean authorized = blog.getUser().getUsername().equals(
                 SecurityContextHolder
