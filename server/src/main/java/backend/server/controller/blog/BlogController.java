@@ -23,22 +23,17 @@ public class BlogController {
     private final BlogService blogService;
     private final UserService userService;
 
-    private List<BlogResponse> convertBlogList(List<Blog> blogs) {
-        // TODO: convert image from string to multipart
-        return blogs.stream().map(b -> new BlogResponse()).toList();
-    }
-
-    private BlogResponse convertBlog(Blog blog) {
-        // TODO: convert image from string to multipart
-        return new BlogResponse();
-    }
-
     @GetMapping("/blogs")
     public ResponseEntity<List<BlogResponse>> getAllBlogs(@RequestParam(name = "sort", required = false) boolean sort) {
+        List<Blog> blogs = null;
+
         if (sort) {
-            return ResponseEntity.ok(convertBlogList(blogService.findAllSortByPostDate()));
+            blogs = blogService.findAllSortByPostDate();
+        } else {
+            blogs = blogService.findAll();
         }
-        return ResponseEntity.ok(convertBlogList(blogService.findAll()));
+
+        return ResponseEntity.ok(blogs.stream().map(BlogResponse::new).toList());
     }
 
     @GetMapping("/blogs/{blogId}")
