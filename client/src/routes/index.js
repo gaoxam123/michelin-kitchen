@@ -11,6 +11,8 @@ import BlogWithComment from "../pages/BlogWithComment/BlogWithComment";
 // TODO: Remove
 import CommentSection from "../components/CommentSection/CommentSection";
 import UserForm from "../components/UserForm";
+import ChangeCredentialsForm from "../components/ChangeCredentialsForm/ChangeCredentialsForm";
+import usePagination from "@mui/material/usePagination/usePagination";
 
 export const publicRoutes = [
   { path: configRoutes.home, component: Homepage },

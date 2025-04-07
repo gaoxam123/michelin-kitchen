@@ -6,7 +6,8 @@ import * as yup from "yup"
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { update } from "../../store/user";
 
 const schema = yup.object().shape({
     id: yup.string().required(),
@@ -19,6 +20,7 @@ function UserForm() {
     const imageInputRef = useRef();
 
     const { user } = useSelector(state => state.user);
+    const dispatch = useDispatch();
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -32,7 +34,7 @@ function UserForm() {
         const detailsChanged = Object.keys(data).some(key => data[key] !== user[key]);
 
         if (!detailsChanged && !profilePicture) {
-            setMessage("No changed made!");
+            setMessage("No changes made!");
             return;
         }
 
@@ -55,8 +57,7 @@ function UserForm() {
                 imageInputRef.current.value = '';
             }
 
-            await request.put(apiRoutes.users.base, data);
-
+            dispatch(update({ newUser: data }));
         } catch (e) {
             setMessage(e);
         }
@@ -71,9 +72,6 @@ function UserForm() {
 
             <input placeholder="Last Name" {...register("lastName")} />
             {formState.errors.lastName && formState.errors.lastName.message}
-
-            <input placeholder="Username" {...register("username")} />
-            {formState.errors.username && formState.errors.username.message}
 
             <input placeholder="Email" {...register("email")} />
             {formState.errors.email && formState.errors.email.message}

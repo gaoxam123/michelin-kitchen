@@ -47,8 +47,6 @@ export default function Info({ userId }) {
     fetchUser();
   }, [userId, fetchUser]);
 
-  console.log(blogs);
-
   useEffect(() => {
     if (user) {
       dispatch(getFollowed({ userId: user.id }));
