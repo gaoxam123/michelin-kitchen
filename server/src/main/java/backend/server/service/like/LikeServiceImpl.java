@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,9 +41,6 @@ public class LikeServiceImpl implements LikeService {
                     System.currentTimeMillis()
             );
         }
-
-//        blog.getLikes().add(like);
-//        user.getLikes().add(like);
 
         // notify user who own the blog
         User blogOwner = userService.findById(blog.getUser().getId());
@@ -80,11 +76,6 @@ public class LikeServiceImpl implements LikeService {
                     System.currentTimeMillis()
             );
         }
-
-//        List<Like> blogLikes = blog.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
-//        List<Like> userLikes = user.getLikes().stream().filter(l -> !l.getId().equals(likeId)).toList();
-//        blog.setLikes(blogLikes);
-//        user.setLikes(userLikes);
 
         likeRepository.deleteById(likeId);
 

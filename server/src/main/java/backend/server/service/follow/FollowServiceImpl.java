@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,9 +42,6 @@ public class FollowServiceImpl implements FollowService {
             );
         }
 
-//        follower.getFollowed().add(newFollow);
-//        followed.getFollowers().add(newFollow);
-
         followRepository.save(newFollow);
     }
 
@@ -61,7 +57,6 @@ public class FollowServiceImpl implements FollowService {
         );
 
         User follower = userService.findById(followRequest.getFollowerId());
-//        User followed = userService.findById(followRequest.getFollowedId());
 
         boolean authorized = follower.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!authorized) {
@@ -71,11 +66,6 @@ public class FollowServiceImpl implements FollowService {
                     System.currentTimeMillis()
             );
         }
-
-//        List<Follow> newFollowedList = follower.getFollowed().stream().filter(f -> !f.getId().equals(followId)).toList();
-//        List<Follow> newFollowerList = followed.getFollowers().stream().filter(f -> !f.getId().equals(followId)).toList();
-//        follower.setFollowed(newFollowedList);
-//        followed.setFollowers(newFollowerList);
 
         followRepository.deleteById(followId);
     }
