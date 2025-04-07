@@ -9,9 +9,14 @@ const cls = classNames.bind(styles)
 
 function Image({
     src,
+    srcBase64,
     className,
     fallback = defaultProfilePicture
 }) {
+    if (srcBase64) {
+        src = `data:image/jpeg;base64,${srcBase64}`
+    }
+
     const [image, setImage] = useState(src)
 
     const handleError = () => setImage(fallback)

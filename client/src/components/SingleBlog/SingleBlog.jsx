@@ -130,14 +130,16 @@ export default function SingleBlog({
               )}
             </div>
           </div>
-          <div className={cls("date")}>{formatDate(blog.blogDate)}</div>
+          <div className={cls("date")}>
+            {formatDate(blog.blogDate)}
+          </div>
         </div>
       </div>
       <div className={cls("caption")}>
         <ExpandableContent text={blog.content} />
       </div>
       <div className={cls("image")}>
-        <Image src="TODO: add image" />
+        <Image srcBase64={blog.imageBase64} />
       </div>
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
