@@ -10,6 +10,7 @@ import BlogWithComment from "../pages/BlogWithComment/BlogWithComment";
 // Testing zone
 // TODO: Remove
 import CommentSection from "../components/CommentSection/CommentSection";
+import UserForm from "../components/UserForm";
 
 export const publicRoutes = [
   { path: configRoutes.home, component: Homepage },
@@ -23,5 +24,5 @@ export const publicRoutes = [
 
   // Testing zone
   // TODO: Remove
-  { path: "/test", component: CommentSection },
+  { path: "/test", component: UserForm },
 ];
