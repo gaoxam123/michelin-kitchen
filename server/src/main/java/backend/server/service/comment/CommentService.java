@@ -14,9 +14,9 @@ public interface CommentService {
 
     Comment findById(CommentId id);
 
-    void create(CommentRequest commentRequest);
+    Comment create(Comment comment);
 
-    void update(CommentRequest commentRequest);
+    Comment update(Comment comment);
 
     void deleteCommentById(CommentId commentId);
 
