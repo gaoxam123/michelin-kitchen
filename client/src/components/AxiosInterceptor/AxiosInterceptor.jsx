@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import request from "../../utils/request";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import routes from "../../config/routes";
 
 const AxiosInterceptor = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const interceptor = request.interceptors.response.use(
@@ -12,7 +13,9 @@ const AxiosInterceptor = ({ children }) => {
       (error) => {
         const method = error.config?.method?.toUpperCase();
         if (error.response?.status === 403 && method !== "GET") {
-          navigate(routes.login);
+          navigate(routes.login, {
+            state: { from: location.pathname },
+          });
         }
         return Promise.reject(error);
       }
@@ -21,7 +24,7 @@ const AxiosInterceptor = ({ children }) => {
     return () => {
       request.interceptors.response.eject(interceptor);
     };
-  }, [navigate]);
+  }, [navigate, location]);
 
   return children;
 };

@@ -8,7 +8,7 @@ import { useInput } from "../../../hooks/useInput";
 import { isNotEmpty, hasMinLength } from "../../../utils/validation";
 import Input from "../../../components/Input";
 import { PermIdentity, Password } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Form from "../../../components/Form";
 import CustomButton from "../../../components/CustomButton";
 import { login } from "../../../store/user";
@@ -17,6 +17,8 @@ import { useDispatch } from "react-redux";
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const from = location.state?.from || configRoutes.home;
 
   const {
     value: enteredUsername,
@@ -58,7 +60,7 @@ export default function Login() {
         password: enteredPassword,
       })
     );
-    navigate(configRoutes.home);
+    navigate(from);
   };
 
   const input = [
