@@ -2,6 +2,7 @@ import apiRoutes from "../config/apiRoutes";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import request from "../utils/request";
+import api from "../utils/api";
 
 export const addFollowed = createAsyncThunk(
   "user/addFollowed",
@@ -101,7 +102,7 @@ export const logout = createAsyncThunk(
 export const update = createAsyncThunk(
   "user/update",
   async ({ newUser, session_reset }, { rejectWithValue }) => {
-    console.log(session_reset)
+    console.log(session_reset);
     try {
       const response = await request.put(apiRoutes.users.base, newUser);
 
@@ -117,6 +118,17 @@ export const update = createAsyncThunk(
     }
   }
 );
+
+export const auth = createAsyncThunk(async (_, { rejectWithValue }) => {
+  try {
+    const response = await request.get(apiRoutes.users.auth);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to authenticate user"
+    );
+  }
+});
 
 const initialUserState = {
   user: null,
@@ -158,6 +170,10 @@ const userSlice = createSlice({
       .addCase(getFollowed.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.following = action.payload.map((user) => user.id);
+      })
+      .addCase(auth.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
       })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
