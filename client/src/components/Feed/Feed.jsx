@@ -11,8 +11,12 @@ const cls = classNames.bind(styles);
 export default function Feed({ initBlogs = [] }) {
   const [blogs, setBlogs] = useState(initBlogs);
   const fetchBlogs = async () => {
-    const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
-    setBlogs(blogsResponse.data);
+    try {
+      const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
+      setBlogs(blogsResponse.data);
+    } catch (error) {
+      alert(error);
+    }
   };
   useEffect(() => {
     fetchBlogs();
