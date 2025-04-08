@@ -112,7 +112,7 @@ export default function Info({ userId }) {
           </div>
         </div>
       </div>
-      <Feed blogs={blogs} />
+      <Feed initBlogs={blogs} />
     </div>
   );
 }

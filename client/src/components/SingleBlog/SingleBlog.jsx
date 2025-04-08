@@ -12,12 +12,11 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import apiRoutes from "../../config/apiRoutes";
 import {
-  fetchBlogById,
   fetchCommentsByBlogId,
   getLikes,
   addLike,
   removeLike,
-} from "../../store/blog";
+} from "../../utils/blogHelperFunctions";
 
 import { addFollowed, removeFollowed, getFollowed } from "../../store/user";
 import { Link } from "react-router-dom";
@@ -32,47 +31,50 @@ const cls = classNames.bind(styles);
 export default function SingleBlog({
   // TODO: dirty testing, remove later
   blogId = "7193d391-f894-4833-8aed-bf45cdba7038",
+  userId,
+  content,
+  blogDate,
+  imageBase64,
 }) {
   const dispatch = useDispatch();
-  const { blog, comments, likes } = useSelector((state) => state.blog);
+  // const { blog, comments, likes } = useSelector((state) => state.blog);
+  const [comments, setComents] = useState([]);
+  const [likes, setLikes] = useState([]);
   const { user, following } = useSelector((state) => state.user);
   const [blogOwner, setBlogOwner] = useState(null);
 
   useEffect(() => {
-    const tmp = async () => {
-      dispatch(fetchBlogById({ blogId }));
+    const fetchFollowed = async () => {
       if (user) {
         await dispatch(getFollowed({ userId: user.id }));
       }
     };
     if (blogId) {
-      tmp();
+      fetchFollowed();
     }
   }, [blogId, dispatch, user]);
 
-  const fetchBlog = useCallback(async () => {
-    dispatch(getLikes({ blogId }));
-    dispatch(fetchCommentsByBlogId({ blogId }));
-    const userResponse = await request.get(
-      `${apiRoutes.users.base}/${blog.userId}`
-    );
+  const fetchBlogDetails = useCallback(async () => {
+    const fetchedLikes = await getLikes({ blogId });
+    setLikes(fetchedLikes);
+    const fetchedComments = await fetchCommentsByBlogId({ blogId });
+    setComents(fetchedComments);
+    const userResponse = await request.get(`${apiRoutes.users.base}/${userId}`);
     setBlogOwner(userResponse.data);
-  }, [blogId, dispatch, blog]);
+  }, [blogId, userId]);
 
   useEffect(() => {
-    if (!blogId || !blog) return;
-    fetchBlog();
-  }, [blogId, dispatch, fetchBlog, blog]);
+    if (!blogId) return;
+    fetchBlogDetails();
+  }, [blogId, fetchBlogDetails]);
 
-  const liked = user && blog && likes.map((like) => like.id).includes(user.id);
-  const showFollowButton = user && blogOwner && user.id !== blogOwner.id;
-  const followed = blogOwner && following.includes(blogOwner.id);
-
-  if (!blog || !blogOwner) {
+  if (!blogOwner) {
     return <p>...Loading</p>;
   }
 
-  // console.log(blog);
+  const liked = user && likes.map((like) => like.id).includes(user.id);
+  const showFollowButton = user && blogOwner && user.id !== blogOwner.id;
+  const followed = blogOwner && following.includes(blogOwner.id);
 
   const handleFollowClick = async () => {
     if (followed) {
@@ -89,11 +91,12 @@ export default function SingleBlog({
 
   const upLike = async () => {
     if (liked) {
-      await dispatch(removeLike({ userId: user.id, blogId }));
+      await removeLike({ userId: user.id, blogId });
     } else {
-      await dispatch(addLike({ userId: user.id, blogId }));
+      await addLike({ userId: user.id, blogId });
     }
-    await dispatch(getLikes({ blogId }));
+    const fetchedLikes = await getLikes({ blogId });
+    setLikes(fetchedLikes);
   };
 
   return (
@@ -130,16 +133,14 @@ export default function SingleBlog({
               )}
             </div>
           </div>
-          <div className={cls("date")}>
-            {formatDate(blog.blogDate)}
-          </div>
+          <div className={cls("date")}>{formatDate(blogDate)}</div>
         </div>
       </div>
       <div className={cls("caption")}>
-        <ExpandableContent text={blog.content} />
+        <ExpandableContent text={content} />
       </div>
       <div className={cls("image")}>
-        <Image srcBase64={blog.imageBase64} />
+        <Image srcBase64={imageBase64} />
       </div>
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
