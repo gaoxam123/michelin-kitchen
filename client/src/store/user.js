@@ -98,6 +98,26 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const update = createAsyncThunk(
+  "user/update",
+  async ({ newUser, session_reset }, { rejectWithValue }) => {
+    console.log(session_reset)
+    try {
+      const response = await request.put(apiRoutes.users.base, newUser);
+
+      if (session_reset) {
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update user"
+      );
+    }
+  }
+);
+
 const initialUserState = {
   user: null,
   following: [],
@@ -129,6 +149,10 @@ const userSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.following = [];
+        state.status = "succeeded";
+      })
+      .addCase(update.fulfilled, (state, action) => {
+        state.user = action.payload;
         state.status = "succeeded";
       })
       .addCase(getFollowed.fulfilled, (state, action) => {
