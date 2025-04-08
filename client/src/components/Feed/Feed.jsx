@@ -17,7 +17,6 @@ export default function Feed({ initBlogs = [] }) {
   useEffect(() => {
     fetchBlogs();
   }, []);
-  console.log(blogs);
   return (
     <div className={cls("feed")}>
       <div className={cls("feed-wrapper")}>

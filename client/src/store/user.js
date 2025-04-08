@@ -119,16 +119,19 @@ export const update = createAsyncThunk(
   }
 );
 
-export const auth = createAsyncThunk(async (_, { rejectWithValue }) => {
-  try {
-    const response = await request.get(apiRoutes.users.auth);
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to authenticate user"
-    );
+export const auth = createAsyncThunk(
+  "user/auth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await request.get(apiRoutes.users.auth);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to authenticate user"
+      );
+    }
   }
-});
+);
 
 const initialUserState = {
   user: null,
