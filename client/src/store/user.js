@@ -85,12 +85,9 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "user/logout",
-  async ({ username, password }, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      await request.post(apiRoutes.auth.logout, {
-        username,
-        password,
-      });
+      await request.post(apiRoutes.auth.logout);
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to log out"

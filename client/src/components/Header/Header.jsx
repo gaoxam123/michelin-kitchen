@@ -3,12 +3,14 @@ import { defaultProfilePicture } from "../../config/imagesPaths";
 import { Link, useNavigate } from "react-router-dom";
 import configRoutes from "../../config/routes";
 
+import { logout } from "../../store/user";
+import { useDispatch, useSelector } from "react-redux";
+
 import classNames from "classnames/bind";
 import styles from "./Header.module.css";
 import Menu from "./Menu";
 import CustomButton from "../CustomButton";
 import SearchBar from "../SearchBar";
-import { useSelector } from "react-redux";
 
 const cls = classNames.bind(styles);
 
@@ -16,7 +18,9 @@ import { Person, Chat, Notifications } from "@mui/icons-material";
 
 function Header() {
   const navigate = useNavigate();
+
   const { user, status, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const menuItems = [
     {
@@ -51,6 +55,7 @@ function Header() {
       icon: null,
       title: "Logout",
       to: "/",
+      onClick: () => { dispatch(logout()) }
     },
   ];
 

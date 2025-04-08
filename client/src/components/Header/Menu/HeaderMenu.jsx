@@ -3,8 +3,8 @@ import Popper from "../../Popper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { userActions, logout } from "../../../store/user";
-import { useDispatch, useSelector } from "react-redux";
+// import {  logout } from "../../../store/user";
+import { useSelector } from "react-redux";
 
 import React, { useState } from "react";
 
@@ -17,7 +17,6 @@ function Menu({ items }) {
   const [history, setHistory] = useState([items]);
   const currentList = history[history.length - 1];
   const [activate, setActivate] = useState(false);
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
   return (
@@ -49,11 +48,10 @@ function Menu({ items }) {
                       setHistory((prev) => [...prev, item.children]);
                     } else if (item.back) {
                       setHistory((prev) => prev.slice(0, -1));
-                    } else if (item.to === "/") {
-                      dispatch(logout({ username: "dcm", password: "dcm" }));
-                    } else {
-                      // TODO
-                      alert("clicked on " + item.title);
+                    }
+
+                    if (item.onClick) {
+                      item.onClick();
                     }
                   }}
                 >
