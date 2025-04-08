@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -14,6 +14,10 @@ const schema = yup.object().shape({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
     email: yup.string().email().required(),
+
+    username: yup.string(),
+    oldPassword: yup.string(),
+    newPassword: yup.string(),
 });
 
 function UserForm() {
@@ -22,10 +26,12 @@ function UserForm() {
     const { user } = useSelector(state => state.user);
     const dispatch = useDispatch();
 
-    const { register, handleSubmit, formState } = useForm({
+    const { register, handleSubmit, reset, formState } = useForm({
         resolver: yupResolver(schema),
         defaultValues: { ...user }
     });
+
+    useEffect(() => reset(user), [user, reset]);
 
     const [message, setMessage] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
@@ -33,7 +39,7 @@ function UserForm() {
     const onSubmit = async data => {
         const detailsChanged = Object.keys(data).some(key => data[key] !== user[key]);
 
-        if (!detailsChanged && !profilePicture) {
+        if (!detailsChanged && !profilePicture && !data.oldPassword) {
             setMessage("No changes made!");
             return;
         }
@@ -57,7 +63,17 @@ function UserForm() {
                 imageInputRef.current.value = '';
             }
 
-            dispatch(update({ newUser: data }));
+            if (data.oldPassword) {
+                data.passwordIsChanged = true;
+            }
+            dispatch(update({
+                newUser: data,
+                session_reset: data.passwordIsChanged
+            }));
+
+            if (data.passwordIsChanged || data.email !== user.email) {
+                request.get(apiRoutes.auth.logout);
+            }
         } catch (e) {
             setMessage(e);
         }
@@ -84,6 +100,24 @@ function UserForm() {
                     if (e.target.files?.[0]) setProfilePicture(e.target.files[0]);
                 }}
             />
+
+            <input placeholder="Username" {...register("username")} />
+            {formState.errors.username && formState.errors.username.message}
+
+            <input
+                type="password"
+                placeholder="Old Password"
+                {...register("oldPassword")}
+            />
+            {formState.errors.oldPassword && formState.errors.oldPassword.message}
+
+            <input
+                type="password"
+                placeholder="New Password"
+                {...register("newPassword")}
+            />
+            {formState.errors.newPassword && formState.errors.newPassword.message}
+
 
             <button type="submit">
                 Save changes
