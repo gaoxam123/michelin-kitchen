@@ -55,7 +55,9 @@ function Header() {
       icon: null,
       title: "Logout",
       to: "/",
-      onClick: () => { dispatch(logout()) }
+      onClick: () => {
+        dispatch(logout());
+      },
     },
   ];
 
@@ -73,8 +75,38 @@ function Header() {
         {user ? (
           <>
             <div className={cls("header-links")}>
-              <span className={cls("header-link")}>Homepage</span>
-              <span className={cls("header-link")}>Timeline</span>
+              <span className={cls("header-link")}>
+                <Link
+                  to={configRoutes.home}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    font: "inherit",
+                    padding: "0",
+                    margin: "0",
+                  }}
+                >
+                  Homepage
+                </Link>
+              </span>
+              <span className={cls("header-link")}>
+                <Link
+                  to={
+                    user
+                      ? `${configRoutes.profile}/${user.id}`
+                      : configRoutes.home
+                  }
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    font: "inherit",
+                    padding: "0",
+                    margin: "0",
+                  }}
+                >
+                  Timeline
+                </Link>
+              </span>
             </div>
             <div className={cls("header-icons")}>
               <div className={cls("header-icon-item")}>
