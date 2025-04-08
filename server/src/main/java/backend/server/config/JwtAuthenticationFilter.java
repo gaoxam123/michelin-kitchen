@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (request.getRequestURI().startsWith("/api/auth") || request.getMethod().equals("GET")) {
+        if (request.getRequestURI().startsWith("/api/auth") || (request.getMethod().equals("GET") && !request.getRequestURI().startsWith("/api/users/auth-me"))) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -77,6 +77,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (ExpiredJwtException e) {
+            // could be useful
+            if (request.getMethod().equals("GET") && request.getRequestURI().startsWith("/api/users/auth-me")) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
