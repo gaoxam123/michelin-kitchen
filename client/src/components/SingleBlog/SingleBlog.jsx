@@ -79,21 +79,21 @@ export default function SingleBlog({
   const handleFollowClick = async () => {
     if (followed) {
       await dispatch(
-        removeFollowed({ followerId: user.id, followedId: blogOwner.id })
+        removeFollowed({ followerId: user?.id, followedId: blogOwner.id })
       );
     } else {
       await dispatch(
-        addFollowed({ followerId: user.id, followedId: blogOwner.id })
+        addFollowed({ followerId: user?.id, followedId: blogOwner.id })
       );
     }
-    await dispatch(getFollowed({ userId: user.id }));
+    await dispatch(getFollowed({ userId: user?.id }));
   };
 
   const upLike = async () => {
     if (liked) {
-      await removeLike({ userId: user.id, blogId });
+      await removeLike({ userId: user?.id, blogId });
     } else {
-      await addLike({ userId: user.id, blogId });
+      await addLike({ userId: user?.id, blogId });
     }
     const fetchedLikes = await getLikes({ blogId });
     setLikes(fetchedLikes);

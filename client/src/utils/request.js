@@ -13,14 +13,14 @@ const request = axios.create({
 });
 
 // login whenever jwt is expired
-request.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      window.location.href = routes.login;
-    }
-    return Promise.reject(error);
-  }
-);
+// request.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       window.location.href = routes.login;
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default request;
