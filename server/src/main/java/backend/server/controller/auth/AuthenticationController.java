@@ -69,7 +69,7 @@ public class AuthenticationController {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(3600)
+                .maxAge(3600 * 24)
                 .sameSite("Strict")
                 .build()
                 .toString();

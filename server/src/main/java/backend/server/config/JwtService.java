@@ -47,7 +47,7 @@ public class JwtService {
                 // created at what time
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // expire in 1 day
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .and()
                 // define hashing strategy
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
