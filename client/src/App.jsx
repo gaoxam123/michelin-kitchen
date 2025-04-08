@@ -5,6 +5,7 @@ import { publicRoutes } from "./routes";
 import { useCallback, useEffect } from "react";
 import { auth } from "./store/user";
 import { useDispatch } from "react-redux";
+import AxiosInterceptor from "./components/AxiosInterceptor";
 
 function App() {
   const dispatch = useDispatch();
@@ -16,25 +17,27 @@ function App() {
   }, [authUser]);
   return (
     <BrowserRouter>
-      <div className="App">
-        <Routes>
-          {publicRoutes.map((route, index) => {
-            const Component = route.component;
-            const ComponentLayout = route.layout || Layout;
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  <ComponentLayout>
-                    <Component />
-                  </ComponentLayout>
-                }
-              />
-            );
-          })}
-        </Routes>
-      </div>
+      <AxiosInterceptor>
+        <div className="App">
+          <Routes>
+            {publicRoutes.map((route, index) => {
+              const Component = route.component;
+              const ComponentLayout = route.layout || Layout;
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <ComponentLayout>
+                      <Component />
+                    </ComponentLayout>
+                  }
+                />
+              );
+            })}
+          </Routes>
+        </div>
+      </AxiosInterceptor>
     </BrowserRouter>
   );
 }
