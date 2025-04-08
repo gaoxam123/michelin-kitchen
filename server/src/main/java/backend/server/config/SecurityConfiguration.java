@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         request -> request
                                 .requestMatchers(HttpMethod.GET, "/api/blogs/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/users/auth-me").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/profile-picture/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()

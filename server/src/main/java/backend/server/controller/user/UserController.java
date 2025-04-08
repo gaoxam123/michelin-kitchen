@@ -54,7 +54,6 @@ public class UserController {
     @GetMapping("/users/auth-me")
     public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
-        System.out.println(username);
         return ResponseEntity.ok(new UserResponse(userService.findByUsername(username)));
     }
 
