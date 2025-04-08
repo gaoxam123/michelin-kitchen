@@ -60,7 +60,7 @@ export default function Login() {
         password: enteredPassword,
       })
     );
-    navigate(from);
+    navigate(from, { replace: true });
   };
 
   const input = [

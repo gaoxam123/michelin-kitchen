@@ -134,7 +134,11 @@ function Header() {
             <div className={cls("login-btn")}>
               <CustomButton
                 title="Log In"
-                onClick={() => navigate(configRoutes.login)}
+                onClick={() =>
+                  navigate(configRoutes.login, {
+                    state: { from: location.pathname },
+                  })
+                }
               />
             </div>
             <div className={cls("signup-btn")}>
