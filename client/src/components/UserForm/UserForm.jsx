@@ -5,22 +5,26 @@ import * as yup from "yup"
 
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { update } from "../../store/user";
+import routes from "../../config/routes";
 
 const schema = yup.object().shape({
     id: yup.string().required(),
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    email: yup.string().email().required(),
+    firstName: yup.string().required("First Name is empty!"),
+    lastName: yup.string().required("Last Name is empty!"),
+    email: yup.string().email().required("Email is empty!"),
 
-    username: yup.string(),
+    username: yup.string().required("Username is empty!"),
     oldPassword: yup.string(),
     newPassword: yup.string(),
 });
 
 function UserForm() {
+    const navigate = useNavigate();
+
     const imageInputRef = useRef();
 
     const { user } = useSelector(state => state.user);
@@ -31,7 +35,9 @@ function UserForm() {
         defaultValues: { ...user }
     });
 
-    useEffect(() => reset(user), [user, reset]);
+    useEffect(() => {
+        reset(user);
+    }, [user, reset]);
 
     const [message, setMessage] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
@@ -66,13 +72,16 @@ function UserForm() {
             if (data.oldPassword) {
                 data.passwordIsChanged = true;
             }
-            dispatch(update({
+            await dispatch(update({
                 newUser: data,
                 session_reset: data.passwordIsChanged
-            }));
+            })).unwrap();
+
+            setMessage("Update successful!")
 
             if (data.passwordIsChanged || data.email !== user.email) {
-                request.get(apiRoutes.auth.logout);
+                request.post(apiRoutes.auth.logout);
+                navigate(routes.login);
             }
         } catch (e) {
             setMessage(e);
