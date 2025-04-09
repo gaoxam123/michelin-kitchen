@@ -12,6 +12,9 @@ import Menu from "./Menu";
 import CustomButton from "../CustomButton";
 import SearchBar from "../SearchBar";
 
+import Image from "../Image";
+import { getProfilePictureURL } from "../../utils/getImages";
+
 const cls = classNames.bind(styles);
 
 import { Person, Chat, Notifications } from "@mui/icons-material";
@@ -122,11 +125,10 @@ function Header() {
                 <span className={cls("header-icon-badge")}>1</span>
               </div>
             </div>
-            <img
-              src={user.image || defaultProfilePicture}
-              alt=""
+            <Image
+              src={getProfilePictureURL(user.id)}
               className={cls("header-img")}
-              onClick={() => navigate(`/profile/${user.id}`)}
+              to={`/profile/${user.id}`}
             />
           </>
         ) : (

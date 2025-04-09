@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const cls = classNames.bind(styles);
 
-export default function Feed({ initBlogs = [] }) {
+export default function Feed({ initBlogs }) {
   const [blogs, setBlogs] = useState(initBlogs);
   const fetchBlogs = async () => {
     try {
@@ -19,12 +19,13 @@ export default function Feed({ initBlogs = [] }) {
     }
   };
   useEffect(() => {
-    fetchBlogs();
+    if (!blogs)
+      fetchBlogs();
   }, []);
   return (
     <div className={cls("feed")}>
       <div className={cls("feed-wrapper")}>
-        {blogs.map((blog) => (
+        {blogs && blogs.map((blog) => (
           <SingleBlog
             key={blog.id}
             blogId={blog.id}
