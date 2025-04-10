@@ -6,11 +6,13 @@ import classNames from "classnames/bind";
 import styles from "./Feed.module.css";
 import { useEffect, useState } from "react";
 import CreateBlog from "../CreateBlog/CreateBlog";
+import { useSelector } from "react-redux";
 
 const cls = classNames.bind(styles);
 
 export default function Feed({ initBlogs }) {
   const [blogs, setBlogs] = useState(initBlogs);
+  const { user } = useSelector((state) => state.user);
   const fetchBlogs = async () => {
     try {
       const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
@@ -24,7 +26,7 @@ export default function Feed({ initBlogs }) {
   }, []);
   return (
     <div className={cls("feed")}>
-      <CreateBlog />
+      {user && <CreateBlog />}
       <div className={cls("feed-wrapper")}>
         {blogs &&
           blogs.map((blog) => (

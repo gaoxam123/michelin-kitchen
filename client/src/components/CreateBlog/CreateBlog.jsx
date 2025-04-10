@@ -38,12 +38,11 @@ export default function CreateBlog() {
       />
       <div className={cls("wrapper")}>
         <div className={cls("img-wrapper")}>
-          <Link to={user ? `${routes.profile}/${user.id}` : routes.login}>
-            <Image
-              src={user ? getProfilePictureURL(user.id) : null}
-              className={cls("img")}
-            />
-          </Link>
+          <Image
+            src={user ? getProfilePictureURL(user.id) : null}
+            className={cls("img")}
+            to={user ? `${routes.profile}/${user.id}` : routes.login}
+          />
         </div>
         <CustomButton
           onClick={handleOpenModal}

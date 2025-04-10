@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import request from "../../../utils/request";
 import apiRoutes from "../../../config/apiRoutes";
-import routes from "../../../config/routes";
+import { useSelector } from "react-redux";
 
 const cls = classNames.bind(styles);
 
@@ -20,7 +20,7 @@ const schema = yup.object().shape({
   image: yup.mixed(),
 });
 
-export default function CreateBlogModal({ ref, setOpenModal, userId }) {
+export default function CreateBlogModal({ ref, setOpenModal }) {
   const dialog = useRef();
   const imageInputRef = useRef();
   const {
@@ -34,6 +34,7 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
   const [profilePicture, setProfilePicture] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,6 +49,12 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
       dialog.current.close();
     },
   }));
+
+  useEffect(() => {
+    reset({
+      userId: user ? user.id : null,
+    });
+  }, [user, reset]);
 
   // Handle clicking outside the modal to close it
   useEffect(() => {
@@ -66,13 +73,6 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
   }, [setOpenModal]);
 
   const onSubmit = async (data) => {
-    if (!userId) {
-      navigate(routes.login, {
-        state: { from: location.pathname },
-      });
-      return;
-    }
-
     if (!profilePicture && !data.content) {
       setMessage("Can't post empty blogs!");
       return;
@@ -80,7 +80,7 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("userId", userId);
+    formData.append("userId", user.id);
     formData.append("content", data.content || "");
     if (profilePicture) {
       formData.append("image", profilePicture);
@@ -96,6 +96,8 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
       alert("Blog created successfully!");
       reset();
       setProfilePicture(null);
+      imageInputRef.current.value = "";
+      navigate(location.pathname, { replace: true });
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -119,9 +121,9 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
       </div>
       <div className={cls("form")}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <input type="hidden" value={userId} {...register("userId")} />
+          <input type="hidden" {...register("userId")} />
 
-          <textarea placeholder="Write something..." {...register("content")} />
+          <input placeholder="Write something..." {...register("content")} />
           {errors.content && (
             <p className={cls("error")}>{errors.content.message}</p>
           )}
@@ -139,7 +141,6 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
           )}
 
           {message && <div className={cls("message")}>{message}</div>}
-
           <CustomButton
             title={loading ? "Submitting..." : "Submit"}
             isButton

@@ -47,20 +47,25 @@ export default function Login() {
     setDidEditUsername(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (usernameHasError || passwordHasError) {
       return;
     }
 
-    dispatch(
+    await dispatch(
       login({
         username: enteredUsername,
         password: enteredPassword,
       })
     );
-    navigate(from, { replace: true });
+    navigate(
+      from !== configRoutes.login && from !== configRoutes.register
+        ? from
+        : configRoutes.home,
+      { replace: true }
+    );
   };
 
   const input = [
