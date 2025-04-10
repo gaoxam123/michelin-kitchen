@@ -60,6 +60,7 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
       setMessage("Can't post empty blogs!");
       return;
     }
+    dialog.current.close();
   };
 
   return (
