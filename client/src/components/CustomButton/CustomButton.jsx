@@ -18,6 +18,7 @@ export default function CustomButton({
   }
   return (
     <Component
+      type={isButton ? "submit" : undefined}
       className={cls("wrapper", className)}
       onClick={onClick}
       {...props}

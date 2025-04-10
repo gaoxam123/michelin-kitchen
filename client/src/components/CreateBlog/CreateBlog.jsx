@@ -34,7 +34,7 @@ export default function CreateBlog() {
       <CreateBlogModal
         ref={dialog}
         setOpenModal={setOpenModal}
-        userId={user?.id}
+        userId={user ? user.id : null}
       />
       <div className={cls("wrapper")}>
         <div className={cls("img-wrapper")}>

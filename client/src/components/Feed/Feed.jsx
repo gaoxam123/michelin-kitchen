@@ -20,23 +20,24 @@ export default function Feed({ initBlogs }) {
     }
   };
   useEffect(() => {
-    if (!blogs)
-      fetchBlogs();
+    if (!blogs) fetchBlogs();
   }, []);
+  console.log(blogs);
   return (
     <div className={cls("feed")}>
       <CreateBlog />
       <div className={cls("feed-wrapper")}>
-        {blogs && blogs.map((blog) => (
-          <SingleBlog
-            key={blog.id}
-            blogId={blog.id}
-            userId={blog.userId}
-            content={blog.content}
-            blogDate={blog.blogDate}
-            imageBase64={blog.imageBase64}
-          />
-        ))}
+        {blogs &&
+          blogs.map((blog) => (
+            <SingleBlog
+              key={blog.id}
+              blogId={blog.id}
+              userId={blog.userId}
+              content={blog.content}
+              blogDate={blog.blogDate}
+              imageBase64={blog.imageBase64}
+            />
+          ))}
       </div>
     </div>
   );
