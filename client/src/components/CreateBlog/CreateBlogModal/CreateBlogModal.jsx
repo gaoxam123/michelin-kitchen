@@ -93,7 +93,7 @@ export default function CreateBlogModal({ ref, setOpenModal, userId }) {
         },
       });
 
-      setMessage("Blog created successfully!");
+      alert("Blog created successfully!");
       reset();
       setProfilePicture(null);
     } catch (error) {

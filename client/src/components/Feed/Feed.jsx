@@ -22,7 +22,6 @@ export default function Feed({ initBlogs }) {
   useEffect(() => {
     if (!blogs) fetchBlogs();
   }, []);
-  console.log(blogs);
   return (
     <div className={cls("feed")}>
       <CreateBlog />
