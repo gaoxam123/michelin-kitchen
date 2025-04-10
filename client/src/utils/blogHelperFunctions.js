@@ -27,6 +27,17 @@ export const fetchBlogById = async ({ blogId }) => {
   }
 };
 
+export const addBlog = async ({ blog }) => {
+  try {
+    const response = await request.post(`/blogs`, {
+      data: blog,
+    });
+    return response.data;
+  } catch (error) {
+    return console.log(error.response?.data?.message || "Failed to post blog");
+  }
+};
+
 // export const updateBlog = createAsyncThunk(
 //   "blog/updateBlog",
 //   async ({ blog }, { rejectWithValue }) => {

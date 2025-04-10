@@ -1,0 +1,38 @@
+.noScroll {
+    overflow: hidden;
+    padding-right: 10px;
+}
+
+.wrapper {
+    height: 80px;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: lightblue;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    .img-wrapper {
+        height: 90%;
+        width: 10%;
+        .img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+    .modal-button {
+        background-color: rgb(240, 240, 240);
+        height: 50px;
+        width: 75%;
+        border-radius: 25px;
+    }
+    .modal-button:hover {
+        background-color: rgb(221, 221, 221);
+    }
+}

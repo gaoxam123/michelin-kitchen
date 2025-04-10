@@ -5,6 +5,7 @@ import apiRoutes from "../../config/apiRoutes";
 import classNames from "classnames/bind";
 import styles from "./Feed.module.css";
 import { useEffect, useState } from "react";
+import CreateBlog from "../CreateBlog/CreateBlog";
 
 const cls = classNames.bind(styles);
 
@@ -23,6 +24,7 @@ export default function Feed({ initBlogs = [] }) {
   }, []);
   return (
     <div className={cls("feed")}>
+      <CreateBlog />
       <div className={cls("feed-wrapper")}>
         {blogs.map((blog) => (
           <SingleBlog
