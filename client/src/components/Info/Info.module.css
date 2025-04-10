@@ -1,71 +1,67 @@
 .container {
-    width: 100%;
-    padding-top: 20px;
+  width: 100%;
+  padding-top: 20px;
 
-    .pictures-and-buttons {
-        height: 350px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        .images {
-            height: 75%;
-            .background-image-wrapper {
-                background-color: rgb(106, 237, 226);
-                height: 100%;
-            }
-            .profile-image-wrapper {
-                position: relative;
-                top: -85px;
-                left: 30px;
-                height: 170px;
-                width: 170px;
-                border-radius: 50%;
-                border: 5px solid white;
-                .profile-image {
-                    height: 100%;
-                    object-fit: fit;
-                    border-radius: 50%;
-                }
-            }
-        }
-        .buttons {
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            padding-right: 20px;
-            padding-top: 27px;
-            height: 25%;
+  .pictures-and-buttons {
+    height: 350px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .images {
+      height: 75%;
+      .background-image-wrapper {
+        background-color: rgb(106, 237, 226);
+        height: 100%;
+      }
+      .profile-image {
+        position: relative;
+        top: -85px;
+        left: 30px;
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid white;
+      }
+    }
+    .buttons {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      padding-right: 20px;
+      padding-top: 27px;
+      height: 25%;
 
-            .follow-button {
-                color: white;
-                background-color: rgb(77, 175, 223);
-                border-radius: 20px;
-                border: 0;
-            }
-        }
+      .follow-button {
+        color: white;
+        background-color: rgb(77, 175, 223);
+        border-radius: 20px;
+        border: 0;
+      }
     }
-    .infos {
-        padding: 20px;
-        .name {
-            font-size: 25px;
-            font-weight: 600;
-        }
-        .username {
-            color: gray;
-        }
-        .follows-wrapper {
-            padding-top: 15px;
-            display: flex;
-            gap: 20px;
-            .follows {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                color: gray;
-            }
-            .num {
-                font-weight: 700;
-                font-size: 20px;
-                color: black;
-            }
-        }
+  }
+  .infos {
+    padding: 20px;
+    .name {
+      font-size: 25px;
+      font-weight: 600;
     }
+    .username {
+      color: gray;
+    }
+    .follows-wrapper {
+      padding-top: 15px;
+      display: flex;
+      gap: 20px;
+      .follows {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: gray;
+      }
+      .num {
+        font-weight: 700;
+        font-size: 20px;
+        color: black;
+      }
+    }
+  }
 }

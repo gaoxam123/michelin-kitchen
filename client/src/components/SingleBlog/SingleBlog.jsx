@@ -22,6 +22,8 @@ import { addFollowed, removeFollowed, getFollowed } from "../../store/user";
 import { Link } from "react-router-dom";
 import routes from "../../config/routes";
 
+import { getProfilePictureURL } from "../../utils/getImages";
+
 import classNames from "classnames/bind";
 import styles from "./SingleBlog.module.css";
 import request from "../../utils/request";
@@ -102,7 +104,7 @@ export default function SingleBlog({
   return (
     <div className={cls("wrapper")}>
       <div className={cls("header")}>
-        <Image className={cls("profile-picture")} src="TODO: Add image" />
+        <Image className={cls("profile-picture")} src={getProfilePictureURL(user?.id)} />
         <div className={cls("username-date-follow")}>
           <div className={cls("username-follow")}>
             <div className={cls("username")}>

@@ -7,6 +7,7 @@ import Image from "../Image";
 import CustomButton from "../CustomButton";
 import Feed from "../Feed";
 import request from "../../utils/request";
+import { getProfilePictureURL } from "../../utils/getImages";
 
 import classNames from "classnames/bind";
 import styles from "./Info.module.css";
@@ -79,9 +80,7 @@ export default function Info({ userId }) {
       <div className={cls("pictures-and-buttons")}>
         <div className={cls("images")}>
           <div className={cls("background-image-wrapper")}></div>
-          <div className={cls("profile-image-wrapper")}>
-            <Image className={cls("profile-image")} />
-          </div>
+            <Image src={getProfilePictureURL(viewedUser.id)} className={cls("profile-image")} />
         </div>
         <div className={cls("buttons")}>
           {showFollowButton && (

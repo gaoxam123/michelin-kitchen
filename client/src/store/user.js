@@ -2,7 +2,6 @@ import apiRoutes from "../config/apiRoutes";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import request from "../utils/request";
-import api from "../utils/api";
 
 export const addFollowed = createAsyncThunk(
   "user/addFollowed",

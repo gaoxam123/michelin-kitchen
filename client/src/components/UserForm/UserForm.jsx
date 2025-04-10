@@ -5,22 +5,31 @@ import * as yup from "yup"
 
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { update } from "../../store/user";
+import routes from "../../config/routes";
+
+import classNames from "classnames/bind";
+import styles from "./UserForm.module.css";
+
+const cls = classNames.bind(styles)
 
 const schema = yup.object().shape({
     id: yup.string().required(),
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    email: yup.string().email().required(),
+    firstName: yup.string().required("First Name is empty!"),
+    lastName: yup.string().required("Last Name is empty!"),
+    email: yup.string().email().required("Email is empty!"),
 
-    username: yup.string(),
+    username: yup.string().required("Username is empty!"),
     oldPassword: yup.string(),
     newPassword: yup.string(),
 });
 
 function UserForm() {
+    const navigate = useNavigate();
+
     const imageInputRef = useRef();
 
     const { user } = useSelector(state => state.user);
@@ -31,7 +40,9 @@ function UserForm() {
         defaultValues: { ...user }
     });
 
-    useEffect(() => reset(user), [user, reset]);
+    useEffect(() => {
+        reset(user);
+    }, [user, reset]);
 
     const [message, setMessage] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
@@ -66,65 +77,86 @@ function UserForm() {
             if (data.oldPassword) {
                 data.passwordIsChanged = true;
             }
-            dispatch(update({
+            await dispatch(update({
                 newUser: data,
                 session_reset: data.passwordIsChanged
-            }));
+            })).unwrap();
+
+            setMessage("Update successful!")
 
             if (data.passwordIsChanged || data.email !== user.email) {
-                request.get(apiRoutes.auth.logout);
+                request.post(apiRoutes.auth.logout);
+                navigate(routes.login);
             }
         } catch (e) {
             setMessage(e);
         }
     };
 
+    const inputItems = [
+        {
+            text: "First Name",
+            name: "firstName",
+        },
+        {
+            text: "Last Name",
+            name: "lastName",
+        },
+        {
+            text: "Email",
+            name: "email",
+        },
+        {
+            text: "Username",
+            name: "username",
+        },
+        {
+            text: "Old password",
+            name: "oldPassword",
+        },
+        {
+            text: "New password",
+            name: "newPassword",
+        },
+    ];
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <input type="hidden" {...register("id")} />
+        <>
+            <h1>Edit User Detail</h1>
 
-            <input placeholder="First Name" {...register("firstName")} />
-            {formState.errors.firstName && formState.errors.firstName.message}
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <input type="hidden" {...register("id")} />
 
-            <input placeholder="Last Name" {...register("lastName")} />
-            {formState.errors.lastName && formState.errors.lastName.message}
+                {inputItems.map(item => (
+                    <div key={item.name} className={cls("form-group")}>
+                        <label className={cls("input-text")} for={item.name}>{`${item.text}:`}</label>
+                        <input id={item.name} className={cls("input")} placeholder={item.text} {...register(item.name)} />
+                        {formState.errors[item.name] &&
+                            <span className={cls("error")}>{formState.errors[item.name].message}</span>
+                        }
+                    </div>
+                ))}
 
-            <input placeholder="Email" {...register("email")} />
-            {formState.errors.email && formState.errors.email.message}
+                <div className={cls("form-group")}>
+                    <label className={cls("input-text")} for="image">Upload new profile picture:</label>
+                    <input
+                        ref={imageInputRef}
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                            if (e.target.files?.[0]) setProfilePicture(e.target.files[0]);
+                        }}
+                    />
+                </div>
 
-            <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                    if (e.target.files?.[0]) setProfilePicture(e.target.files[0]);
-                }}
-            />
+                <button type="submit" className={cls("submit-button")}>
+                    Save changes
+                </button>
 
-            <input placeholder="Username" {...register("username")} />
-            {formState.errors.username && formState.errors.username.message}
-
-            <input
-                type="password"
-                placeholder="Old Password"
-                {...register("oldPassword")}
-            />
-            {formState.errors.oldPassword && formState.errors.oldPassword.message}
-
-            <input
-                type="password"
-                placeholder="New Password"
-                {...register("newPassword")}
-            />
-            {formState.errors.newPassword && formState.errors.newPassword.message}
-
-
-            <button type="submit">
-                Save changes
-            </button>
-
-            {message && message}
-        </form>
+                {message && message}
+            </form>
+        </>
     )
 }
 
