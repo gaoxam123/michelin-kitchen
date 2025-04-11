@@ -179,7 +179,7 @@ export default function SingleBlog({
               )}
             </div>
             <div>
-              {user.id === userId && (
+              {user && user.id === userId && (
                 <CustomButton
                   title={"Delete"}
                   onClick={handleDeleteBlog}
