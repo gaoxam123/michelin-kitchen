@@ -68,7 +68,7 @@ function Header() {
     <div className={cls("header-container")}>
       <div className={cls("header-left")}>
         <Link className={cls("logo")} to={configRoutes.home}>
-          MichelinKitchen
+          NakanoMiku
         </Link>
       </div>
       <div className={cls("header-center")}>
