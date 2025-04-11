@@ -1,26 +1,33 @@
+import styles from "./BlogUpdate.module.css";
 import classNames from "classnames/bind";
-import styles from "./CreateBlogModal.module.css";
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Close } from "@mui/icons-material";
-import CustomButton from "../../CustomButton";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useSelector } from "react-redux";
-import { addBlog } from "../../../utils/blogHelperFunctions";
 
 const cls = classNames.bind(styles);
 
-// Validation Schema using Yup
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import CustomButton from "../../components/CustomButton";
+import { fetchBlogById, updateBlog } from "../../utils/blogHelperFunctions";
+import routes from "../../config/routes";
+
 const schema = yup.object().shape({
+  id: yup.string().required("Blog ID is required"),
   userId: yup.string().required("User ID is required"),
   content: yup.string(),
   image: yup.mixed(),
 });
-
-export default function CreateBlogModal({ ref, setOpenModal }) {
-  const dialog = useRef();
+export default function BlogUpdate() {
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const imageInputRef = useRef();
+  const { id } = useParams();
+  const [blog, setBlog] = useState(null);
   const {
     register,
     handleSubmit,
@@ -29,53 +36,41 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { user } = useSelector((state) => state.user);
-
-  // Imperative handle for opening and closing the modal
-  useImperativeHandle(ref, () => ({
-    open() {
-      setOpenModal(true);
-      dialog.current.showModal();
-    },
-    close() {
-      setOpenModal(false);
-      dialog.current.close();
-    },
-  }));
-
+  const fetchBlog = useCallback(async () => {
+    const blogRespone = await fetchBlogById({ blogId: id });
+    setBlog(blogRespone);
+  }, [id]);
   useEffect(() => {
-    reset({
-      userId: user ? user.id : null,
-    });
-  }, [user, reset]);
-
-  // Handle clicking outside the modal to close it
+    fetchBlog();
+  }, [fetchBlog]);
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dialog.current && event.target === dialog.current) {
-        setOpenModal(false);
-        dialog.current.close();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setOpenModal]);
-
+    if (blog) {
+      reset({
+        id: blog.id,
+        userId: blog.userId,
+        content: blog.content,
+      });
+    }
+  }, [blog, reset]);
+  if (!blog) return <p>...Loading</p>;
   const onSubmit = async (data) => {
+    const detailsChanged = Object.keys(data).some(
+      (key) => data[key] !== user[key]
+    );
+
+    if (!detailsChanged && !profilePicture) {
+      setMessage("No changes made!");
+      return;
+    }
+
     if (!profilePicture && !data.content) {
-      setMessage("Can't post empty blogs!");
+      setMessage("Blogs can't be empty!");
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
+    formData.append("id", id);
     formData.append("userId", user.id);
     formData.append("content", data.content || "");
     if (profilePicture) {
@@ -83,18 +78,13 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
     }
 
     try {
-      // await request.post(`${apiRoutes.blogs.base}`, formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
-      await addBlog(formData);
+      await updateBlog(formData);
 
-      alert("Blog created successfully!");
+      alert("Blog updated successfully!");
       reset();
       setProfilePicture(null);
       imageInputRef.current.value = "";
-      window.location.reload();
+      navigate(`${routes.blog}/${id}`, { replace: true });
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -103,21 +93,13 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
   };
 
   return (
-    <dialog ref={dialog} className={cls("container")}>
+    <div className={cls("container")}>
       <div className={cls("header")}>
-        <div className={cls("text")}>Create Blog</div>
-        <form method="dialog" className={cls("close-form")}>
-          <CustomButton
-            title=""
-            isButton
-            onClick={() => setOpenModal(false)}
-            className={cls("close-button")}
-            icon={<Close sx={{ fontSize: 20 }} />}
-          />
-        </form>
+        <div className={cls("text")}>Update Blog</div>
       </div>
       <div className={cls("form")}>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <input type="hidden" {...register("id")} />
           <input type="hidden" {...register("userId")} />
 
           <textarea placeholder="Write something..." {...register("content")} />
@@ -146,6 +128,6 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
           />
         </form>
       </div>
-    </dialog>
+    </div>
   );
 }

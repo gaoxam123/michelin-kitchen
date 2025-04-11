@@ -1,116 +1,200 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  background-color: #f2f2f2;
-  border-radius: 10px;
-  width: 80%;
+  background-color: #ffffff; /* Clean white background for the card */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 100%;
+  max-width: 600px; /* Ensures it doesn't stretch too wide on large screens */
+  margin: 20px auto; /* Centers the component */
+  padding: 15px; /* Inner padding */
 }
 
 .header {
   display: flex;
   align-items: center;
-  justify-content: start;
-  gap: 20px;
-  margin: 5px 10px;
-  height: 60px;
-  .profile-picture {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    img:hover {
-      cursor: pointer;
-    }
-  }
-  .username-date-follow {
-    display: flex;
-    flex-direction: column;
-    .username-follow {
-      font-size: 20px;
-      color: rgb(66, 60, 60);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      .username:hover {
-        text-decoration: underline;
-        text-decoration-thickness: 1.5px;
-        cursor: pointer;
-      }
-      .follow {
-        color: rgb(95, 95, 220);
-        font-size: 18px;
-      }
-      .follow:hover {
-        cursor: pointer;
-        text-decoration: underline;
-        text-decoration-thickness: 1.5px;
-      }
-    }
-    .date {
-      font-size: 15px;
-      color: rgb(152, 141, 141);
-    }
-    .date:hover {
-      cursor: pointer;
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-    }
-  }
+  justify-content: flex-start;
+  gap: 15px; /* Reduced gap for a more compact look */
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0; /* Divider line for clarity */
+}
+
+.profile-picture {
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd; /* Light border to define the profile image */
+}
+
+.username-date-follow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1; /* Ensures it takes remaining space */
+}
+
+.username-follow {
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.username:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #007bff; /* Blue color on hover */
+}
+
+.follow-button {
+  background-color: #4caf50; /* Green background for follow button */
+  color: white;
+  border-radius: 20px;
+  padding: 6px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.follow-button:hover {
+  background-color: #45a049; /* Darker green when hovering */
+}
+
+.delete-button {
+  background-color: #f44336; /* Red background for delete button */
+  color: white;
+  border-radius: 20px;
+  padding: 6px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f; /* Darker red when hovering */
+}
+
+.edit-button {
+  background-color: #007bff; /* Blue background for the edit button */
+  color: white;
+  border-radius: 20px;
+  padding: 6px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.edit-button:hover {
+  background-color: #0056b3; /* Darker blue when hovering */
+}
+
+
+.date {
+  font-size: 14px;
+  color: #888;
+  margin-top: 5px;
 }
 
 .caption {
-  padding: 5px 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5; /* Improved line spacing for readability */
+  text-align: justify; /* Aligns text evenly */
 }
 
 .image {
-  img {
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-  }
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the image is nicely clipped to rounded corners */
 }
 
 .likes-comments-shares {
-  padding: 0px 10px;
-  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  color: #888;
+  font-size: 14px;
+}
+
+.likes {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  color: gray;
-  .likes {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .likes:hover {
-    cursor: pointer;
-  }
-  .likes p:hover {
-    text-decoration: underline;
-  }
-  .comments-shares {
-    display: flex;
-    gap: 20px;
-    .comments:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .shares:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
+  gap: 5px;
+  cursor: pointer;
+}
+
+.likes p {
+  font-weight: 500;
+}
+
+.likes:hover p {
+  text-decoration: underline;
+}
+
+.comments-shares {
+  display: flex;
+  gap: 20px;
+}
+
+.comments, .shares {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.comments:hover, .shares:hover {
+  text-decoration: underline;
 }
 
 .buttons {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: flex-start;
 }
-.follow-button {
-  color: white;
-  background-color: rgb(77, 175, 223);
+
+.buttons .MuiButton-root {
+  padding: 8px 16px;
   border-radius: 20px;
-  border: 0;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease-in-out;
 }
+
+.buttons .MuiButton-root:hover {
+  background-color: rgba(0, 123, 255, 0.1); /* Adds a hover effect */
+}
+
+.like-button {
+  color: blue;
+}
+
+.like-button.liked {
+  color: #007bff;
+}
+
+.comment-button {
+  color: #4caf50;
+}
+
+.comment-button:hover {
+  background-color: rgba(76, 175, 80, 0.1); /* Green hover effect */
+}
+
+.delete-button {
+  color: white;
+  background-color: red;
+  border-radius: 20px;
+  font-weight: bold;
+  padding: 6px 15px;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+

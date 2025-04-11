@@ -10,12 +10,14 @@ import { formatDate } from "../../utils/formatDate";
 import Image from "../Image";
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 import apiRoutes from "../../config/apiRoutes";
 import {
   fetchCommentsByBlogId,
   getLikes,
   addLike,
   removeLike,
+  deleteBlog,
 } from "../../utils/blogHelperFunctions";
 
 import { addFollowed, removeFollowed, getFollowed } from "../../store/user";
@@ -44,6 +46,8 @@ export default function SingleBlog({
   const [likes, setLikes] = useState([]);
   const { user, following } = useSelector((state) => state.user);
   const [blogOwner, setBlogOwner] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchFollowed = async () => {
@@ -101,6 +105,22 @@ export default function SingleBlog({
     setLikes(fetchedLikes);
   };
 
+  const handleDeleteBlog = async () => {
+    await deleteBlog({
+      blog: {
+        id: blogId,
+        userId,
+        content,
+        image: imageBase64,
+      },
+    });
+    if (location.pathname.startsWith(`${routes.blog}`)) {
+      navigate(routes.home, { replace: true });
+    } else {
+      window.location.reload();
+    }
+  };
+
   return (
     <div className={cls("wrapper")}>
       <div className={cls("header")}>
@@ -134,6 +154,31 @@ export default function SingleBlog({
                   title={followed ? "Unfollow" : "Follow"}
                   onClick={handleFollowClick}
                   className={cls("follow-button")}
+                />
+              )}
+            </div>
+            <div>
+              {user && user.id === userId && (
+                <Link
+                  to={`${routes.blog}/${blogId}/edit`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    font: "inherit",
+                    padding: "0",
+                    margin: "0",
+                  }}
+                >
+                  <CustomButton title={"Edit"} className={cls("edit-button")} />
+                </Link>
+              )}
+            </div>
+            <div>
+              {user.id === userId && (
+                <CustomButton
+                  title={"Delete"}
+                  onClick={handleDeleteBlog}
+                  className={cls("delete-button")}
                 />
               )}
             </div>

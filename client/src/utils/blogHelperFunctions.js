@@ -27,10 +27,12 @@ export const fetchBlogById = async ({ blogId }) => {
   }
 };
 
-export const addBlog = async ({ blog }) => {
+export const addBlog = async (formData) => {
   try {
-    const response = await request.post(`/blogs`, {
-      data: blog,
+    const response = await request.post(`/blogs`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error) {
@@ -55,16 +57,18 @@ export const addBlog = async ({ blog }) => {
 //   }
 // );
 
-export const updateBlog = async ({ blog }) => {
+export const updateBlog = async (formData) => {
   try {
-    const response = await request.put(`/blogs`, {
-      data: blog,
+    const response = await request.put(`/blogs`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error) {
     return console.log(
       error.response?.data?.message ||
-        "Failed to update blog with id " + blog.id
+        "Failed to update blog with id " + formData.get("id")
     );
   }
 };
