@@ -28,6 +28,10 @@
   border: 2px solid #ddd; /* Light border to define the profile image */
 }
 
+.profile-picture:hover{
+  cursor: pointer;
+}
+
 .username-date-follow {
   display: flex;
   flex-direction: column;
@@ -112,6 +116,10 @@
   margin-top: 15px;
   border-radius: 10px;
   overflow: hidden; /* Ensures the image is nicely clipped to rounded corners */
+}
+
+.image:hover {
+  cursor: pointer;
 }
 
 .likes-comments-shares {

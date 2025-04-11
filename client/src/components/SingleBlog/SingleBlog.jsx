@@ -127,6 +127,11 @@ export default function SingleBlog({
         <Image
           className={cls("profile-picture")}
           src={getProfilePictureURL(user?.id)}
+          to={
+            blogOwner.id
+              ? `${routes.profile}/${blogOwner.id}`
+              : `${routes.home}`
+          }
         />
         <div className={cls("username-date-follow")}>
           <div className={cls("username-follow")}>
@@ -190,14 +195,19 @@ export default function SingleBlog({
         <ExpandableContent text={content} />
       </div>
       <div className={cls("image")}>
-        <Image srcBase64={imageBase64} />
+        <Image srcBase64={imageBase64} to={`${routes.blog}/${blogId}`} />
       </div>
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
           <ThumbUpOffAlt /> <p>{likes.length}</p>
         </div>
         <div className={cls("comments-shares")}>
-          <div className={cls("comments")}>{comments.length} comments</div>
+          <div
+            className={cls("comments")}
+            onClick={() => navigate(`${routes.blog}/${blogId}`)}
+          >
+            {comments.length} comments
+          </div>
         </div>
       </div>
       <div className={cls("buttons")}>
@@ -207,7 +217,11 @@ export default function SingleBlog({
           icon={<ThumbUpAlt />}
           title="Like"
         />
-        <CustomButton icon={<ChatBubbleOutline />} title={"Comment"} />
+        <CustomButton
+          icon={<ChatBubbleOutline />}
+          title={"Comment"}
+          onClick={() => navigate(`${routes.blog}/${blogId}`)}
+        />
       </div>
     </div>
   );

@@ -1,18 +1,21 @@
 import SingleBlog from "../SingleBlog";
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
+import routes from "../../config/routes";
 
 import classNames from "classnames/bind";
 import styles from "./Feed.module.css";
 import { useEffect, useState } from "react";
 import CreateBlog from "../CreateBlog/CreateBlog";
 import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const cls = classNames.bind(styles);
 
 export default function Feed({ initBlogs }) {
   const [blogs, setBlogs] = useState(initBlogs);
   const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const fetchBlogs = async () => {
     try {
       const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
