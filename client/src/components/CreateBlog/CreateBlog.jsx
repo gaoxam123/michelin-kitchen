@@ -37,13 +37,11 @@ export default function CreateBlog() {
         userId={user ? user.id : null}
       />
       <div className={cls("wrapper")}>
-        <div className={cls("img-wrapper")}>
-          <Image
-            src={user ? getProfilePictureURL(user.id) : null}
-            className={cls("img")}
-            to={user ? `${routes.profile}/${user.id}` : routes.login}
-          />
-        </div>
+        <Image
+          src={user ? getProfilePictureURL(user.id) : null}
+          className={cls("img")}
+          to={user ? `${routes.profile}/${user.id}` : routes.login}
+        />
         <CustomButton
           onClick={handleOpenModal}
           title="Create new blog"
