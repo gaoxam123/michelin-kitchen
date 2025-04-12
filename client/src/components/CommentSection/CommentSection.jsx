@@ -2,44 +2,53 @@ import Comment from "../Comment/Comment"
 import Input from "../Input"
 import CustomButton from "../CustomButton"
 
+import { fetchCommentsByBlogId, addComment } from "../../utils/blogHelperFunctions"
+import { useSelector } from "react-redux"
+
 import classNames from "classnames/bind"
 import styles from "./CommentSection.module.css"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const cls = classNames.bind(styles)
 
-function CommentSection() {
-    const [comments, setComments] = useState([
-        {
-            name: "Joel",
-            avatar: "TODO",
-            text: "Very cool comment"
-        },
-        {
-            name: "Clem",
-            avatar: "TODO",
-            text: "Also very cool comment with\nLine break💫"
-        },
-    ])
+function CommentSection({ blogId }) {
+    const { user } = useSelector(state => state.user);
+
+    const [comments, setComments] = useState([]);
 
     const [commentInput, setCommentInput] = useState("")
 
-    const handlePost = () => {
+    useEffect(() => {
+        if (!blogId) {
+            return;
+        }
+
+        const fetchComments = async (blogId) => {
+            const response = await fetchCommentsByBlogId({ blogId });
+            setComments(response);
+        }
+        fetchComments(blogId);
+    }, [blogId]);
+
+    const handlePost = async () => {
         if (!commentInput.trim()) {
             return
         }
 
-        // TODO: POST comments
+        try {
+            const newComment = {
+                userId: user.id,
+                blogId: blogId,
+                content: commentInput.trim(),
+            };
 
-        setCommentInput("")
-        setComments([
-            {
-                name: "NewUser",
-                avatar: "TODO",
-                text: commentInput.trim(),
-            },
-            ...comments
-        ])
+            await addComment(newComment);
+
+            setCommentInput("");
+            setComments([newComment, ...comments]);
+        } catch (e) {
+            alert(e);
+        }
     }
 
     const handleKeyDown = e => {
@@ -71,9 +80,9 @@ function CommentSection() {
                     return (
                         <Comment
                             key={index}
-                            name={comment.name}
-                            avatar={comment.avatar}
-                            text={comment.text}
+                            content={comment.content}
+                            userId={comment.userId}
+                            commentDate={comment.commentDate}
                         />
                     )
                 })}

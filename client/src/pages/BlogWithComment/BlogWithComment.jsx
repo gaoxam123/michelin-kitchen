@@ -17,10 +17,14 @@ export default function BlogWithComment() {
     const blogRespone = await fetchBlogById({ blogId: id });
     setBlog(blogRespone);
   }, [id]);
+
   useEffect(() => {
     fetchBlog();
   }, [fetchBlog]);
-  if (!blog) return <p>...Loading</p>;
+
+  if (!blog)
+    return <p>...Loading</p>;
+
   return (
     <div className={cls("wrapper")}>
       <SingleBlog
@@ -30,7 +34,7 @@ export default function BlogWithComment() {
         blogDate={blog.blogDate}
         imageBase64={blog.imageBase64}
       />
-      <CommentSection />
+      <CommentSection blogId={id} />
     </div>
   );
 }

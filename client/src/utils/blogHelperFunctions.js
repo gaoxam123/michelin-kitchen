@@ -120,15 +120,8 @@ export const deleteBlog = async ({ blog }) => {
 // );
 
 export const fetchCommentsByBlogId = async ({ blogId }) => {
-  try {
-    const response = await request.get(`/comments/${blogId}`);
-    return response.data;
-  } catch (error) {
-    return console.log(
-      error.response?.data?.message ||
-        "Failed to get comments of blog with id " + blogId
-    );
-  }
+  const response = await request.get(`/comments/${blogId}`);
+  return response.data;
 };
 
 // export const addComment = createAsyncThunk(
@@ -147,17 +140,9 @@ export const fetchCommentsByBlogId = async ({ blogId }) => {
 //   }
 // );
 
-export const addComment = async ({ comment }) => {
-  try {
-    const response = await request.post(`/comments`, {
-      data: comment,
-    });
-    return response.data;
-  } catch (error) {
-    return console.log(
-      error.response?.data?.message || "Failed to add comment"
-    );
-  }
+export const addComment = async (comment) => {
+  const response = await request.post(`/comments`, comment);
+  return response.data;
 };
 
 // export const updateComment = createAsyncThunk(
