@@ -19,8 +19,8 @@ export default function Info({ userId }) {
   const { user, following, status, error } = useSelector((state) => state.user);
   const [viewedUser, setViewedUser] = useState(null);
   const [blogs, setBlogs] = useState(null);
-  const [followedList, setFollowedList] = useState([]);
-  const [followerList, setFollowerList] = useState([]);
+  const [followedList, setFollowedList] = useState(null);
+  const [followerList, setFollowerList] = useState(null);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -60,7 +60,7 @@ export default function Info({ userId }) {
   const showFollowButton = user && viewedUser && user.id !== viewedUser.id;
   const followed = viewedUser && following.includes(viewedUser.id);
 
-  if (!viewedUser || !blogs) {
+  if (!viewedUser || !blogs || !followedList || !followerList) {
     return <p>...Loading</p>;
   }
 
