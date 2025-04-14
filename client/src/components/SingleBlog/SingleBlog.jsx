@@ -196,9 +196,9 @@ export default function SingleBlog({
       <div className={cls("caption")}>
         <ExpandableContent text={newlineToBr(content)} />
       </div>
-      <div className={cls("image")}>
+      {imageBase64 && (<div className={cls("image")}>
         <Image srcBase64={imageBase64} to={`${routes.blog}/${blogId}`} />
-      </div>
+      </div>)}
       <div className={cls("likes-comments-shares")}>
         <div className={cls("likes")}>
           <ThumbUpOffAlt /> <p>{likes.length}</p>
