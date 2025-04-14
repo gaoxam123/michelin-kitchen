@@ -1,6 +1,7 @@
 import Image from "../Image";
 
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { newlineToBr } from "../../utils/stringFormatter";
 
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
@@ -14,14 +15,7 @@ const cls = classNames.bind(styles)
 function Comment({ content, userId, commentDate }) {
     const [name, setName] = useState("Loading...");
 
-    const text = content.split("\n").map(
-        (item, index) => (
-            <Fragment key={index}>
-                {item}
-                {index !== content.split('\n').length - 1 && <br />}
-            </Fragment>
-        )
-    )
+    const text = newlineToBr(content);
 
     useEffect(() => {
         const fetchUserById = async (id) => {
