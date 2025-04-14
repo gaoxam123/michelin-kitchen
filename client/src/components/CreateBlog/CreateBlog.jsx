@@ -9,16 +9,19 @@ import CreateBlogModal from "./CreateBlogModal/CreateBlogModal";
 import CustomButton from "../CustomButton";
 import Image from "../Image";
 import { getProfilePictureURL } from "../../utils/getImages";
-import { Link } from "react-router-dom";
 import routes from "../../config/routes";
 
 export default function CreateBlog() {
   const { user } = useSelector((state) => state.user);
+
   const [openModal, setOpenModal] = useState(false);
+
   const dialog = useRef();
+
   const handleOpenModal = () => {
     dialog.current.open();
   };
+
   useEffect(() => {
     if (openModal) {
       document.body.classList.add(cls("noScroll"));
@@ -29,6 +32,7 @@ export default function CreateBlog() {
       document.body.classList.remove(cls("noScroll"));
     };
   }, [openModal]);
+
   return (
     <>
       <CreateBlogModal

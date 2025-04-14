@@ -77,7 +77,7 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
     setLoading(true);
     const formData = new FormData();
     formData.append("userId", user.id);
-    formData.append("content", data.content || "");
+    formData.append("content", data.content?.trim() || "");
     if (profilePicture) {
       formData.append("image", profilePicture);
     }

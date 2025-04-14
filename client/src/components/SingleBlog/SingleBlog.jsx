@@ -4,6 +4,8 @@ import {
   ThumbUpOffAlt,
 } from "@mui/icons-material";
 
+import { newlineToBr } from "../../utils/stringFormatter";
+
 import CustomButton from "../CustomButton";
 import ExpandableContent from "../ExpandableContent";
 import { formatDate } from "../../utils/formatDate";
@@ -192,7 +194,7 @@ export default function SingleBlog({
         </div>
       </div>
       <div className={cls("caption")}>
-        <ExpandableContent text={content} />
+        <ExpandableContent text={newlineToBr(content)} />
       </div>
       <div className={cls("image")}>
         <Image srcBase64={imageBase64} to={`${routes.blog}/${blogId}`} />
