@@ -1,32 +1,29 @@
 import SingleBlog from "../SingleBlog";
 import request from "../../utils/request";
 import apiRoutes from "../../config/apiRoutes";
-import routes from "../../config/routes";
 
 import classNames from "classnames/bind";
 import styles from "./Feed.module.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CreateBlog from "../CreateBlog/CreateBlog";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 
 const cls = classNames.bind(styles);
 
 export default function Feed({ initBlogs }) {
   const [blogs, setBlogs] = useState(initBlogs);
   const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
       const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
       setBlogs(blogsResponse.data);
     } catch (error) {
       alert(error);
     }
-  };
+  }, []);
   useEffect(() => {
     if (!blogs) fetchBlogs();
-  }, []);
+  }, [fetchBlogs, blogs]);
   return (
     <div className={cls("feed")}>
       {user && <CreateBlog />}

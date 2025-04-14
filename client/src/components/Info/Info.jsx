@@ -18,7 +18,7 @@ export default function Info({ userId }) {
   const dispatch = useDispatch();
   const { user, following, status, error } = useSelector((state) => state.user);
   const [viewedUser, setViewedUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState(null);
   const [followedList, setFollowedList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
 
@@ -32,10 +32,13 @@ export default function Info({ userId }) {
         `${apiRoutes.users.base}/${userId}${apiRoutes.blogs.base}`
       );
       setBlogs(blogsResponse.data);
-      // TODO: apiRoutes
-      const followedResponse = await request.get(`/users/${userId}/followed`);
+      const followedResponse = await request.get(
+        `${apiRoutes.users.base}/${userId}/followed`
+      );
       setFollowedList(followedResponse.data);
-      const followerResponse = await request.get(`/users/${userId}/followers`);
+      const followerResponse = await request.get(
+        `${apiRoutes.users.base}/${userId}/followers`
+      );
       setFollowerList(followerResponse.data);
     } catch (error) {
       // TODO handle error
@@ -57,7 +60,7 @@ export default function Info({ userId }) {
   const showFollowButton = user && viewedUser && user.id !== viewedUser.id;
   const followed = viewedUser && following.includes(viewedUser.id);
 
-  if (!viewedUser) {
+  if (!viewedUser || !blogs) {
     return <p>...Loading</p>;
   }
 
@@ -80,7 +83,10 @@ export default function Info({ userId }) {
       <div className={cls("pictures-and-buttons")}>
         <div className={cls("images")}>
           <div className={cls("background-image-wrapper")}></div>
-            <Image src={getProfilePictureURL(viewedUser.id)} className={cls("profile-image")} />
+          <Image
+            src={getProfilePictureURL(viewedUser.id)}
+            className={cls("profile-image")}
+          />
         </div>
         <div className={cls("buttons")}>
           {showFollowButton && (
