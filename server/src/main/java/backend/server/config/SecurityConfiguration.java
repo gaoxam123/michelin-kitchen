@@ -1,6 +1,7 @@
 package backend.server.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
+
+    @Value("${cors.allowed-origins}")
+    private String[] REACT_APP_URL;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -51,7 +55,7 @@ public class SecurityConfiguration {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
 
                     corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173/"));
+                    corsConfiguration.setAllowedOrigins(List.of(REACT_APP_URL));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
 

@@ -39,3 +39,6 @@ logging:
 security:
   jwt:
     encryption_secret: ${JWT_ENCRYPTION_SECRET}
+
+cors:
+  allowed-origins: ${REACT_APP_URL}

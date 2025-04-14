@@ -41,14 +41,11 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/blogs")
-    public ResponseEntity<List<BlogResponse>> findAllBlogs(@PathVariable UUID id, @RequestParam(name = "sort", required = false) String sort, @RequestParam(name = "like", required = false) String like) {
+    public ResponseEntity<List<BlogResponse>> findAllBlogs(@PathVariable UUID id, @RequestParam(name = "like", required = false) String like) {
         if (like != null) {
             return ResponseEntity.ok(blogService.findBlogsLikedByUserId(id).stream().map(BlogResponse::new).toList());
         }
-        if (sort != null) {
-            return ResponseEntity.ok(blogService.findBlogsByUserIdSortByPostDate(id).stream().map(BlogResponse::new).toList());
-        }
-        return ResponseEntity.ok(blogService.findBlogsByUserId(id).stream().map(BlogResponse::new).toList());
+        return ResponseEntity.ok(blogService.findBlogsByUserIdSortByPostDate(id).stream().map(BlogResponse::new).toList());
     }
 
     @GetMapping("/users/auth-me")

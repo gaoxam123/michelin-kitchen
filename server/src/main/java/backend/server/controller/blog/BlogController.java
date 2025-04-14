@@ -24,11 +24,8 @@ public class BlogController {
     private final UserService userService;
 
     @GetMapping("/blogs")
-    public ResponseEntity<List<BlogResponse>> getAllBlogs(@RequestParam(name = "sort", required = false) boolean sort) {
-        if (sort) {
-            return ResponseEntity.ok(blogService.findAllSortByPostDate().stream().map(BlogResponse::new).toList());
-        }
-        return ResponseEntity.ok(blogService.findAll().stream().map(BlogResponse::new).toList());
+    public ResponseEntity<List<BlogResponse>> getAllBlogs() {
+        return ResponseEntity.ok(blogService.findAllSortByPostDate().stream().map(BlogResponse::new).toList());
     }
 
     @GetMapping("/blogs/{blogId}")
