@@ -15,8 +15,6 @@ const cls = classNames.bind(styles)
 function Comment({ content, userId, commentDate }) {
     const [name, setName] = useState("Loading...");
 
-    const text = newlineToBr(content);
-
     useEffect(() => {
         const fetchUserById = async (id) => {
             const response = await request.get(`${apiRoutes.users.base}/${id}`);
@@ -34,7 +32,7 @@ function Comment({ content, userId, commentDate }) {
             <Image src={getProfilePictureURL(userId)} className={cls("avatar")} />
             <div className={cls("content")}>
                 <strong>{name}</strong>
-                <p>{text}</p>
+                <p>{newlineToBr(content)}</p>
             </div>
         </div >
     )
