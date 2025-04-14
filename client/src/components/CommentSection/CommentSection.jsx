@@ -61,19 +61,21 @@ function CommentSection({ blogId }) {
     return (
         <div className={cls("wrapper")}>
             <h3>Comments (💡Use Shift + Enter for new line)</h3>
-
-            <div className={cls("comment-input")}>
-                <Input
-                    componentType="textarea"
-                    id="comment"
-                    placeholder="Be creative 🌈"
-                    value={commentInput}
-                    onChange={e => setCommentInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    hideError
-                />
-                <CustomButton onClick={handlePost} title="POST" isButton />
-            </div>
+            {
+                user && (
+                    <div className={cls("comment-input")}>
+                        <Input
+                            componentType="textarea"
+                            id="comment"
+                            placeholder="Be creative 🌈"
+                            value={commentInput}
+                            onChange={e => setCommentInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            hideError
+                        />
+                        <CustomButton onClick={handlePost} title="POST" isButton />
+                    </div>)
+            }
 
             <div className={cls("comments")}>
                 {comments.map((comment, index) => {
