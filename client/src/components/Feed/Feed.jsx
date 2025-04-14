@@ -13,6 +13,7 @@ const cls = classNames.bind(styles);
 export default function Feed({ initBlogs }) {
   const [blogs, setBlogs] = useState(initBlogs);
   const { user } = useSelector((state) => state.user);
+
   const fetchBlogs = useCallback(async () => {
     try {
       const blogsResponse = await request.get(`${apiRoutes.blogs.base}`);
@@ -21,9 +22,11 @@ export default function Feed({ initBlogs }) {
       alert(error);
     }
   }, []);
+
   useEffect(() => {
     if (!blogs) fetchBlogs();
   }, [fetchBlogs, blogs]);
+
   return (
     <div className={cls("feed")}>
       {user && <CreateBlog />}

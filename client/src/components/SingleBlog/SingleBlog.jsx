@@ -128,7 +128,7 @@ export default function SingleBlog({
       <div className={cls("header")}>
         <Image
           className={cls("profile-picture")}
-          src={getProfilePictureURL(user?.id)}
+          src={getProfilePictureURL(userId)}
           to={
             blogOwner.id
               ? `${routes.profile}/${blogOwner.id}`
