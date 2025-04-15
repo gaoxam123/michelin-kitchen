@@ -23,11 +23,11 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    @Value("${cors.allowed-origins}")
-    private String[] REACT_APP_URL;
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+
+    @Value("${cors.allowed-origins}")
+    private String[] REACT_APP_URL;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
