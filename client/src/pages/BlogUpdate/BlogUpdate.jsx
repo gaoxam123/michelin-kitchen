@@ -75,6 +75,8 @@ export default function BlogUpdate() {
     formData.append("content", data.content || "");
     if (profilePicture) {
       formData.append("image", profilePicture);
+    } else {
+      formData.append("image", blog.image);
     }
 
     try {
