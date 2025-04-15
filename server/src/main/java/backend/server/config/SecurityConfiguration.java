@@ -27,7 +27,7 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     @Value("${cors.allowed-origins}")
-    private String[] REACT_APP_URL;
+    private List<String> CORS_ALLOWED_ORIGINS;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
 
                     corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.setAllowedOrigins(List.of(REACT_APP_URL));
+                    corsConfiguration.setAllowedOrigins(CORS_ALLOWED_ORIGINS);
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
 
