@@ -68,7 +68,7 @@ function Header() {
     <div className={cls("header-container")}>
       <div className={cls("header-left")}>
         <Link className={cls("logo")} to={configRoutes.home}>
-          NakanoMiku
+          Michelin Kitchen ✨
         </Link>
       </div>
       <div className={cls("header-center")}>
@@ -158,8 +158,3 @@ function Header() {
 }
 
 export default Header;
-
-// (<>
-//   <div className={cls('login-btn')} onClick={() => dispatch(userActions.logout())}>
-//     <CustomButton title='Log Out'/>
-//   </div></>)
