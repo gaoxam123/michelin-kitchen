@@ -7,11 +7,11 @@ export const addFollowed = createAsyncThunk(
   "user/addFollowed",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await request.post(apiRoutes.follows, {
+      await request.post(apiRoutes.follows, {
         followerId,
         followedId,
       });
-      return response.data.followedId;
+      return followedId;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to follow user"
@@ -24,10 +24,10 @@ export const removeFollowed = createAsyncThunk(
   "user/removeFollowed",
   async ({ followerId, followedId }, { rejectWithValue }) => {
     try {
-      const response = await request.delete(apiRoutes.follows, {
+      await request.delete(apiRoutes.follows, {
         data: { followerId, followedId },
       });
-      return response.data.followedId;
+      return followedId;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to unfollow user"
