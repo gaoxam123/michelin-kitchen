@@ -36,15 +36,6 @@
     margin-right: 15px;
 }
 
-.leftbar-button {
-    padding: 10px;
-    font-weight: 550 !important;
-}
-
-.leftbar-button:hover {
-    background-color: lightgray;
-}
-
 .leftbar-hr {
     margin: 20px 0;
 }
