@@ -1,6 +1,5 @@
 import Header from "../Header";
 import Leftbar from "../Leftbar";
-import Rightbar from "../rightbar/rightbar";
 
 import styles from "./Layout.module.css";
 import classNames from "classnames/bind";
@@ -14,7 +13,6 @@ function Layout({ children }) {
       <div className={cls("layout-content")}>
         <Leftbar />
         <div className={cls("main-block")}>{children}</div>
-        <Rightbar />
       </div>
     </div>
   );

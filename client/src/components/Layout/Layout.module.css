@@ -11,7 +11,7 @@
 }
 
 .main-block {
-  flex: 5.5;
+  flex: 8;
   max-height: 100vh;
   overflow-y: scroll;
 }
