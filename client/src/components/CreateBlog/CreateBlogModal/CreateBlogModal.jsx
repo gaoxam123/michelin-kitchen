@@ -83,11 +83,6 @@ export default function CreateBlogModal({ ref, setOpenModal }) {
     }
 
     try {
-      // await request.post(`${apiRoutes.blogs.base}`, formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
       await addBlog(formData);
 
       alert("Blog created successfully!");

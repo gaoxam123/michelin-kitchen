@@ -3,6 +3,7 @@ package backend.server.service.email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -14,10 +15,13 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${api.base-url}")
+    private String API_BASE_URL;
+
     @Override
     @Async
     public void sendVerificationEmail(String to, String token, String subject, String body) {
-        String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + token;
+        String verificationUrl = API_BASE_URL + "api/auth/verify?token=" + token;
         String bodyWithUrl = body + verificationUrl;
 
         try {

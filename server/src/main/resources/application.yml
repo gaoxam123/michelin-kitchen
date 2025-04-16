@@ -45,3 +45,6 @@ security:
 
 cors:
   allowed-origins: ${REACT_APP_URL}
+
+api:
+  base-url: ${SPRING_APP_URL}
