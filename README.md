@@ -31,3 +31,29 @@ git clone https://github.com/quocanhxemer/michelin-kitchen.git
 cd michelin-kitchen
 ```
 Or just download the repository and unzip it.
+
+## 3. Create an environment file
+In the root directory, create a `.env` file like following:
+```env
+MYSQL_DB_URL=jdbc:mysql://mysql-db:3306/michelin_db
+MYSQL_ROOT_PASSWORD=password
+MYSQL_DATABASE=michelin_db
+MYSQL_USER=michelin
+MYSQL_PASSWORD=michelin
+
+JWT_ENCRYPTION_SECRET=<secretkey_256>
+
+SMTP_USERNAME=<email.address@mail.com>
+SMTP_PASSWORD=email_password
+
+REACT_APP_URL=http://localhost:5173/
+SPRING_APP_URL=http://localhost:8080/
+```
+
+## 4. Run the App
+Make sure Docker is up and running in the background, then run this command.
+```bash
+docker compose up --build
+```
+- ReactJS frontend: http://localhost:5173/ 
+- Spring Boot backend: http://localhost:8080/ 
