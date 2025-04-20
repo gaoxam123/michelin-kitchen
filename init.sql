@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS michelin_db;
+
+CREATE USER IF NOT EXISTS 'michelin'@'%' IDENTIFIED BY 'michelin';
+GRANT ALL PRIVILEGES ON michelin_db.* TO 'michelin'@'%';
+FLUSH PRIVILEGES;
+
