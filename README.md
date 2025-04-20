@@ -57,3 +57,20 @@ docker compose up --build
 ```
 - ReactJS frontend: http://localhost:5173/ 
 - Spring Boot backend: http://localhost:8080/ 
+
+# ☁️ Running on the cloud
+## 1. Update `.env`
+Replace `localhost` with the server's public IP address or domain name:
+```env
+REACT_APP_URL=http://<your-server-ip-or-domain>:5173/
+SPRING_APP_URL=http://<your-server-ip-or-domain>:8080/
+```
+
+## 2. Change the API constant called by ReactJS
+Change the API baseURL accordingly in `client/src/utils/api.js` to match the new server:
+```js
+export default `http://${your_server_ip_or_domain}:8080/api`;
+```
+
+## 3. Open Firewall Ports
+⚠️ Make sure your server is accessible from the public internet and that the necessary ports (5173 and 8080) are open in your firewall settings.
