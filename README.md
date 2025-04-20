@@ -74,3 +74,17 @@ export default `http://${your_server_ip_or_domain}:8080/api`;
 
 ## 3. Open Firewall Ports
 ⚠️ Make sure your server is accessible from the public internet and that the necessary ports (5173 and 8080) are open in your firewall settings.
+
+# Screenshots 📸
+![edit profile](./readme_imgs/edit_profile.png)
+
+![search](./readme_imgs/search.png)
+
+![post & comments](./readme_imgs/post_comments.png)
+
+![profile](./readme_imgs/profile.png)
+
+![email verification](./readme_imgs/email_verification.png)
+
+![register](./readme_imgs/register.png)
+
